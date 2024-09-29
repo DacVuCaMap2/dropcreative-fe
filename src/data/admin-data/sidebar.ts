@@ -1,4 +1,4 @@
-import { ListItem } from "flowbite-react";
+
 import { ChartPie, CircleUserRound, Headset, Package, UsersRound } from "lucide-react";
 
 export const sideBarAdmin = [

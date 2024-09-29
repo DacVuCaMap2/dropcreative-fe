@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react'
 export default function HomeDropdown() {
     const [isOpen, setOpen] = useState(false);
     const listDropDown = homeDrop1;
-    const selectItem: { drop1: any, drop2: string, drop3: boolean, drop4: boolean } = {
+    const selectItem = {
         drop1: listDropDown[0],
         drop2: "",
         drop3: true,
@@ -42,7 +42,7 @@ export default function HomeDropdown() {
                 <div className='absolute text-sm bg-white w-full shadow-2xl top-16 rounded'>
                     <div className='border-b border-gray-300'>
                         {listDropDown &&
-                            listDropDown.map((item: any, index) => (
+                            listDropDown.map((item, index) => (
                                 <div key={index} className={`${selectItem.drop1.name === item.name && 'text-blue-500'} flex flex-row items-center hover:bg-gray-200 hover:cursor-pointer px-4 py-2 space-x-2`}>
                                     {item.icon && <item.icon size={16} />}
                                     <span className='flex-grow'>{item.name}</span>
@@ -53,7 +53,7 @@ export default function HomeDropdown() {
                     </div>
                     <div className='border-b'>
                         {selectItem &&
-                            selectItem.drop1.listSelect.map((item: any, index: number) => (
+                            selectItem.drop1.listSelect.map((item, index: number) => (
                                 <div key={index} className={`${selectItem.drop2 === item.name && 'text-blue-500'} flex flex-row items-center hover:bg-gray-200 hover:cursor-pointer px-4 py-2 space-x-2`}>
                                     {item.icon && <item.icon size={16} />}
                                     <span className='flex-grow'>{item.name}</span>
@@ -64,7 +64,7 @@ export default function HomeDropdown() {
                     </div>
                     <div className='border-b'>
                         {selectItem &&
-                            selectItem.drop1.listCheckbox.map((item: any, index: number) => (
+                            selectItem.drop1.listCheckbox.map((item, index: number) => (
                                 <div key={index} className={`flex flex-row items-center hover:bg-gray-200 hover:cursor-pointer px-4 py-2 space-x-2`}>
                                     <input type="checkbox" id={`checkbox-${index}`} className="mr-2" />
                                     <span className='flex-grow'>{item}</span>

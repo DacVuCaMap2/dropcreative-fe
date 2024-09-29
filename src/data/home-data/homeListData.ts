@@ -34,5 +34,3 @@ export const homeDrop1 = [
         listCheckbox:["Free","Premium"]
     }
 ]
-
-const homeDrop3 = [];
