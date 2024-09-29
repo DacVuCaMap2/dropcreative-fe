@@ -1,0 +1,7 @@
+.main-menu {
+    position: relative;
+    background-image: url('/image/default/main-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.5);
+}
