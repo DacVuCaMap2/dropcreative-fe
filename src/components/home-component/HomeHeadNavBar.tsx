@@ -19,7 +19,7 @@ export default function HomeHeadNavBar() {
                             src="/image/logo-wh.png"
                             alt="Logo"
                             width={160} // Set an arbitrary width
-                            height={160} // Set an arbitrary height
+                            height={0} // Set an arbitrary height
                             className="object-contain" // Use CSS to maintain aspect ratio
                         />
                     </Link>

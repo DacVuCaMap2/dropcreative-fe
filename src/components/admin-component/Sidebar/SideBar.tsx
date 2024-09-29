@@ -18,7 +18,7 @@ export default function SideBar() {
             src="/image/logo-wh.png"
             alt="Logo"
             width={150} // Set an arbitrary width
-            height={150} // Set an arbitrary height
+            height={0} // Set an arbitrary height
             className="object-contain" // Use CSS to maintain aspect ratio
           />
           :
@@ -26,7 +26,7 @@ export default function SideBar() {
             src="/image/logo.png"
             alt="Logo"
             width={150} // Set an arbitrary width
-            height={150} // Set an arbitrary height
+            height={0} // Set an arbitrary height
             className="object-contain" // Use CSS to maintain aspect ratio
           />
         }
