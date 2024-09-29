@@ -12,7 +12,7 @@ export default function SideBar() {
   const [hoveredItem, setHoveredItem] = useState<string>("");
   return (
     <div className={`h-screen px-3 py-4 overflow-y-auto bg-neutral-950 text-stone-100 ${showSideBar ? 'w-[220px]' : 'w-[70px]'}`}>
-      <Link href="https://flowbite.com/" className="flex items-center ps-2.5 mb-5">
+      <Link href="/" className="flex items-center ps-2.5 mb-5">
         {showSideBar ?
           <Image
             src="/image/logo-wh.png"
