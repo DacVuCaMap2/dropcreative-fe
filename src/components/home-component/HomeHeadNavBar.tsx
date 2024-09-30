@@ -11,7 +11,7 @@ export default function HomeHeadNavBar() {
         setIsOpen(!isOpen);
     };
     return (
-        <header className="w-full fixed z-30 top-30 ">
+        <header className="w-full absolute z-30 top-30 ">
             <nav className="border-gray-200 flex justify-between items-center px-4 py-2">
                 <div className='flex flex-row items-center space-x-8 text-white'>
                     <Link href={'/'}>
@@ -37,7 +37,7 @@ export default function HomeHeadNavBar() {
                 </div>
 
 
-                {/* Các biểu tượng bên phải */}``
+                {/* Các biểu tượng bên phải */}
                 <div className="flex items-center space-x-4">
                     {/* Nút Upload */}
                     <button className="flex items-center border text-xs font-bold text-white px-4 py-2 rounded">

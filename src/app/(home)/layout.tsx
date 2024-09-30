@@ -10,7 +10,7 @@ const Layout = ({
 
     return (
         <div>
-            <main className=" w-full">
+            <main className=" w-full relative">
                 <HomeHeadNavBar/>
                 {children}
             </main>
