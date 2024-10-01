@@ -1,5 +1,4 @@
 
-import HomeHeadNavBar from '@/components/home-component/HomeHeadNavBar';
 import ToolHeadNavBar from '@/components/tool-component/ToolHeadNavBar';
 import React from 'react';
 

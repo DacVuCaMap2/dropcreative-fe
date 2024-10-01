@@ -1,5 +1,5 @@
 "use client"
-import { Bell, Bot, ChevronDown, Folder, Upload } from 'lucide-react';
+import { Bell, Bot, ChevronDown, Folder } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react'
