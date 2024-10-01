@@ -36,18 +36,20 @@ export default function ToolMain() {
         }
         setLoading(1);
         const url = "https://api.freepik.com/v1/ai/text-to-image";
+        const styling = {
+            style: selectedStyle === "All" ? getRandomElement(listStyle) : selectedStyle,
+            color: selectedColor === "All" ? getRandomElement(listColor) : selectedColor,
+            lightning: selectedLightning === "All" ? getRandomElement(listLightning) : selectedLightning,
+            framing: selectedFraming === "All" ? getRandomElement(listFraming) : selectedFraming
+        };
+        const updatedStyling = cleanStyling(styling);
         const data = {
             prompt: prompt,
             num_inference_steps: 8,
             guidance_scale: 1,
             num_images: 4,
             image: { size: selectedSize.split(' ').slice(1).join(' ') },
-            styling: {
-                style: selectedStyle,
-                color: selectedColor,
-                lightning: selectedLightning,
-                framing: selectedFraming
-            }
+            styling: styling
         };
         console.log(data)
         const config = {
@@ -56,13 +58,25 @@ export default function ToolMain() {
 
         // setImgBase64(response);
         //add to list
-        if (response) {
+        if (response && Array.isArray(response)) {
             response.forEach((item: any) => {
                 newArr.push(item.base64);
             });
             setListImgBase64(newArr);
-            setLoading(0);
+
         }
+        setLoading(0);
+    }
+    const cleanStyling = (obj: any) => {
+        for (const key in obj) {
+            if (obj[key] === "All") {
+                delete obj[key];
+            }
+        }
+        return obj;
+    };
+    function getRandomElement(arr: string[]) {
+        return arr[Math.floor(Math.random() * arr.length)];
     }
     return (
         <div className='flex flex-row py-4 px-2 space-x-2 tool-main'>
@@ -171,7 +185,6 @@ export default function ToolMain() {
                                 </Tooltip>
                             </button>
                         </div>
-
                     ))}
 
                     {loadingImg === 1 &&

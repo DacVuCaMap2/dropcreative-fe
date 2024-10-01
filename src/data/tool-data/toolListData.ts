@@ -1,4 +1,5 @@
 export const aiStyle: string[] = [
+    "All",
     "photo",
     "digital-art",
     "3d",
@@ -26,6 +27,7 @@ export const aiStyle: string[] = [
 ];
 
 export const aiColor: string[] = [
+    "All",
     "pastel",
     "b&w",
     "sepia",
@@ -47,6 +49,7 @@ export const aiColor: string[] = [
     "burgundy&blue"
 ];
 export const aiLightning: string[] = [
+    "All",
     "studio",
     "warm",
     "cinematic",
@@ -61,6 +64,7 @@ export const aiLightning: string[] = [
     "indoor-light"
 ];
 export const aiFraming: string[] = [
+    "All",
     "portrait",
     "macro",
     "panoramic",
