@@ -26,8 +26,8 @@ export const aiStyle: string[] = [
 ];
 
 export const aiColor: string[] = [
-    "b&w",
     "pastel",
+    "b&w",
     "sepia",
     "dramatic",
     "vibrant",

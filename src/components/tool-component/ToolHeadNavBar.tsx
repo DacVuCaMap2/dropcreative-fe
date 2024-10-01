@@ -26,7 +26,7 @@ export default function ToolHeadNavBar() {
                     </Link>
                     <div className='flex flex-row space-x-4 text-sm items-center'>
                         <Link href={'/admin'} className='border border-gray-500 py-2 px-4 rounded font-bold flex flex-row items-center space-x-2'>
-                            <Bot size={20}/><span>AI image generator</span>
+                            <Bot size={20}/><span>AI Product Builder</span>
                         </Link>
                     </div>
                 </div>
