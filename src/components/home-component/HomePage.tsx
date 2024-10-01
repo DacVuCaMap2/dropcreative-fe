@@ -29,7 +29,7 @@ export default function HomePage() {
             <div className='flex flex-col px-20 py-16'>
 
                 <div className='flex flex-col space-y-4'>
-                    <span className='font-bold text-xl'>Free tools to skyrocket your creative freedom</span>
+                    <span className='font-bold text-xl'>AI helps create product images and increase creativity</span>
                     <div className='flex flex-row w-full space-x-6 '>
 
                         <Link href={"/tools-page"}>
@@ -49,7 +49,7 @@ export default function HomePage() {
                             </div>
                         </Link>
 
-                        <Link href={"/"}>
+                        {/* <Link href={"/"}>
                             <div className='relative flex flex-col h-56 w-56 bg-red-400 rounded-xl overflow-hidden group'>
                                 <div className='absolute top-3 left-2 z-10 text-white font-bold'>Designer</div>
                                 <span className='absolute top-10 left-2 z-10 text-white text-xs font-bold opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100'>
@@ -64,7 +64,7 @@ export default function HomePage() {
                                 />
                                 <div className='absolute inset-0 bg-black opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-50' />
                             </div>
-                        </Link>
+                        </Link> */}
 
                     </div>
                 </div>

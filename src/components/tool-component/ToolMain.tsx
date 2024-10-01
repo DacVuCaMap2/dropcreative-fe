@@ -1,8 +1,10 @@
 "use client"
 import PostApi from '@/api/PostApi';
 import { aiColor, aiFraming, aiLightning, aiStyle } from '@/data/tool-data/toolListData';
+import { Grip, PackageOpen } from 'lucide-react';
 import React, { useState } from 'react';
-
+import { ClipLoader } from 'react-spinners';
+import './ToolMain.css';
 export default function ToolMain() {
     const listStyle: string[] = aiStyle;
     const listColor: string[] = aiColor;
@@ -18,13 +20,16 @@ export default function ToolMain() {
     const [selectedLightning, setSelectedLightning] = useState(listLightning[0]); // Mặc định là phần tử đầu tiên
     const [prompt, setPrompt] = useState("");
     const [imgBase64, setImgBase64] = useState("");
+    const [listImgBase64, setListImgBase64] = useState<string[]>([]);
+    const [loadingImg, setLoading] = useState(0);
     const handleCreate = async () => {
+        setLoading(1);
         const url = "https://api.freepik.com/v1/ai/text-to-image";
         const data = {
             prompt: prompt,
             num_inference_steps: 8,
             guidance_scale: 1,
-            num_images: 1,
+            num_images: 4,
             image: { size: selectedSize.split(' ').slice(1).join(' ') },
             styling: {
                 style: selectedStyle,
@@ -34,20 +39,54 @@ export default function ToolMain() {
             }
         };
         const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'x-freepik-api-key': 'FPSXa66c58ab5a6c4635a8af2f04aa36a57f'
-            }
         };
         const response = await PostApi(url, data, config);
-        console.log(response);
-        setImgBase64(response);
+        // setImgBase64(response);
+        //add to list
+        if (response) {
+            const newArr: string[] = [];
+            response.forEach((item: any) => {
+                newArr.push(item.base64);
+            });
+            setListImgBase64(newArr);
+            setLoading(0);
+        }
+    }
+    const handleLoadMore = async () => {
+        setLoading(1);
+        const url = "https://api.freepik.com/v1/ai/text-to-image";
+        const data = {
+            prompt: prompt,
+            num_inference_steps: 8,
+            guidance_scale: 1,
+            num_images: 4,
+            image: { size: selectedSize.split(' ').slice(1).join(' ') },
+            styling: {
+                style: selectedStyle,
+                color: selectedColor,
+                lightning: selectedLightning,
+                framing: selectedFraming
+            }
+        };
+        const config = {
+        };
+        const response = await PostApi(url, data, config);
+        // setImgBase64(response);
+        //add to list
+        if (response) {
+            const newArr: string[] = [...listImgBase64];
+            response.forEach((item: any) => {
+                newArr.push(item.base64);
+            });
+            setListImgBase64(newArr);
+            console.log(newArr);
+            setLoading(0);
+        }
     }
     return (
-        <div className='flex flex-row py-4 px-2'>
-            <div className='flex flex-col py-2 px-4 bg-neutral-950 w-80'>
-                <div className='py-2'>Prompt</div>
+        <div className='flex flex-row py-4 px-2 space-x-2 tool-main'>
+            <div className='fixed flex flex-col text-sm py-2 px-4 bg-neutral-950 w-80 space-y-2 '>
+                <div className='py-2 font-bold'>Prompt</div>
                 <div>
                     <textarea
                         onChange={(e) => setPrompt(e.target.value)}
@@ -56,7 +95,7 @@ export default function ToolMain() {
                     </textarea>
                 </div>
                 {/* Giao diện chưa chỉnh sửa */}
-                <div className='flex flex-col text-black py-2'>
+                <div className='flex flex-col text-black py-2 space-y-2'>
                     <div className='flex flex-row'>
                         <label htmlFor="" className='text-white w-20'>Mode</label>
                         <select
@@ -127,15 +166,47 @@ export default function ToolMain() {
                     <button onClick={() => handleCreate()} className='w-full bg-neutral-800 py-2'>Create</button>
                 </div>
             </div>
-            <div className="aiImg">
-                {imgBase64 && (
-                    <img
-                        src={`data:image/png;base64,${imgBase64}`}
-                        alt="Generated"
-                        style={{ height: '300px', width: 'auto' }}
-                    />
+            <div className='w-80 h-10 text-white'>
 
-                )}
+            </div>
+            <div className="aiImg flex-grow flex flex-col min-h-[500px]">
+
+                <div className='flex flex-row justify-center border-b border-gray-600 font-bold text-sm'>
+                    <div className='flex flex-row items-center space-x-1 border-b border-white h-full'><Grip /> <span>Creations</span></div>
+                </div>
+                <div className='flex-grow py-2 flex flex-row flex-wrap justify-center'>
+                    {listImgBase64.map((item: string, index) => (
+                        <div key={index} className='flex-shrink-0 ml-2 mt-2'>
+                            <img
+                                src={`data:image/png;base64,${item}`}
+                                alt="Generated"
+                                style={{ height: '500px', width: 'auto' }}
+                            />
+                        </div>
+                    ))}
+
+                    {loadingImg === 1 &&
+                        <div className='h-20 flex items-center justify-center w-full'>
+                            <ClipLoader color='#ffffff' />
+                        </div>
+                    }
+                    {(listImgBase64.length === 0 && loadingImg === 0) ?
+                        <div className='flex space-y-4 flex-col justify-center items-center font-bold text-sm text-gray-600'>
+                            <span>Type prompt and create AI image</span>
+                            <PackageOpen size={50} />
+
+                        </div>
+                        : ''
+                    }
+                </div>
+
+                <div className='flex justify-center'>
+                    {listImgBase64.length > 0 &&
+                        <button onClick={() => handleLoadMore()} className='bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700'>
+                            Load more
+                        </button>
+                    }
+                </div>
             </div>
             <div></div>
         </div>
