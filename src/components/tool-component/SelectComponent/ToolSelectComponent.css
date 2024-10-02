@@ -1,0 +1,37 @@
+/* Đối với trình duyệt WebKit (Chrome, Safari) */
+.tool-select {
+    overflow-y: auto;
+}
+
+.tool-select::-webkit-scrollbar {
+    width: 8px; /* Chiều rộng của thanh cuộn */
+}
+
+.tool-select::-webkit-scrollbar-track {
+    background: none; /* Nền của track (nền thanh cuộn) */
+}
+
+.tool-select::-webkit-scrollbar-thumb {
+    background-color: gray; /* Màu của thanh cuộn */
+    border-radius: 10px; /* Bo góc cho thanh cuộn */
+}
+
+/* Đối với trình duyệt Firefox */
+.tool-select {
+    scrollbar-width: thin; /* Đặt chiều rộng thanh cuộn mỏng */
+    scrollbar-color: gray transparent; /* Màu thanh cuộn và nền */
+}
+
+/* Đối với trình duyệt Edge (tương tự như Chrome) */
+.tool-select::-ms-scrollbar {
+    width: 8px;
+}
+
+.tool-select::-ms-scrollbar-track {
+    background: none;
+}
+
+.tool-select::-ms-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 10px;
+}

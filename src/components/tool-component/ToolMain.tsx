@@ -1,27 +1,34 @@
 "use client"
 import PostApi from '@/api/PostApi';
-import { aiColor, aiFraming, aiLightning, aiStyle } from '@/data/tool-data/toolListData';
-import { ArrowDownToLine, Grip, PackageOpen } from 'lucide-react';
+import { aiColor, aiFraming, aiLightning, aiMode, aiSize, aiStyle } from '@/data/tool-data/toolListData';
+import { ArrowDownToLine, ChevronRight, Cpu, Grip, PackageOpen, RectangleVertical, Star } from 'lucide-react';
 import React, { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import './ToolMain.css';
 import { Tooltip } from 'react-tooltip';
+import ToolSelectComponent from './SelectComponent/ToolSelectComponent';
+import { CSSTransition } from 'react-transition-group';
+import Image from 'next/image';
 export default function ToolMain() {
-    const listStyle: string[] = aiStyle;
-    const listColor: string[] = aiColor;
-    const listLightning: string[] = aiLightning;
-    const listFraming: string[] = aiFraming;
-
+    const listStyle: any[] = aiStyle;
+    const listColor: any[] = aiColor;
+    const listLightning: any[] = aiLightning;
+    const listFraming: any[] = aiFraming;
+    const listSize: any[] = aiSize;
+    const listMode: any[] = aiMode;
     // Khai báo state cho từng select
     const [selectedMode, setSelectedMode] = useState("Flux Fast");
-    const [selectedSize, setSelectedSize] = useState("1:1 Square");
-    const [selectedStyle, setSelectedStyle] = useState(listStyle[0]); // Mặc định là phần tử đầu tiên
-    const [selectedColor, setSelectedColor] = useState(listColor[0]); // Mặc định là phần tử đầu tiên
-    const [selectedFraming, setSelectedFraming] = useState(listFraming[0]); // Mặc định là phần tử đầu tiên
-    const [selectedLightning, setSelectedLightning] = useState(listLightning[0]); // Mặc định là phần tử đầu tiên
+    const [selectedSize, setSelectedSize] = useState(listSize[0].value);
+    const [selectedStyle, setSelectedStyle] = useState(listStyle[0].value);
+    const [selectedColor, setSelectedColor] = useState(listColor[0].value);
+    const [selectedFraming, setSelectedFraming] = useState(listFraming[0].value);
+    const [selectedLightning, setSelectedLightning] = useState(listLightning[0].value);
     const [prompt, setPrompt] = useState("");
     const [listImgBase64, setListImgBase64] = useState<string[]>([]);
     const [loadingImg, setLoading] = useState(0);
+    const [openSelect, setOpenSelect] = useState(false);
+    const [curSelect, setCurSelect] = useState<any>(null);
+    const [curKey, setCurKey] = useState("");
     const handleCreate = async () => {
         const newArr: string[] = [];
         postAndGetImg(newArr);
@@ -42,11 +49,10 @@ export default function ToolMain() {
             lightning: selectedLightning === "All" ? getRandomElement(listLightning) : selectedLightning,
             framing: selectedFraming === "All" ? getRandomElement(listFraming) : selectedFraming
         };
-        const updatedStyling = cleanStyling(styling);
         const data = {
             prompt: prompt,
-            num_inference_steps: 8,
-            guidance_scale: 1,
+            num_inference_steps: 1000,
+            guidance_scale: 0.1,
             num_images: 4,
             image: { size: selectedSize.split(' ').slice(1).join(' ') },
             styling: styling
@@ -67,21 +73,80 @@ export default function ToolMain() {
         }
         setLoading(0);
     }
-    const cleanStyling = (obj: any) => {
-        for (const key in obj) {
-            if (obj[key] === "All") {
-                delete obj[key];
-            }
+    const handleSetValue = (key: string, val: string) => {
+        switch (key) {
+            case "Mode":
+                setSelectedMode(val);
+                break;
+            case "Size":
+                setSelectedSize(val);
+                break;
+            case "Style":
+                setSelectedStyle(val);
+                break;
+            case "Color":
+                setSelectedColor(val);
+                break;
+            case "Camera":
+                setSelectedFraming(val);
+                break;
+            case "Lighting":
+                setSelectedLightning(val);
+                break;
+            default:
+                break;
         }
-        return obj;
-    };
-    function getRandomElement(arr: string[]) {
-        return arr[Math.floor(Math.random() * arr.length)];
+    }
+    const handleOpenSelect = (key: string) => {
+
+        setCurKey(key);
+        console.log(key);
+        switch (key) {
+            case "Mode":
+                setCurSelect(listMode);
+                break;
+            case "Size":
+                setCurSelect(listSize);
+                break;
+            case "Style":
+                setCurSelect(listStyle);
+                break;
+            case "Color":
+                setCurSelect(listColor);
+                break;
+            case "Camera":
+                setCurSelect(listFraming);
+                break;
+            case "Lighting":
+                setCurSelect(listLightning);
+                break;
+            default:
+                break;
+        }
+        setOpenSelect(!openSelect);
+    }
+    function getRandomElement(arr: any[]) {
+        return arr[Math.floor(Math.random() * arr.length)].value;
     }
     return (
-        <div className='flex flex-row py-4 px-2 space-x-2 tool-main'>
-            <div className='flex flex-col text-sm py-2 px-4 bg-neutral-950 w-80 space-y-2 '>
-                <div className='py-2 font-bold'>Prompt</div>
+        <div className='flex flex-row py-4 px-2 space-x-4 tool-main'>
+            <div className='flex flex-col text-sm pb-4 px-4 background-gray min-w-80 space-y-2 rounded-lg relative'>
+                <CSSTransition
+                    in={openSelect}
+                    timeout={100}
+                    classNames="slide"
+                    unmountOnExit
+                >
+                    <div className={`absolute z-30 ${(curKey === "Mode" || curKey === "Size") ? `top-1/3 h-1/2` : 'top-0 h-full'} background-gray rounded-lg`} style={{ right: '-71%', width: '70%' }}>
+                        <ToolSelectComponent
+                            setOpen={setOpenSelect}
+                            listData={curSelect}
+                            handleSetValue={handleSetValue}
+                            curKey={curKey}
+                        />
+                    </div>
+                </CSSTransition>
+                <div className='py-2 font-bold' style={{ marginTop: "8px" }}>Prompt</div>
                 <div>
                     <textarea
                         onChange={(e) => setPrompt(e.target.value)}
@@ -89,73 +154,61 @@ export default function ToolMain() {
                         className='w-full min-h-32 resize-none bg-neutral-900 rounded outline-none focus:bg-neutral-900 focus:ring-0'>
                     </textarea>
                 </div>
+
+
                 {/* Giao diện chưa chỉnh sửa */}
-                <div className='flex flex-col text-black py-2 space-y-2'>
-                    <div className='flex flex-row'>
-                        <label htmlFor="" className='text-white w-20'>Mode</label>
-                        <select
-                            value={selectedMode}
-                            onChange={(e) => setSelectedMode(e.target.value)}>
-                            <option value="Flux Fast">Flux Fast</option>
-                        </select>
-                    </div>
-                    <div className='flex flex-row'>
-                        <label htmlFor="" className='text-white w-20'>Size</label>
-                        <select
-                            value={selectedSize}
-                            onChange={(e) => setSelectedSize(e.target.value)}>
-                            <option value="1:1 Square">1:1 Square</option>
-                            <option value="1:2 Vertical">1:2 Vertical</option>
-                            <option value="2:1 Horizontal">2:1 Horizontal</option>
-                            <option value="2:3 Portrait">2:3 Portrait</option>
-                            <option value="3:4 Traditional">3:4 Traditional</option>
-                            <option value="4:5 Social Post">4:5 Social Post</option>
-                            <option value="9:16 Social Story">9:16 Social Story</option>
-                            <option value="3:2 Standard">3:2 Standard</option>
-                            <option value="4:3 Classic">4:3 Classic</option>
-                            <option value="16:9 Wide">16:9 Wide</option>
-                        </select>
-                    </div>
-                    <div className='flex flex-row'>
-                        <label htmlFor="" className='text-white w-20'>Style</label>
-                        <select
-                            value={selectedStyle}
-                            onChange={(e) => setSelectedStyle(e.target.value)}>
-                            {listStyle.map((item: string, index) => (
-                                <option key={index} value={item}>{item}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className='flex flex-row'>
-                        <label htmlFor="" className='text-white w-20'>Color</label>
-                        <select
-                            value={selectedColor}
-                            onChange={(e) => setSelectedColor(e.target.value)}>
-                            {listColor.map((item: string, index) => (
-                                <option key={index} value={item}>{item}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className='flex flex-row'>
-                        <label htmlFor="" className='text-white w-20'>Camera</label>
-                        <select
-                            value={selectedFraming}
-                            onChange={(e) => setSelectedFraming(e.target.value)}>
-                            {listFraming.map((item: string, index) => (
-                                <option key={index} value={item}>{item}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className='flex flex-row'>
-                        <label htmlFor="" className='text-white w-20'>Lightning</label>
-                        <select
-                            value={selectedLightning}
-                            onChange={(e) => setSelectedLightning(e.target.value)}>
-                            {listLightning.map((item: string, index) => (
-                                <option key={index} value={item}>{item}</option>
-                            ))}
-                        </select>
-                    </div>
+                <div className='flex flex-col text-black py-2 text-xs space-y-1'>
+                    <button onClick={() => handleOpenSelect("Mode")} className='h-10 flex flex-row items-center text-white px-2 bg-neutral-900 hover:bg-neutral-800 space-x-2'>
+                        <Cpu size={16} />
+                        <span className=''>Mode</span>
+
+                        <div className='flex-grow text-right text-stone-400'>
+                            {selectedMode}
+                        </div>
+                        <ChevronRight size={16} />
+                    </button>
+                    <button onClick={() => handleOpenSelect("Size")} className='h-10 flex flex-row items-center text-white px-2 bg-neutral-900 hover:bg-neutral-800 space-x-2'>
+                        <RectangleVertical size={16} />
+                        <span className=''>Size</span>
+
+                        <div className='flex-grow text-right text-stone-400'>
+                            {selectedSize}
+                        </div>
+                        <ChevronRight size={16} />
+                    </button>
+                    <button onClick={() => handleOpenSelect("Style")} className='h-10 flex flex-row items-center text-white px-2 bg-neutral-900 hover:bg-neutral-800 space-x-2'>
+                        <Star size={16} />
+                        <span className=''>Style</span>
+                        <div className='flex-grow text-right text-stone-400'>
+                            {selectedStyle}
+                        </div>
+                        <ChevronRight size={16} />
+                    </button>
+
+                    <button onClick={() => handleOpenSelect("Color")} className='h-10 flex flex-row items-center text-white px-2 bg-neutral-900 hover:bg-neutral-800 space-x-2'>
+                        <Star size={16} />
+                        <span className=''>Color</span>
+                        <div className='flex-grow text-right text-stone-400'>
+                            {selectedColor}
+                        </div>
+                        <ChevronRight size={16} />
+                    </button>
+                    <button onClick={() => handleOpenSelect("Camera")} className='h-10 flex flex-row items-center text-white px-2 bg-neutral-900 hover:bg-neutral-800 space-x-2'>
+                        <Star size={16} />
+                        <span className=''>Camera</span>
+                        <div className='flex-grow text-right text-stone-400'>
+                            {selectedFraming}
+                        </div>
+                        <ChevronRight size={16} />
+                    </button>
+                    <button onClick={() => handleOpenSelect("Lighting")} className='h-10 flex flex-row items-center text-white px-2 bg-neutral-900 hover:bg-neutral-800 space-x-2'>
+                        <Star size={16} />
+                        <span className=''>Lighting</span>
+                        <div className='flex-grow text-right text-stone-400'>
+                            {selectedLightning}
+                        </div>
+                        <ChevronRight size={16} />
+                    </button>
                 </div>
                 <div>
                     <button onClick={() => handleCreate()} className='w-full bg-neutral-800 py-2'>Create</button>
@@ -168,16 +221,18 @@ export default function ToolMain() {
             <div className="aiImg flex-grow flex flex-col min-h-[500px]">
 
                 <div className='flex flex-row justify-center border-b border-gray-600 font-bold text-sm'>
-                    <div className='flex flex-row items-center space-x-1 border-b border-white h-full'><Grip /> <span>Creations</span></div>
+                    <button className='flex flex-row items-center space-x-1 border-b border-white h-full py-2'><Grip /> <span>Creations</span></button>
                 </div>
                 <div className='flex-grow py-2 flex flex-row flex-wrap justify-center'>
                     {listImgBase64.map((item: string, index) => (
                         <div key={index} className='flex-shrink-0 ml-2 mt-2 relative group rounded'>
-                            <img
+                            <Image
                                 src={`data:image/png;base64,${item}`}
                                 alt="Generated"
-                                style={{ height: '500px', width: 'auto' }}
-                            />
+                                width={400}
+                                height={0}
+                                // style={{width: '40%', height: 'auto' }}
+                            ></Image>
                             <button className='absolute downImg flex items-center justify-center right-2 top-2 bg-white w-8 h-8 text-gray-600 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
                                 <ArrowDownToLine />
                                 <Tooltip anchorSelect=".downImg" place="left">
