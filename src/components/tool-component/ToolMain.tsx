@@ -231,16 +231,20 @@ export default function ToolMain() {
                                 alt="Generated"
                                 width={400}
                                 height={0}
-                                // style={{width: '40%', height: 'auto' }}
-                            ></Image>
-                            <button className='absolute downImg flex items-center justify-center right-2 top-2 bg-white w-8 h-8 text-gray-600 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                            />
+                            <a
+                                href={`data:image/png;base64,${item}`} // Liên kết tới hình ảnh base64
+                                download={`image-${index}.png`} // Tên tệp tải xuống
+                                className='absolute downImg flex items-center justify-center right-2 top-2 bg-white w-8 h-8 text-gray-600 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300'
+                            >
                                 <ArrowDownToLine />
                                 <Tooltip anchorSelect=".downImg" place="left">
                                     Download image
                                 </Tooltip>
-                            </button>
+                            </a>
                         </div>
                     ))}
+
 
                     {loadingImg === 1 &&
                         <div className='h-20 flex items-center justify-center w-full'>
