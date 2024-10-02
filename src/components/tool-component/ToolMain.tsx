@@ -152,7 +152,7 @@ export default function ToolMain() {
                 <div>
                     <textarea
                         onChange={(e) => setPrompt(e.target.value)}
-                        placeholder='Describe your image'
+                        placeholder='Product description'
                         className='w-full min-h-32 resize-none bg-neutral-900 rounded outline-none focus:bg-neutral-900 focus:ring-0'>
                     </textarea>
                 </div>
