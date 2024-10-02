@@ -126,11 +126,13 @@ export default function ToolMain() {
         setOpenSelect(!openSelect);
     }
     function getRandomElement(arr: any[]) {
-        return arr[Math.floor(Math.random() * arr.length)].value;
+        let num = Math.floor(Math.random() * arr.length);
+        num = num===0 ? 1 : num;
+        return arr[num].value;
     }
     return (
         <div className='flex flex-row py-4 px-2 space-x-4 tool-main'>
-            <div className='flex flex-col text-sm pb-4 px-4 background-gray min-w-80 space-y-2 rounded-lg relative'>
+            <div className='flex flex-col max-h-[600px] text-sm pb-4 px-4 background-gray min-w-80 space-y-2 rounded-lg relative'>
                 <CSSTransition
                     in={openSelect}
                     timeout={100}
@@ -225,12 +227,13 @@ export default function ToolMain() {
                 </div>
                 <div className='flex-grow py-2 flex flex-row flex-wrap justify-center'>
                     {listImgBase64.map((item: string, index) => (
-                        <div key={index} className='flex-shrink-0 ml-2 mt-2 relative group rounded'>
+                        <div key={index} className='flex-shrink-0 ml-2 mt-2 relative group rounded-lg'>
                             <Image
                                 src={`data:image/png;base64,${item}`}
                                 alt="Generated"
-                                width={400}
+                                width={300}
                                 height={0}
+                                className='rounded-lg'
                             />
                             <a
                                 href={`data:image/png;base64,${item}`} // Liên kết tới hình ảnh base64

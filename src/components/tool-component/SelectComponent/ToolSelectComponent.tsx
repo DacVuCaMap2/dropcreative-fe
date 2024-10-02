@@ -32,6 +32,7 @@ export default function ToolSelectComponent(props: Props) {
     }
     const handleSelect = (item: any) => {
         props.handleSetValue(props.curKey, item.value);
+        props.setOpen(false);
     }
     return (
         <div className={`tool-select w-full h-full overflow-y-auto p-2 `}>
