@@ -132,14 +132,14 @@ export default function ToolMain() {
     }
     return (
         <div className='flex flex-row py-4 px-2 space-x-4 tool-main'>
-            <div className='flex flex-col max-h-[600px] text-sm pb-4 px-4 background-gray min-w-80 space-y-2 rounded-lg relative'>
+            <div className='flex flex-col max-h-[600px] text-sm pb-4 px-4 background-gray min-w-64 space-y-2 rounded-lg relative'>
                 <CSSTransition
                     in={openSelect}
                     timeout={100}
                     classNames="slide"
                     unmountOnExit
                 >
-                    <div className={`absolute z-30 ${(curKey === "Mode" || curKey === "Size") ? `top-1/3 h-1/2` : 'top-0 h-full'} background-gray rounded-lg`} style={{ right: '-71%', width: '70%' }}>
+                    <div className={`absolute z-30 ${(curKey === "Mode" || curKey === "Size") ? `top-1/3 h-1/2` : 'top-0 h-full'} background-gray rounded-lg`} style={{ right: '-81%', width: '80%' }}>
                         <ToolSelectComponent
                             setOpen={setOpenSelect}
                             listData={curSelect}
