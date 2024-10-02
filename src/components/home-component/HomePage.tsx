@@ -34,9 +34,9 @@ export default function HomePage() {
 
                         <Link href={"/tools-page"}>
                             <div className='relative flex flex-col h-56 w-56 bg-red-400 rounded-xl overflow-hidden group'>
-                                <div className='absolute top-3 left-2 z-10 text-white font-bold'>AI image generator</div>
+                                <div className='absolute top-3 left-2 z-10 text-white font-bold'>AI Product Builder</div>
                                 <span className='absolute top-10 left-2 z-10 text-white text-xs font-bold opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100'>
-                                    Create images from worlds in real time
+                                    Generate product images from the world in real time
                                 </span>
                                 <Image
                                     src="/image/default/AIgen.jpg"
