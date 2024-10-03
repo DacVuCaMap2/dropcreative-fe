@@ -14,8 +14,8 @@ export default function HomeCategories() {
             const scrollAmount = direction === 'left' ? -210 : 210; // Điều chỉnh giá trị này nếu cần
             setScrollLocation(scrollAmount);
             scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-            let hidLeft = scrollAmount===-210;
-            let hidRight = scrollAmount === 210;
+            const hidLeft = scrollAmount===-210;
+            const hidRight = scrollAmount === 210;
             setHiddenBtn({left:hidLeft,right:hidRight});
         }
     };

@@ -88,7 +88,7 @@ export default function HomePage() {
                             <div className='flex flex-row flex-wrap justify-center'>
 
                                 {listTheme.map((item: any, index) => (
-                                    <Link href={"/"}>
+                                    <Link key={index} href={"/"}>
                                         <div className='relative flex flex-col h-56 mb-4 ml-6 rounded-xl overflow-hidden group'>
                                             <div className='absolute bottom-3 left-2 z-10 text-white font-bold'>{item.title}</div>
                                             <img
@@ -119,7 +119,7 @@ export default function HomePage() {
                             <div className='flex flex-row flex-wrap justify-center space-x-8'>
 
                                 {listCountry.map((item: any, index) => (
-                                    <Link href={"/"}>
+                                    <Link key={index} href={"/"}>
                                         <div className='relative'>
                                             <div className='absolute hover:opacity-15 opacity-0 top-0 left-0 h-full w-full bg-white'>
 
