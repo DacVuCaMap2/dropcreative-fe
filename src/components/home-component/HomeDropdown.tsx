@@ -39,7 +39,7 @@ export default function HomeDropdown() {
 
 
             {isOpen &&
-                <div className='absolute text-sm bg-white w-full shadow-2xl top-16 rounded'>
+                <div className='absolute z-30 text-sm bg-white w-full shadow-2xl top-16 rounded'>
                     <div className='border-b border-gray-300'>
                         {listDropDown &&
                             listDropDown.map((item, index) => (
