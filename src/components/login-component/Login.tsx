@@ -68,10 +68,7 @@ const Login = () => {
                     },
                   ]}
                 >
-                  <Input.Password
-                    placeholder="input password"
-                    className="w-80 h-9"
-                  />
+                  <Input.Password className="w-80 h-9" />
                 </Form.Item>
 
                 <Form.Item<FieldType> name="remember" valuePropName="checked">

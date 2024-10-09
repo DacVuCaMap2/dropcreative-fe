@@ -71,10 +71,7 @@ const Register = (props: IProps) => {
                   { required: true, message: "Please input your password!" },
                 ]}
               >
-                <Input.Password
-                  placeholder="input password"
-                  className="w-80 h-9"
-                />
+                <Input.Password className="w-80 h-9" />
               </Form.Item>
               <label className="text-sm font-medium	">
                 Username<span className="text-red-500">*</span>
