@@ -1,45 +1,136 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import './AddProductComponent.css'
-import { CircleAlert, Trash } from 'lucide-react'
+import { CircleAlert, Crown, Trash, Type } from 'lucide-react'
 import { Tooltip } from 'react-tooltip'
 import TinyMCEEditor from '@/components/TinyMCE/TinyMCEEditor'
 import Product, { getNewProduct } from '@/model/Product'
+import Image from 'next/image'
+
+type productVariant = {
+  optionName: string,
+  optionValue: string[]
+}
+type variantDetails = {
+  name: string,
+  price: number,
+  comparePrice: number,
+  image: string,
+  sku: string,
+  barcode: string
+}
 
 
 export default function AddProductComponent() {
 
   const [productData, setProductData] = useState<Product>(getNewProduct());
-  const [listVariant, setListVariant] = useState<string[]>([]);
-  console.log(productData);
+  const [listVariant, setListVariant] = useState<productVariant[]>([]);
   const [content, setContent] = useState('<p>Initial content</p>');
-
+  const [listVariantDetails, setListVariantDetails] = useState<variantDetails[]>([]);
   const handleEditorChange = (newContent: any) => {
     setContent(newContent);
   };
 
   const handleChange = (e: any, key: string) => {
     let value = e.target.value;
+    /// cac gia tri price
     if (key === "price" || key === "comparePrice" || key === "costPerPrice" || key === "shippingFee") {
-      value = parseFloat(value);
-      if (isNaN(value)) {
-        value = 0;
-      }
+      value = value ? parseFloat(value) : 0;
+
     }
-    let productTemp = { ...productData, [key]: value };
+    const productTemp = { ...productData, [key]: value };
+    console.log(productTemp);
     setProductData(productTemp);
   }
+
+
   const handleAddVariant = () => {
     if (listVariant.length < 3) {
-      setListVariant([...listVariant, ""]);
+      const newVariant: productVariant = { optionName: "", optionValue: [] };
+      setListVariant([...listVariant, newVariant]);
     }
   };
-  const handleDeleteVariant = (ind:number)=>{
-
-    const newList = listVariant.filter((item:string,childIndex)=>childIndex!=ind);
-    console.log(newList);
+  const handleDeleteVariant = (ind: number) => {
+    const newList = listVariant.filter((item: productVariant, childIndex) => childIndex != ind);
     setListVariant(newList);
   }
+  const handleChangeVariantName = (ind: number, e: any) => {
+    const value = e.target.value;
+    const tempListVariant = [...listVariant];
+    const newListVariant = tempListVariant.map((item: productVariant, index) => {
+      if (index === ind) {
+        return { ...item, optionName: value };
+      }
+      return item;
+    })
+    setListVariant(newListVariant);
+  }
+  const handleChangeVariantValue = (ind: number, e: any) => {
+    const value = e.target.value;
+    const valuesArray: string[] = value.split(',');
+    const tempListVariant = [...listVariant];
+    const newListVariant = tempListVariant.map((item: productVariant, index) => {
+      if (index === ind) {
+        return { ...item, optionValue: valuesArray };
+      }
+      return item;
+    })
+    setListVariant(newListVariant);
+  }
+  const handleChangeVariantDetails = (ind: number, e: any, key: string) => {
+    const value = e.target.value;
+    const newDetails = [...listVariantDetails].map((item: variantDetails, index) => {
+      if (index === ind) {
+        return { ...item, [key]: value };
+      }
+      return item;
+    });
+    setListVariantDetails(newDetails);
+  }
+  useEffect(() => {
+    if (listVariant.length > 0) {
+      const combineOptionValues = (options: productVariant[]): string[] => {
+        const values: string[][] = options.map(option => option.optionValue);
+
+        const result: string[][] = [];
+
+        const combine = (prefix: string[], remainingArrays: string[][]): void => {
+          if (remainingArrays.length === 0) {
+            result.push(prefix);
+            return;
+          }
+
+          const [firstArray, ...restArrays] = remainingArrays;
+
+          firstArray.forEach(item => {
+            combine([...prefix, item], restArrays);
+          });
+        };
+
+        combine([], values);
+        return result.map(items => items.join(', '));
+      };
+
+      const result = combineOptionValues(listVariant);
+
+      // Kiểm tra độ dài trước khi tạo tempVariantDetails
+      const limitedResult = result.slice(0, 50); // Giới hạn độ dài mảng là 50
+
+      const tempVariantDetails = limitedResult.map((str: string) => {
+        return {
+          name: str,
+          price: productData.price,
+          comparePrice: productData.comparePrice,
+          image: "",
+          sku: "",
+          barcode: ""
+        }
+      });
+
+      setListVariantDetails(tempVariantDetails);
+    }
+  }, [listVariant]);
+
   return (
     <div className='flex flex-row w-full add-component py-4 space-x-2'>
       <div className='flex flex-col w-2/3 px-2 space-y-6'>
@@ -56,7 +147,7 @@ export default function AddProductComponent() {
               placeholder="Type title"
               required
             />
-            <label className="block mb-2 text-xs">0/225</label>
+            <label className="block mb-2 text-xs">{productData.title.length}/225</label>
           </div>
 
           <div className='space-y-2'>
@@ -121,7 +212,7 @@ export default function AddProductComponent() {
                   USD
                 </div>
                 <div className="relative w-full">
-                  <input value={productData.price} onChange={e => handleChange(e, "price")} type="text" id="location-search" className="block border-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-100 rounded-e-lg focus:ring-0" required />
+                  <input value={productData.price === 0 ? '' : productData.price} onChange={e => handleChange(e, "price")} type="number" id="location-search" className="block border-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-100 rounded-e-lg focus:ring-0" required />
                 </div>
               </div>
             </div>
@@ -132,7 +223,7 @@ export default function AddProductComponent() {
                   USD
                 </div>
                 <div className="relative w-full">
-                  <input value={productData.comparePrice} onChange={e => handleChange(e, "comparePrice")} type="text" id="location-search" className="block border-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-100 rounded-e-lg focus:ring-0" required />
+                  <input value={productData.comparePrice === 0 ? '' : productData.comparePrice} onChange={e => handleChange(e, "comparePrice")} type="number" id="location-search" className="block border-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-100 rounded-e-lg focus:ring-0" required />
                 </div>
               </div>
             </div>
@@ -143,7 +234,7 @@ export default function AddProductComponent() {
                   USD
                 </div>
                 <div className="relative w-full">
-                  <input value={productData.costPerPrice} onChange={e => handleChange(e, "costPerPrice")} type="text" id="location-search" className="block border-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-100 rounded-e-lg focus:ring-0" required />
+                  <input value={productData.costPerPrice === 0 ? "" : productData.costPerPrice} onChange={e => handleChange(e, "costPerPrice")} type="number" id="location-search" className="block border-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-100 rounded-e-lg focus:ring-0" required />
                 </div>
               </div>
             </div>
@@ -154,7 +245,7 @@ export default function AddProductComponent() {
                   USD
                 </div>
                 <div className="relative w-full">
-                  <input value={productData.shippingFee} onChange={e => handleChange(e, "shippingFee")} type="text" id="location-search" className="block border-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-100 rounded-e-lg focus:ring-0" required />
+                  <input value={productData.shippingFee === 0 ? "" : productData.shippingFee} onChange={e => handleChange(e, "shippingFee")} type="number" id="location-search" className="block border-none p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-100 rounded-e-lg focus:ring-0" required />
                 </div>
               </div>
             </div>
@@ -164,7 +255,7 @@ export default function AddProductComponent() {
         <div className='border px-4 py-4 text-neutral-600 space-y-4 shadow-lg'>
           <div className='border-b pb-4'>
             <div className='flex flex-row justify-between items-center'>
-              <span className='font-bold'>Variant</span>
+              <span className='font-bold'>Variant ({listVariantDetails.length}/50)</span>
               <div className='flex flex-col'>
                 <button onClick={e => handleAddVariant()} className='text-blue-500 hover:underline'>Add Variant</button>
               </div>
@@ -172,12 +263,14 @@ export default function AddProductComponent() {
             <span className='text-sm'>Add variants if this product comes in multiple versions, like different sizes or colors.</span>
           </div>
           <div>
-            {listVariant.map((item: string, index) => (
-              <div key={index} className='flex flex-row space-x-4 items-center justify-center space-y-2'>
+            {listVariant.map((item: productVariant, index) => (
+              <div key={index} className='flex flex-row space-x-4 items-center justify-center mb-4'>
                 <div className='flex flex-col'>
                   <label htmlFor="" className='font-bold text-sm'>Option name</label>
                   <input
                     type="text"
+                    value={item.optionName}
+                    onChange={(e) => handleChangeVariantName(index, e)}
                     className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                     focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                     placeholder="Type name"
@@ -188,17 +281,48 @@ export default function AddProductComponent() {
                   <label htmlFor="" className='font-bold text-sm'>Option value (press , to separate values. Example | size :xs,s,xl,...) </label>
                   <input
                     type="text"
+                    value={item.optionValue.join(',')}
+                    onChange={(e) => handleChangeVariantValue(index, e)}
                     className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                     focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                     placeholder="Separate options with comma "
                     required
                   />
                 </div>
-                <button onClick={()=>handleDeleteVariant(index)} className='p-2 hover:bg-gray-200 rounded'>
+                <button onClick={() => handleDeleteVariant(index)} className='p-2 hover:bg-gray-200 rounded'>
                   <Trash />
                 </button>
               </div>
             ))}
+          </div>
+          <div className=''>
+            {listVariantDetails.length > 0
+              &&
+              <table className='table-auto max-w-full'>
+                <thead className=' border-b'>
+                  <tr  >
+                    <th className='py-4'>Variant</th>
+                    <th className='py-4'>Image</th>
+                    <th className='py-4'>Price</th>
+                    <th className='py-4'>Compare Price</th>
+                    <th className='py-4'>Sku</th>
+                    <th className='py-4'>Barcode</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {listVariantDetails.map((variantItem: variantDetails, childInd) => (
+                    <tr key={childInd} className='text-center'>
+                      <td className='px-2 py-2 text-sm truncate'>{variantItem.name}</td>
+                      <td className='px-2 py-2'><Image src={'/image/default/AIgen.jpg'} alt={'image'} width={200} height={50} className='rounded cursor-pointer'></Image></td>
+                      <td className='px-2 py-2'><input onChange={e => handleChangeVariantDetails(childInd, e, "price")} value={variantItem.price} type="number" className='w-full rounded bg-gray-100 outline-none border-gray-200' /></td>
+                      <td className='px-2 py-2'><input onChange={e => handleChangeVariantDetails(childInd, e, "comparePrice")} value={variantItem.comparePrice} type="number" className='w-full rounded bg-gray-100 outline-none border-gray-200' /></td>
+                      <td className='px-2 py-2'><input onChange={e => handleChangeVariantDetails(childInd, e, "sku")} value={variantItem.sku} type="text" className='w-full rounded bg-gray-100 outline-none border-gray-200' /></td>
+                      <td className='px-2 py-2'><input onChange={e => handleChangeVariantDetails(childInd, e, "barcode")} value={variantItem.barcode} type="text" className='w-full rounded bg-gray-100 outline-none border-gray-200' /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            }
           </div>
         </div>
 
@@ -213,7 +337,6 @@ export default function AddProductComponent() {
             <label className="block text-xs font-bold">CR (%)</label>
             <input
               type="text"
-              id="first_name"
               className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
               placeholder="Type CR %"
@@ -225,7 +348,6 @@ export default function AddProductComponent() {
             <label className="block text-xs font-bold">AOV</label>
             <input
               type="text"
-              id="first_name"
               className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
               placeholder="Type AOV"
@@ -237,7 +359,6 @@ export default function AddProductComponent() {
             <label className="block text-xs font-bold">Payment gateway unit</label>
             <input
               type="text"
-              id="first_name"
               className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
               placeholder="Type unit"
@@ -245,16 +366,29 @@ export default function AddProductComponent() {
             />
           </div>
 
-          <div className='space-y-2'>
+          {/* <div className='space-y-2'>
             <label className="block text-xs font-bold">Country target</label>
             <input
               type="text"
-              id="first_name"
               className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
               placeholder="Type unit"
               required
             />
+          </div> */}
+          <div className='space-y-2'>
+            <label className="block text-xs font-bold">Country target</label>
+            <select
+              className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+    focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+              required
+            >
+              <option value="" disabled>Select a region</option>
+              <option value="US">US</option>
+              <option value="EU">EU</option>
+              <option value="ASIAN">ASIAN</option>
+              <option value="AFRICA">AFRICA</option>
+            </select>
           </div>
 
         </div>
@@ -266,6 +400,11 @@ export default function AddProductComponent() {
           <div className='flex items-center'>
             <input type="checkbox" className='rounded cursor-pointer' />
             <span className='ml-2 text-sm'>Available listing product</span>
+          </div>
+          <div className='flex items-center'>
+            <input type="checkbox" className='rounded cursor-pointer' />
+            <span className='ml-2 text-sm mr-1'>Only Premium </span>
+            <Crown size={16} color='black' />
           </div>
         </div>
       </div>
