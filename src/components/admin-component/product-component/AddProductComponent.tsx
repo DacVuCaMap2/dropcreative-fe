@@ -15,6 +15,7 @@ type variantDetails = {
   name: string,
   price: number,
   comparePrice: number,
+  quantity:number,
   image: string,
   sku: string,
   barcode: string
@@ -121,6 +122,7 @@ export default function AddProductComponent() {
           name: str,
           price: productData.price,
           comparePrice: productData.comparePrice,
+          quantity:1,
           image: "",
           sku: "",
           barcode: ""
@@ -305,6 +307,7 @@ export default function AddProductComponent() {
                     <th className='py-4'>Image</th>
                     <th className='py-4'>Price</th>
                     <th className='py-4'>Compare Price</th>
+                    <th className='py-4'>Quantity</th>
                     <th className='py-4'>Sku</th>
                     <th className='py-4'>Barcode</th>
                   </tr>
@@ -316,6 +319,7 @@ export default function AddProductComponent() {
                       <td className='px-2 py-2'><Image src={'/image/default/AIgen.jpg'} alt={'image'} width={200} height={50} className='rounded cursor-pointer'></Image></td>
                       <td className='px-2 py-2'><input onChange={e => handleChangeVariantDetails(childInd, e, "price")} value={variantItem.price} type="number" className='w-full rounded bg-gray-100 outline-none border-gray-200' /></td>
                       <td className='px-2 py-2'><input onChange={e => handleChangeVariantDetails(childInd, e, "comparePrice")} value={variantItem.comparePrice} type="number" className='w-full rounded bg-gray-100 outline-none border-gray-200' /></td>
+                      <td className='px-2 py-2'><input onChange={e => handleChangeVariantDetails(childInd, e, "quantity")} value={variantItem.quantity} type="number" className='w-full rounded bg-gray-100 outline-none border-gray-200' /></td>
                       <td className='px-2 py-2'><input onChange={e => handleChangeVariantDetails(childInd, e, "sku")} value={variantItem.sku} type="text" className='w-full rounded bg-gray-100 outline-none border-gray-200' /></td>
                       <td className='px-2 py-2'><input onChange={e => handleChangeVariantDetails(childInd, e, "barcode")} value={variantItem.barcode} type="text" className='w-full rounded bg-gray-100 outline-none border-gray-200' /></td>
                     </tr>
