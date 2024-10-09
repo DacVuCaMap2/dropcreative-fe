@@ -1,4 +1,5 @@
 // components/TinyMCEEditor.js
+'use client'
 import { Editor } from '@tinymce/tinymce-react';
 
 interface TinyMCEEditorProps {
