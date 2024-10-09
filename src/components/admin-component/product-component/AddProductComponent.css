@@ -1,0 +1,4 @@
+.add-component input::placeholder{
+    color: #b5b9be; /* Màu xám */
+    opacity: 1; /* Đảm bảo độ mờ là 100% */
+}

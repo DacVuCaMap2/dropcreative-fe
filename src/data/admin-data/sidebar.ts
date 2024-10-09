@@ -14,7 +14,7 @@ export const sideBarAdmin = [
             },
             {
                 name: "Product",
-                href:"/",
+                href:"/admin/all-product",
                 icon:Package,
                 select:"dashboard",
                 role:[1,2,3]
