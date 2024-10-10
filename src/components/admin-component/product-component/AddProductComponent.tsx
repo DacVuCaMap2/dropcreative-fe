@@ -147,7 +147,7 @@ export default function AddProductComponent() {
         <div className='flex flex-col w-2/3 px-2 space-y-6'>
           <div className='border px-4 py-4 text-neutral-600 space-y-4 shadow-lg'>
             <div className='space-y-2'>
-              <label className="block text-sm font-bold">Title *</label>
+              <label className="block text-sm font-bold">Product name *</label>
               <input
                 type="text"
                 value={productData.title}
@@ -269,47 +269,6 @@ export default function AddProductComponent() {
             </div>
           </div>
 
-
-
-          <div className='border px-4 text-neutral-600 space-y-4 shadow-lg py-4'>
-            <div>
-              <p className='font-bold'>Product personalization</p>
-              <p>For products customers may request additional personal details</p>
-
-            </div>
-            <label className="inline-flex items-center cursor-pointer">
-              <input type="checkbox" value="" className="sr-only peer" />
-              <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            </label>
-          </div>
-
-          <div className='border px-4 text-neutral-600 space-y-4 shadow-lg py-8'>
-            <p className='font-bold'>Assign parameters</p>
-            <div>
-              <label className="block text-sm font-bold mb-1">Facebook Pixel</label>
-              <input
-                type="text"
-                value={productData.title}
-                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-              focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
-                placeholder="Type title"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-bold mb-1">Google Analytics</label>
-              <input
-                type="text"
-                value={productData.title}
-                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-              focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
-                placeholder="Type title"
-                required
-              />
-            </div>
-          </div>
-
           <div className='border px-4 py-4 text-neutral-600 space-y-4 shadow-lg'>
             <div className='border-b pb-4'>
               <div className='flex flex-row justify-between items-center'>
@@ -385,6 +344,47 @@ export default function AddProductComponent() {
               }
             </div>
           </div>
+
+          <div className='border px-4 text-neutral-600 space-y-4 shadow-lg py-4'>
+            <div>
+              <p className='font-bold'>Product personalization</p>
+              <p>For products customers may request additional personal details</p>
+
+            </div>
+            <label className="inline-flex items-center cursor-pointer">
+              <input type="checkbox" value="" className="sr-only peer" />
+              <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className='border px-4 text-neutral-600 space-y-4 shadow-lg py-8'>
+            <p className='font-bold'>Tracking data</p>
+            <div>
+              <label className="block text-sm font-bold mb-1">Facebook Pixel</label>
+              <input
+                type="text"
+                value={productData.title}
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+              focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                placeholder="Type title"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold mb-1">Google Analytics</label>
+              <input
+                type="text"
+                value={productData.title}
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+              focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                placeholder="Type title"
+                required
+              />
+            </div>
+          </div>
+
+
 
         </div>
 
@@ -492,18 +492,27 @@ export default function AddProductComponent() {
                 <option value="FEMALE">FEMALE</option>
               </select>
             </div>
-            <div className='space-y-2'>
-              <label className="block text-xs font-bold">Age target</label>
-              <select
-                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-                focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
-                required defaultValue={""}
-              >
-                <option value="" disabled>Select age</option>
-                <option value="">3 - 18</option>
-                <option value="">18 - 65</option>
-                <option value="">65+</option>
-              </select>
+            <div className='flex flex-row space-x-4'>
+              <div className='space-y-2'>
+                <label className="block text-xs font-bold">Start Age</label>
+                <input
+                  type="text"
+                  className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                    focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                  placeholder="Type "
+                  required
+                />
+              </div>
+              <div className='space-y-2'>
+                <label className="block text-xs font-bold">End Age</label>
+                <input
+                  type="text"
+                  className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                    focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                  placeholder="Type "
+                  required
+                />
+              </div>
             </div>
 
           </div>
