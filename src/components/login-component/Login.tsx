@@ -11,7 +11,7 @@ const Login = () => {
     <div className="flex h-screen">
       <div className="w-9/12">
         <Image
-          src="/login/background.jpg"
+          src="/login/bgnew.png"
           width={1440}
           height={900}
           alt="Image"
