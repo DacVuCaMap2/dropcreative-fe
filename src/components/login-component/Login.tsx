@@ -20,7 +20,7 @@ const Login = () => {
       </div>
       {isLogin && (
         <div className="w-3/12">
-          <div className="w-80 m-0 m-auto h-screen pt-16 flex flex-col gap-7">
+          <div className="w-80 h-screen pt-16 flex flex-col gap-7">
             <div className="flex justify-center">
               <Image
                 src="/image/logo-font.png"
