@@ -150,7 +150,6 @@ export default function AddProductComponent() {
               <label className="block text-sm font-bold">Title *</label>
               <input
                 type="text"
-                id="first_name"
                 value={productData.title}
                 onChange={e => handleChange(e, "title")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
@@ -159,6 +158,23 @@ export default function AddProductComponent() {
                 required
               />
               <label className="block mb-2 text-xs">{productData.title.length}/225</label>
+            </div>
+
+            <div className='space-y-2'>
+              <label className="block text-xs font-bold">Country target</label>
+              <select
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                focus:ring-blue-500 focus:border-blue-500 block w-1/3 p-3"
+                required
+              >
+                <option value="" disabled>Select Categories</option>
+                <option value="PRODUCT_FASHION">Fashion</option>
+                <option value="PRODUCT_BEAUTY">Beauty</option>
+                <option value="PRODUCT_GAMING">Gaming</option>
+                <option value="PRODUCT_KITCHEN">Kitchen</option>
+                <option value="PRODUCT_HOME_DECOR">Home Decor</option>
+                <option value="PRODUCT_OFFICE_SUPPLIES">Office Supplies</option>
+              </select>
             </div>
 
             <div className='space-y-2'>

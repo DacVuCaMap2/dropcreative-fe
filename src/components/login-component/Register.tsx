@@ -11,8 +11,8 @@ const Register = (props: IProps) => {
 
   return (
     <div className="w-3/12">
-      <div className="w-full h-screen m-0 m-auto">
-        <div className="w-96 m-0 m-auto h-screen pt-14 flex flex-col gap-7">
+      <div className="w-full">
+        <div className="w-96 pt-14 flex flex-col gap-7">
           <div
             className="flex gap-2 text-blue-700 font-semibold text-sm cursor-pointer"
             onClick={() => {

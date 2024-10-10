@@ -21,7 +21,7 @@ const Login = () => {
       <div className="absolute bg-white px-10 py-10 h-screen overflow-auto">
         {isLogin && (
           <div className="w-3/12">
-            <div className="w-80 pt-16 flex flex-col gap-7">
+            <div className="w-80 pt-16 flex flex-col gap-7 ">
               <div className="flex justify-center">
                 <Image
                   src="/image/logo-font.png"
