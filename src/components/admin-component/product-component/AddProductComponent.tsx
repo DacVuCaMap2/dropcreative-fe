@@ -160,22 +160,7 @@ export default function AddProductComponent() {
               <label className="block mb-2 text-xs">{productData.title.length}/225</label>
             </div>
 
-            <div className='space-y-2'>
-              <label className="block text-xs font-bold">Country target</label>
-              <select
-                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-                focus:ring-blue-500 focus:border-blue-500 block w-1/3 p-3"
-                required
-              >
-                <option value="" disabled>Select Categories</option>
-                <option value="PRODUCT_FASHION">Fashion</option>
-                <option value="PRODUCT_BEAUTY">Beauty</option>
-                <option value="PRODUCT_GAMING">Gaming</option>
-                <option value="PRODUCT_KITCHEN">Kitchen</option>
-                <option value="PRODUCT_HOME_DECOR">Home Decor</option>
-                <option value="PRODUCT_OFFICE_SUPPLIES">Office Supplies</option>
-              </select>
-            </div>
+
 
             <div className='space-y-2'>
               <div className="flex items-center space-x-2">
@@ -286,7 +271,7 @@ export default function AddProductComponent() {
 
 
 
-          <div className='border px-4 text-neutral-600 space-y-4 shadow-lg py-8'>
+          <div className='border px-4 text-neutral-600 space-y-4 shadow-lg py-4'>
             <div>
               <p className='font-bold'>Product personalization</p>
               <p>For products customers may request additional personal details</p>
@@ -298,6 +283,32 @@ export default function AddProductComponent() {
             </label>
           </div>
 
+          <div className='border px-4 text-neutral-600 space-y-4 shadow-lg py-8'>
+            <p className='font-bold'>Assign parameters</p>
+            <div>
+              <label className="block text-sm font-bold mb-1">Facebook Pixel</label>
+              <input
+                type="text"
+                value={productData.title}
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+              focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                placeholder="Type title"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold mb-1">Google Analytics</label>
+              <input
+                type="text"
+                value={productData.title}
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+              focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                placeholder="Type title"
+                required
+              />
+            </div>
+          </div>
 
           <div className='border px-4 py-4 text-neutral-600 space-y-4 shadow-lg'>
             <div className='border-b pb-4'>
@@ -384,6 +395,24 @@ export default function AddProductComponent() {
               <p className='font-bold'>Product attribute</p>
               <p>Product description on sample search page</p>
             </div>
+
+            <div className='space-y-2'>
+              <label className="block text-xs font-bold">Categories</label>
+              <select
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                defaultValue="" // Sử dụng defaultValue để thiết lập giá trị mặc định
+                required
+              >
+                <option value="" disabled>Select Categories</option>
+                <option value="PRODUCT_FASHION">Fashion</option>
+                <option value="PRODUCT_BEAUTY">Beauty</option>
+                <option value="PRODUCT_GAMING">Gaming</option>
+                <option value="PRODUCT_KITCHEN">Kitchen</option>
+                <option value="PRODUCT_HOME_DECOR">Home Decor</option>
+                <option value="PRODUCT_OFFICE_SUPPLIES">Office Supplies</option>
+              </select>
+            </div>
             <div className='space-y-2'>
               <label className="block text-xs font-bold">CR (%)</label>
               <input
@@ -449,6 +478,31 @@ export default function AddProductComponent() {
                 <option value="EU">EU</option>
                 <option value="ASIAN">ASIAN</option>
                 <option value="AFRICA">AFRICA</option>
+              </select>
+            </div>
+            <div className='space-y-2'>
+              <label className="block text-xs font-bold">Gender target</label>
+              <select
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                required defaultValue={"All"}
+              >
+                <option value="All">All</option>
+                <option value="MALE">MALE</option>
+                <option value="FEMALE">FEMALE</option>
+              </select>
+            </div>
+            <div className='space-y-2'>
+              <label className="block text-xs font-bold">Age target</label>
+              <select
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                required defaultValue={""}
+              >
+                <option value="" disabled>Select age</option>
+                <option value="">3 - 18</option>
+                <option value="">18 - 65</option>
+                <option value="">65+</option>
               </select>
             </div>
 
