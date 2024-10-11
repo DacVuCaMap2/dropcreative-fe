@@ -32,7 +32,7 @@ const EnterCode = (props: IPropsEnterCode) => {
                 Enter verification code
               </p>
               <span className="text-center text-sm text-zinc-500">
-                We're sent a code to{" "}
+                We&#39;re sent a code to
                 <span className="text-black font-semibold">
                   hello@gmail.com
                 </span>
@@ -71,7 +71,7 @@ const EnterCode = (props: IPropsEnterCode) => {
                     </Form.Item>
                   </div>
                   <div className="text-center text-sm text-zinc-500">
-                    Didn't get a code?{" "}
+                    Didn&#39;t get a code?
                     <span className="text-black font-semibold underline">
                       Click to resend.
                     </span>
