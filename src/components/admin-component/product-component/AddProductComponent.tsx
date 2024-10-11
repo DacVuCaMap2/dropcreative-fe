@@ -1,17 +1,18 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import './AddProductComponent.css'
-import { CircleAlert, Crown, Trash, Type } from 'lucide-react'
+import { CircleAlert, Crown, Trash, Type, X } from 'lucide-react'
 import { Tooltip } from 'react-tooltip'
 import TinyMCEEditor from '@/components/TinyMCE/TinyMCEEditor'
 import Product, { getNewProduct } from '@/model/Product'
 import Image from 'next/image'
 import { Button, ButtonGroup } from '@material-tailwind/react'
-import { div } from 'framer-motion/client'
+import { div, option } from 'framer-motion/client'
 
 type productVariant = {
   optionName: string,
-  optionValue: string[]
+  optionValue: string[],
+  optionInput: string
 }
 type variantDetails = {
   name: string,
@@ -53,13 +54,16 @@ export default function AddProductComponent() {
 
   const handleAddVariant = () => {
     if (listVariant.length < 3) {
-      const newVariant: productVariant = { optionName: "", optionValue: [] };
+      const newVariant: productVariant = { optionName: "", optionValue: [], optionInput: "" };
       setListVariant([...listVariant, newVariant]);
     }
   };
   const handleDeleteVariant = (ind: number) => {
     const newList = listVariant.filter((item: productVariant, childIndex) => childIndex != ind);
     setListVariant(newList);
+    if (newList.length===0) {
+      setListVariantDetails([]);
+    }
   }
   const handleChangeVariantName = (ind: number, e: any) => {
     const value = e.target.value;
@@ -72,18 +76,49 @@ export default function AddProductComponent() {
     })
     setListVariant(newListVariant);
   }
+
+
   const handleChangeVariantValue = (ind: number, e: any) => {
     const value = e.target.value;
-    const valuesArray: string[] = value.split(',');
     const tempListVariant = [...listVariant];
     const newListVariant = tempListVariant.map((item: productVariant, index) => {
       if (index === ind) {
-        return { ...item, optionValue: valuesArray };
+        return { ...item, optionInput: value };
       }
       return item;
     })
     setListVariant(newListVariant);
   }
+
+  const handleKeyDownVariant = (e: any, ind: number) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const tempListVariant = [...listVariant];
+      const newListVariant = tempListVariant.map((item: productVariant, index) => {
+        if (index === ind && item.optionInput) {
+          const tempOptionValue = item.optionValue;
+          tempOptionValue.push(item.optionInput);
+          return { ...item, optionInput: "", optionValue: tempOptionValue };
+        }
+        return item;
+      })
+      setListVariant(newListVariant);
+    }
+  }
+
+  const handleDelChildVariant = (childInd: number, ind: number) => {
+    const tempListVariant = [...listVariant];
+    const newListVariant = tempListVariant.map((item: productVariant, index) => {
+      if (index === ind) {
+        const tempOptionValue = item.optionValue.filter((str:string,childIndex)=>childIndex!=childInd);
+        return { ...item, optionValue: tempOptionValue };
+      }
+      return item;
+    })
+    setListVariant(newListVariant);
+  }
+
+
   const handleChangeVariantDetails = (ind: number, e: any, key: string) => {
     const value = e.target.value;
     const newDetails = [...listVariantDetails].map((item: variantDetails, index) => {
@@ -95,9 +130,10 @@ export default function AddProductComponent() {
     setListVariantDetails(newDetails);
   }
   useEffect(() => {
-    if (listVariant.length > 0) {
+    if (listVariant.length > 0 && listVariant[0].optionValue.length>0) {
       const combineOptionValues = (options: productVariant[]): string[] => {
-        const values: string[][] = options.map(option => option.optionValue);
+        const filterOption = options.filter(option=>option.optionValue.length>0);
+        const values: string[][] = filterOption.map(option => option.optionValue);
 
         const result: string[][] = [];
 
@@ -115,15 +151,19 @@ export default function AddProductComponent() {
         };
 
         combine([], values);
-        return result.map(items => items.join(', '));
+        return result.map(items => items.join(','));
       };
 
       const result = combineOptionValues(listVariant);
 
       // Kiểm tra độ dài trước khi tạo tempVariantDetails
       const limitedResult = result.slice(0, 50); // Giới hạn độ dài mảng là 50
-
+      const oldListVariantDetails = [...listVariantDetails]; 
       const tempVariantDetails = limitedResult.map((str: string) => {
+        const oldDetail = oldListVariantDetails.find(oldStr=>oldStr.name===str)
+        if (oldDetail) {
+          return oldDetail
+        }
         return {
           name: str,
           price: productData.price,
@@ -269,6 +309,24 @@ export default function AddProductComponent() {
             </div>
           </div>
 
+          <div className='border px-4 text-neutral-600 space-y-4 shadow-lg py-4'>
+            <div>
+              <p className='font-bold'>Payment method (dang phat trien....)</p>
+              <p>Choose a payment method for this product</p>
+            </div>
+            <div className='space-y-2'>
+              <label className="block text-xs font-bold">Payment gateway </label>
+              <select
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-3"
+                required defaultValue={""}
+              >
+                <option value="MALE">Your paypal </option>
+                <option value="FEMALE">... card shielđ</option>
+              </select>
+            </div>
+          </div>
+
           <div className='border px-4 py-4 text-neutral-600 space-y-4 shadow-lg'>
             <div className='border-b pb-4'>
               <div className='flex flex-row justify-between items-center'>
@@ -281,7 +339,7 @@ export default function AddProductComponent() {
             </div>
             <div>
               {listVariant.map((item: productVariant, index) => (
-                <div key={index} className='flex flex-row space-x-4 items-center justify-center mb-4'>
+                <div key={index} className='flex flex-row space-x-4 justify-center mb-4 border-b py-2'>
                   <div className='flex flex-col'>
                     <label htmlFor="" className='font-bold text-sm'>Option name</label>
                     <input
@@ -295,16 +353,25 @@ export default function AddProductComponent() {
                     />
                   </div>
                   <div className='flex flex-col flex-grow'>
-                    <label htmlFor="" className='font-bold text-sm'>Option value (press , to separate values. Example | size :xs,s,xl,...) </label>
+                    <label htmlFor="" className='font-bold text-sm'>Option value <span className='font-thin'>(press 'Enter' to separate values. Example | size :xs,s,xl,...)</span> </label>
                     <input
                       type="text"
-                      value={item.optionValue.join(',')}
+                      value={item.optionInput}
                       onChange={(e) => handleChangeVariantValue(index, e)}
+                      onKeyDown={(e) => handleKeyDownVariant(e, index)}
                       className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-                    focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                      focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                       placeholder="Separate options with comma "
                       required
                     />
+                    <div className=' w-full flex flex-row flex-wrap py-1'>
+                      {item.optionValue.map((str: string, childIndex) => (
+                        <div key={childIndex} className='bg-gray-200 mr-2 pl-2 flex flex-row space-x-4 items-center rounded mb-2'>
+                          <span>{str}</span>
+                          <button onClick={() => handleDelChildVariant(childIndex, index)} className='h-full hover:bg-gray-300 py-2 px-1'><X size={20} /></button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   <button onClick={() => handleDeleteVariant(index)} className='p-2 hover:bg-gray-200 rounded'>
                     <Trash />
@@ -493,7 +560,7 @@ export default function AddProductComponent() {
               </select>
             </div>
             <div className='flex flex-row space-x-4'>
-              <div className='space-y-2'>
+              <div className='space-y-2 w-full'>
                 <label className="block text-xs font-bold">Start Age</label>
                 <input
                   type="text"
@@ -503,7 +570,7 @@ export default function AddProductComponent() {
                   required
                 />
               </div>
-              <div className='space-y-2'>
+              <div className='space-y-2 w-full'>
                 <label className="block text-xs font-bold">End Age</label>
                 <input
                   type="text"
@@ -527,8 +594,12 @@ export default function AddProductComponent() {
             </div>
             <div className='flex items-center'>
               <input type="checkbox" className='rounded cursor-pointer' />
-              <span className='ml-2 text-sm mr-1'>Only Premium </span>
+              <span className='ml-2 text-sm mr-1'>Premium </span>
               <Crown size={16} color='black' />
+            </div>
+            <div className='flex items-center'>
+              <input type="checkbox" className='rounded cursor-pointer' />
+              <span className='ml-2 text-sm mr-1'>Free </span>
             </div>
           </div>
           <div className='border px-4 py-4 text-neutral-600 space-y-4 shadow-lg'>
