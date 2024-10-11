@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./AddProductComponent.css";
-import { CircleAlert, Crown, Trash, Type, X } from "lucide-react";
+import { CircleAlert, Crown, Save, Trash, Type, X } from "lucide-react";
 import { Tooltip } from "react-tooltip";
 import TinyMCEEditor from "@/components/TinyMCE/TinyMCEEditor";
 import Product, { getNewProduct } from "@/model/Product";
@@ -31,6 +31,8 @@ export default function AddProductComponent() {
   const [contentCalling, setContentCalling] = useState(
     "<p>Initial content</p>"
   );
+  const [videos, setVideos] = useState<File[]>([]);
+  const [photos, setPhotos] = useState<File[]>([]);
   const [listVariantDetails, setListVariantDetails] = useState<
     variantDetails[]
   >([]);
@@ -209,12 +211,61 @@ export default function AddProductComponent() {
     }
   }, [listVariant]);
 
+
+  //file and images
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleAddVideoClick = () => {
+    fileInputRef.current?.click(); // Kích hoạt sự kiện click của input
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files?.[0];
+    if (files) {
+      // Xử lý tệp được chọn ở đây
+      const temp = [...videos];
+      temp.push(files)
+      if (temp.length === 3) {
+        temp.splice(0, 1); // Xóa video đầu tiên
+      }
+      setVideos(temp);
+    }
+  };
+
+  //images
+  const fileImgtRef = useRef<HTMLInputElement | null>(null);
+  const handleImgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newPhotos = Array.from(files);
+      const oldLenght = photos.length;
+      let tempList =  [...photos, ...newPhotos];
+      if (tempList.length-10>0) {
+        tempList = tempList.slice(tempList.length-10, tempList.length)
+      }
+      setPhotos(tempList);
+    }
+  };
+  const handleAddMediaClick = () => {
+    if (fileImgtRef.current) {
+      fileImgtRef.current.click();
+    }
+  };
   return (
     <div>
-      <p>
-        Build a landing page to display demos on search pages or sell products
-        on the market
-      </p>
+      <div className="flex flex-row items-center justify-between">
+        <div>
+          <p>
+            Build a landing page to display demos on search pages or sell products
+            on the market
+          </p>
+        </div>
+        <button className="flex items-center bg-blue-500 hover:bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
+          <Save size={16} className="mr-2" />
+          Save
+        </button>
+      </div>
       <div className="flex flex-row w-full add-component py-4 space-x-2">
         <div className="flex flex-col w-2/3 px-2 space-y-6">
           <div className="border px-4 py-4 text-neutral-600 space-y-4 shadow-lg">
@@ -287,29 +338,75 @@ export default function AddProductComponent() {
             </div>
           </div>
 
-          <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
-            <div className="flex flex-row justify-between items-center">
+          <div className="border px-4 text-neutral-600 space-y-6 shadow-lg py-8">
+            <div className="flex flex-row justify-between items-center ">
               <span className="font-bold">
-                Videos (0/2) (dang phat trien ...)
+                Videos ({videos.length}/2) (dang phat trien ...)
               </span>
               <div className="flex flex-col">
-                <button className="text-blue-500 hover:underline">
+                <button className="text-blue-500 hover:underline" onClick={handleAddVideoClick}>
                   Add Video
                 </button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="video/*" // Chỉ cho phép chọn video
+                  style={{ display: 'none' }} // Ẩn input
+                />
               </div>
             </div>
+            {videos.length > 0 &&
+              <div className="flex flex-row border-t pt-4 justify-center space-x-4">
+                {videos.map((item: File, index) => (
+                  <div key={index} className="mb-4 rounded-2xl overflow-auto shadow-xl">
+                    <video
+                      width="320"
+                      height="240"
+                      controls
+                      src={URL.createObjectURL(item)} // Tạo URL tạm thời cho video
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                ))}
+              </div>}
           </div>
+
+
           <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
             <div className="flex flex-row justify-between items-center">
               <span className="font-bold">
-                Photos (0/10) (dang phat trien ...)
+                Photos ({photos.length}/10) (dang phat trien ...)
               </span>
               <div className="flex flex-col">
-                <button className="text-blue-500 hover:underline">
-                  Add media
+                <button className="text-blue-500 hover:underline" onClick={handleAddMediaClick}>
+                  Add photos
                 </button>
+                <input
+                  type="file"
+                  ref={fileImgtRef}
+                  onChange={handleImgChange}
+                  accept="image/*" // Chỉ cho phép chọn ảnh
+                  multiple // Cho phép chọn nhiều ảnh
+                  style={{ display: 'none' }} // Ẩn input
+                />
               </div>
             </div>
+            {photos.length > 0 && (
+              <div className="grid grid-cols-5 gap-4 border-t pt-4 ">
+                {photos.map((item: File, index) => (
+                  <div key={index} className="flex flex-col items-center rounded-lg border shadow-xl">
+                    <img
+                      src={URL.createObjectURL(item)} // Tạo URL tạm thời cho ảnh
+                      alt={item.name}
+                      className="w-36 h-36 object-cover" // Kích thước ảnh
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
           </div>
           <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-4">
             <span className="font-bold">Pricing</span>
