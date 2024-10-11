@@ -1,11 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 import Register from "./Register";
 import { FieldType } from "./types";
+import { authLogin } from "@/api/api";
+import { AxiosResponse } from "axios";
+import { TypeLogin, TypeResponse } from "@/types/common";
+import { redirect, useRouter } from "next/navigation";
 
 const Login = () => {
+  const [form] = Form.useForm();
+  const router = useRouter();
   const [isRegister, setIsRegister] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [backgroundImage, setBackgroundImage] = useState("");
@@ -23,6 +29,18 @@ const Login = () => {
     const randomIndex = Math.floor(Math.random() * backgrounds.length);
     setBackgroundImage(backgrounds[randomIndex]);
   }, []);
+  const handleLogin = async (data: TypeLogin) => {
+    try {
+      const res: AxiosResponse<TypeResponse> = await authLogin(data);
+      if (res.data.status === 0) {
+        message.error(res.data.message);
+      } else {
+        router.push("/");
+      }
+    } catch (error: any) {
+      message.error("error", error?.data?.message);
+    }
+  };
   return (
     <div className="flex h-screen relative">
       <div className="w-full h-screen">
@@ -57,11 +75,13 @@ const Login = () => {
               </p>
               <div className="flex justify-center">
                 <Form
+                  form={form}
                   name="basic"
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
                   initialValues={{ remember: true }}
                   autoComplete="off"
+                  onFinish={(values) => handleLogin(values)}
                   className="w-9/12"
                 >
                   <label className="text-sm font-medium	">
@@ -94,7 +114,10 @@ const Login = () => {
                     <Input.Password className="w-60 h-9" />
                   </Form.Item>
 
-                  <Form.Item<FieldType> name="remember" valuePropName="checked">
+                  <Form.Item<FieldType>
+                    name="isRemember"
+                    valuePropName="checked"
+                  >
                     <Checkbox>Stay logged in</Checkbox>
                   </Form.Item>
 

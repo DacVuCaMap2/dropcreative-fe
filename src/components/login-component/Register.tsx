@@ -1,20 +1,40 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { ChevronLeft } from "lucide-react";
 import { FieldType, IProps } from "./types";
 import EnterCode from "./EnterCode";
+import { TypeRegister, TypeResponse } from "@/types/common";
+import { AxiosResponse } from "axios";
+import { authRegister } from "@/api/api";
 
 const Register = (props: IProps) => {
   const { setIsLogin, setIsRegister } = props;
   const [form] = Form.useForm();
   const [isNavigateEnterCode, setIsNavigateEnterCode] = useState(false);
 
+  const handleRegister = async (data: TypeRegister) => {
+    try {
+      const res: AxiosResponse<TypeResponse> = await authRegister(data);
+      if (res.data.status === 0) {
+        message.error(res.data.message);
+      } else {
+        setIsNavigateEnterCode(true);
+      }
+    } catch (error: any) {
+      message.error("error", error?.data?.message);
+    }
+  };
   return (
     <>
       {isNavigateEnterCode ? (
-        <EnterCode isNavigateEnterCode={isNavigateEnterCode} />
+        <EnterCode
+          isNavigateEnterCode={isNavigateEnterCode}
+          email={form.getFieldValue("email")}
+          setIsRegister={setIsRegister}
+          setIsNavigateEnterCode={setIsNavigateEnterCode}
+        />
       ) : (
         <div className="w-3/12">
           <div className="w-80 flex flex-col gap-7">
@@ -44,6 +64,7 @@ const Register = (props: IProps) => {
               <Form
                 form={form}
                 name="basic"
+                onFinish={(values) => handleRegister(values)}
                 initialValues={{ remember: true }}
                 autoComplete="off"
                 className="w-9/12"
@@ -78,7 +99,7 @@ const Register = (props: IProps) => {
                   Username<span className="text-red-500">*</span>
                 </label>
                 <Form.Item<FieldType>
-                  name="username"
+                  name="userName"
                   rules={[
                     { required: true, message: "Please input your username!" },
                   ]}
@@ -103,7 +124,7 @@ const Register = (props: IProps) => {
                 >
                   <Input className="w-60 rounded-md h-9 border-slate-300" />
                 </Form.Item>
-                <Form.Item<FieldType> name="remember" valuePropName="checked">
+                {/* <Form.Item<FieldType> name="remember" valuePropName="checked">
                   <div className="w-60">
                     <Checkbox className="mt-1" />
                     <span className="ml-2">
@@ -111,13 +132,12 @@ const Register = (props: IProps) => {
                       Company by email.
                     </span>
                   </div>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
                   <Button
                     htmlType="submit"
                     type="primary"
                     className="w-60 h-10 rounded text-base font-medium"
-                    onClick={() => setIsNavigateEnterCode(true)}
                   >
                     Sign up
                   </Button>
@@ -137,9 +157,6 @@ const Register = (props: IProps) => {
               </span>
             </div>
           </div>
-          {isNavigateEnterCode && (
-            <EnterCode isNavigateEnterCode={isNavigateEnterCode} />
-          )}
         </div>
       )}
     </>

@@ -1,21 +1,46 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { ChevronLeft } from "lucide-react";
 import { FieldType, IPropsEnterCode } from "./types";
+import { TypeResponse } from "@/types/common";
+import { AxiosResponse } from "axios";
+import { checkActiveCode } from "@/api/api";
 
 const EnterCode = (props: IPropsEnterCode) => {
-  const { isNavigateEnterCode } = props;
+  const { isNavigateEnterCode, email, setIsRegister, setIsNavigateEnterCode } =
+    props;
   const [form] = Form.useForm();
-
+  const [codeActive, setActiveCode] = useState<string>();
+  const handleSubmitCode = async () => {
+    try {
+      const res: AxiosResponse<TypeResponse> = await checkActiveCode(
+        codeActive,
+        email
+      );
+      if (res.data.status === 0) {
+        message.error(res.data.message);
+      } else {
+        window.location.reload();
+      }
+    } catch (error: any) {
+      message.error("error", error?.data?.message);
+    }
+  };
   return (
     <>
       {isNavigateEnterCode && (
         <>
           <div className="w-3/12">
             <div className="w-80 flex flex-col gap-7">
-              <div className="flex gap-2 text-blue-700 font-semibold text-sm cursor-pointer">
+              <div
+                className="flex gap-2 text-blue-700 font-semibold text-sm cursor-pointer"
+                onClick={() => {
+                  setIsRegister(true);
+                  setIsNavigateEnterCode(false);
+                }}
+              >
                 <ChevronLeft width={20} height={20} />
                 <span className="text-sm">Back</span>
               </div>
@@ -32,32 +57,35 @@ const EnterCode = (props: IPropsEnterCode) => {
                 Enter verification code
               </p>
               <span className="text-center text-sm text-zinc-500">
-                We&#39;re sent a code to
-                <span className="text-black font-semibold">
-                  hello@gmail.com
-                </span>
+                We&#39;re sent a code to&ensp;
+                <span className="text-black font-semibold">{email}</span>
               </span>
               <div className="flex justify-center">
                 <Form
+                  form={form}
                   name="basic"
                   labelCol={{ span: 8 }}
                   wrapperCol={{ span: 16 }}
+                  onFinish={handleSubmitCode}
                   initialValues={{ remember: true }}
                   autoComplete="off"
                   className="w-9/12"
                 >
                   <div className="flex flex-col justify-center">
                     <Form.Item<FieldType>
-                      name="codeVerify"
+                      name="activeCode"
                       rules={[
                         {
                           required: true,
-                          message: "Please input your verify code!",
+                          message: "Please input your code!",
                         },
                       ]}
                     >
                       <div className="w-60">
-                        <Input.OTP formatter={(str) => str.toUpperCase()} />
+                        <Input.OTP
+                          formatter={(str) => str.toUpperCase()}
+                          onChange={(value) => setActiveCode(value)}
+                        />
                       </div>
                     </Form.Item>
                     <Form.Item>
@@ -70,12 +98,12 @@ const EnterCode = (props: IPropsEnterCode) => {
                       </Button>
                     </Form.Item>
                   </div>
-                  <div className="text-center text-sm text-zinc-500">
+                  {/* <div className="text-center text-sm text-zinc-500">
                     Didn&#39;t get a code?
                     <span className="text-black font-semibold underline">
                       Click to resend.
                     </span>
-                  </div>
+                  </div> */}
                 </Form>
               </div>
             </div>
