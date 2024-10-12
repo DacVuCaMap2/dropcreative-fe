@@ -69,8 +69,8 @@ const PhotoGallery: React.FC<Props> = (props: Props) => {
             // Combine new unique photos with existing ones, limiting the number to 10
             let tempList = [...photos, ...uniqueNewPhotos];
             // If there are more than 10, keep the most recent 10
-            if (tempList.length > 10) {
-                tempList = tempList.slice(-10);
+            if (tempList.length > 25) {
+                tempList = tempList.slice(-25);
             }
 
             setPhotos(tempList);
@@ -114,7 +114,7 @@ const PhotoGallery: React.FC<Props> = (props: Props) => {
         <div>
             <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
                 <div className="flex flex-row justify-between items-center">
-                    <span className="font-bold">Photos ({photos.length}/10)</span>
+                    <span className="font-bold">Photos</span>
                     <div className="flex flex-col">
                         <button
                             className="text-blue-500 hover:underline"

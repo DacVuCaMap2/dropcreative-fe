@@ -29,9 +29,9 @@ type variantDetails = {
   status: number;
 };
 type Props = {
-  accountId:string
+  accountId: string
 }
-export default function AddProductComponent(props:Props) {
+export default function AddProductComponent(props: Props) {
   const accountId = props.accountId;
   console.log(accountId);
   const [productData, setProductData] = useState<Product>(getNewProduct());
@@ -434,7 +434,7 @@ export default function AddProductComponent(props:Props) {
           <div className="border px-4 text-neutral-600 space-y-6 shadow-lg py-8">
             <div className="flex flex-row justify-between items-center ">
               <span className="font-bold">
-                Videos ({videos.length}/2) (dang phat trien ...)
+                Videos
               </span>
               <div className="flex flex-col">
                 <button className="text-blue-500 hover:underline" onClick={handleAddVideoClick}>
@@ -452,7 +452,7 @@ export default function AddProductComponent(props:Props) {
             {videos.length > 0 &&
               <div className="flex flex-row border-t pt-4 justify-center space-x-4">
                 {videos.map((item: File, index) => (
-                  <div key={index} className="mb-4 rounded-2xl overflow-auto shadow-xl relative">
+                  <div key={index} className="mb-4 rounded-2xl overflow-auto shadow-xl relative min-h-40">
                     <video
                       width="320"
                       height="240"
@@ -611,7 +611,7 @@ export default function AddProductComponent(props:Props) {
 
           <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-4">
             <div>
-              <p className="font-bold">Payment method (dang phat trien....)</p>
+              <p className="font-bold">Payment method</p>
               <p>Choose a payment method for this product</p>
             </div>
             <div className="space-y-2">
@@ -634,7 +634,7 @@ export default function AddProductComponent(props:Props) {
             <div className="border-b pb-4">
               <div className="flex flex-row justify-between items-center">
                 <span className="font-bold">
-                  Variant ({listVariantDetails.length}/50)
+                  Variant
                 </span>
                 <div className="flex flex-col">
                   <button
@@ -913,6 +913,7 @@ export default function AddProductComponent(props:Props) {
                 value={productData.categoryId}
                 defaultValue="" // Sử dụng defaultValue để thiết lập giá trị mặc định
                 required
+                onChange={e => handleChange(e, "categoryId")}
               >
                 <option value="0" disabled>
                   Select Categories
@@ -1048,6 +1049,52 @@ export default function AddProductComponent(props:Props) {
                 />
               </div>
             </div>
+
+            {videos.length > 0 &&
+              <div className="space-y-2">
+                <label className="block text-xs font-bold">Videos</label>
+                {videos.length > 0 &&
+                  <div className="flex flex-row border-t pt-4 justify-center space-x-4">
+                    {videos.map((item: File, index) => (
+                      <div key={index} className="mb-4 rounded-2xl overflow-auto shadow-xl relative">
+                        <video
+                          width="160"
+                          height="120"
+                          controls
+                          src={URL.createObjectURL(item)} // Tạo URL tạm thời cho video
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                        <div className="absolute right-2 top-2">
+                          <button onClick={() => setVideos(videos.filter((vid: File, ind) => ind != index))} className="p-2 bg-white">
+                            <Trash size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>}
+              </div>
+            }
+
+
+            {photos.length>0 &&
+            <div className="space-y-2">
+              <label className="block text-xs font-bold">Photos</label>
+              {photos.length > 0 && (
+                <div className="grid grid-cols-5 gap-4 border-t pt-4 ">
+                  {photos.map((item: File, index) => (
+                    <div key={index} className="flex flex-col items-center rounded-lg border shadow-xl">
+                      <img
+                        src={URL.createObjectURL(item)} // Tạo URL tạm thời cho ảnh
+                        alt={item.name}
+                        className="w-16 h-16 object-cover" // Kích thước ảnh
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            }
           </div>
 
           <div className="border px-4 py-4 text-neutral-600 space-y-4 shadow-lg">
@@ -1089,7 +1136,6 @@ export default function AddProductComponent(props:Props) {
             <button className="border p-2 rounded font-bold hover:bg-neutral-300">
               Select domain
             </button>{" "}
-            (dang phat trien....)
           </div>
         </div>
       </div>

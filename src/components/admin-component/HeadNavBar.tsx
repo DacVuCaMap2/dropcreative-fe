@@ -14,10 +14,11 @@ export default function HeadNavBar() {
         <header className="w-full text-black border-b ">
             <nav className="bg-white border-gray-200 dark:bg-gray-900 flex justify-between items-center px-4 py-2">
                 {/* Nút Upload */}
-                <button className="flex items-center bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
+                {/* <button className="flex items-center bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
                     <Upload size={16} className="mr-2" />
                     Upload File
-                </button>
+                </button> */}
+                <span></span>
 
                 {/* Các biểu tượng bên phải */}
                 <div className="flex items-center space-x-8">
