@@ -2,7 +2,7 @@ class Product {
     id: any;
     title: string;
     description: string;
-    accountId: number; 
+    accountId: number|null; 
     categoryId: number; 
     status: number;
     serviceType: number; 
@@ -32,7 +32,7 @@ class Product {
         id: any;
         title: string;
         description: string; 
-        accountId: number;   
+        accountId: number|null;   
         categoryId: number;  
         status: number;
         serviceType: number;  
@@ -97,7 +97,7 @@ export default Product;
 //         id: null,
 //         title: "",
 //         description: "",  
-//         accountId: 0, 
+//         accountId: null, 
 //         categoryId: 0,
 //         status: 0,
 //         serviceType: 0,

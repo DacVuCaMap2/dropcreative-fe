@@ -8,7 +8,8 @@ import Product, { getNewProduct } from "@/model/Product";
 import Image from "next/image";
 import PhotoGallery from "@/components/imgdrag/ImageDrag";
 import Modal from 'react-modal';
-import { div } from "framer-motion/client";
+import { div, form } from "framer-motion/client";
+import axios from "axios";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -22,9 +23,13 @@ type variantDetails = {
   image: File | null;
   sku: string;
   barcode: string;
+  fileName: string;
+  value: string;
+  status: number;
 };
 
 export default function AddProductComponent() {
+  const accountId = 1;
   const [productData, setProductData] = useState<Product>(getNewProduct());
   const [listVariant, setListVariant] = useState<productVariant[]>([]);
   const [description, setDescription] = useState(`<p>${productData.description}</p>`);
@@ -33,6 +38,12 @@ export default function AddProductComponent() {
   const [photos, setPhotos] = useState<File[]>([]);
   const [isOpenSelectPhoto, setIsOpenSelectPhoto] = useState(false);
   const [indCurrent, setIndCurrent] = useState(0);
+  const [serviceT, setServiceT] = useState({
+    free: productData.serviceType === 1 || productData.serviceType === 3 ? true : false
+    , premium: productData.serviceType === 2 || productData.serviceType === 3 ? true : false
+  });
+
+  const [listVariantDetails, setListVariantDetails] = useState<variantDetails[]>([]);
   const openModal = () => {
     document.body.style.overflow = 'hidden';
     setIsOpenSelectPhoto(true);
@@ -42,9 +53,7 @@ export default function AddProductComponent() {
     document.body.style.overflow = 'unset';
     setIsOpenSelectPhoto(false);
   };
-  const [listVariantDetails, setListVariantDetails] = useState<
-    variantDetails[]
-  >([]);
+
 
   const handleEditorChange = (newContent: any) => {
     setDescription(newContent);
@@ -52,10 +61,14 @@ export default function AddProductComponent() {
   const handleContentCalling = (newContent: any) => {
     setContentCalling(contentCalling);
   };
-
+  const handleServiceType = (e: any, key: string) => {
+    const value = e.target.checked;
+    console.log(value);
+    setServiceT({ ...serviceT, [key]: value })
+  }
   const handleChange = (e: any, key: string) => {
     let value = e.target.value;
-    if (key==="isPersonal") {
+    if (key === "isPersonal") {
       value = e.target.checked;
     }
     console.log(value);
@@ -218,6 +231,9 @@ export default function AddProductComponent() {
           image: photos.length > 0 ? photos[0] : null,
           sku: "",
           barcode: "",
+          value: "",
+          fileName: "",
+          status: 1
         };
       });
 
@@ -264,11 +280,6 @@ export default function AddProductComponent() {
   };
 
 
-  const handleSave = () => {
-    console.log(productData);
-    console.log(videos);
-    console.log(photos);
-  }
 
   const handleSelectVariantImg = (img: File) => {
     const variantInd = indCurrent;
@@ -282,6 +293,52 @@ export default function AddProductComponent() {
     closeModal();
   }
 
+
+  const handleSubmit = async () => {
+    console.log(productData);
+    console.log(videos);
+    console.log(photos);
+    console.log(listVariantDetails);
+    console.log(serviceT);
+    const productVariants = listVariantDetails.map((item: variantDetails, index) => {
+      return { value: item.name,status:item.status,price:item.price,comparePrice:item.comparePrice,quantity:item.quantity,
+        sku:item.sku,barcode:item.barcode, fileName: item.image ? `${index}-${accountId}image${Date.now()}` : '' }
+    })
+    let serviceType = 4;
+    serviceType = serviceT.free && serviceT.premium ? 3 : serviceType;
+    serviceType = serviceT.free && !serviceT.premium ? 1 : serviceType;
+    serviceType = !serviceT.free && serviceT.premium ? 2 : serviceType;
+    let variantValue = listVariant.map(item => item.optionName).join('./');
+    let postData = { ...productData, productVariants: productVariants, serviceType: serviceType, accountId: accountId,variant:variantValue };
+    const {id,...filterPostData} = postData;
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(filterPostData));
+
+    if (photos.length > 0) {
+      photos.forEach((photo, index) => {
+        formData.append(`images`, photo); // Ghi chú: tên "images" phải khớp với tên ở server
+      });
+    }
+    if (videos.length > 0) {
+      videos.forEach((video, index) => {
+        formData.append(`videos`, video); // Ghi chú: tên "videos" phải khớp với tên ở server
+      });
+    }
+    console.log(photos,videos);
+    console.log(filterPostData);
+    let url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
+    try {
+
+      const response = await axios.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
+        },
+      });
+      console.log('Success:', response.data.data);
+    } catch (error) {
+      console.error('Error:', error);
+    } 
+  }
   return (
     <div className="relative  flex justify-between items-center w-full flex-wrap">
       <div className="w-1/2">
@@ -290,7 +347,7 @@ export default function AddProductComponent() {
           on the market
         </p>
       </div>
-      <button onClick={handleSave} className="sticky top-4 right-2  flex  items-center bg-blue-500 hover:bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
+      <button onClick={handleSubmit} className="sticky top-4 right-2  flex  items-center bg-blue-500 hover:bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
         <Save size={16} className="mr-2" />
         Save
       </button>
@@ -996,12 +1053,12 @@ export default function AddProductComponent() {
               <span className="ml-2 text-sm">Available listing product</span>
             </div>
             <div className="flex items-center">
-              <input type="checkbox" className="rounded cursor-pointer" checked={productData.serviceType===2 || productData.serviceType===3 ? true : false} onChange={e => handleChange(e, "serviceType")} />
+              <input type="checkbox" className="rounded cursor-pointer" checked={serviceT.premium} onChange={e => handleServiceType(e, "premium")} />
               <span className="ml-2 text-sm mr-1">Premium </span>
               <Crown size={16} color="black" />
             </div>
             <div className="flex items-center">
-              <input type="checkbox" className="rounded cursor-pointer" checked={productData.serviceType===1 || productData.serviceType===3 ? true : false} onChange={e => handleChange(e, "serviceType")}  />
+              <input type="checkbox" className="rounded cursor-pointer" checked={serviceT.free} onChange={e => handleServiceType(e, "free")} />
               <span className="ml-2 text-sm mr-1">Free </span>
             </div>
           </div>
