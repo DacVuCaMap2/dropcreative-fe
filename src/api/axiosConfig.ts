@@ -2,8 +2,8 @@ import axios from 'axios';
 import { message } from 'antd'; 
 
 const axiosInstance = axios.create({
-  baseURL: 'https://api.dropcreative.io/', 
-  // baseURL: 'http://localhost:8080', 
+  // baseURL: 'https://api.dropcreative.io/', 
+  baseURL: process.env.NEXT_PUBLIC_API_URL, 
   timeout: 10000, 
   headers: {
     'Content-Type': 'application/json',

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./AddProductComponent.css";
 import { CircleAlert, Crown, Save, Trash, Type, X } from "lucide-react";
 import { Tooltip } from "react-tooltip";
@@ -7,6 +7,8 @@ import TinyMCEEditor from "@/components/TinyMCE/TinyMCEEditor";
 import Product, { getNewProduct } from "@/model/Product";
 import Image from "next/image";
 import PhotoGallery from "@/components/imgdrag/ImageDrag";
+import Modal from 'react-modal';
+import { div } from "framer-motion/client";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -17,7 +19,7 @@ type variantDetails = {
   price: number;
   comparePrice: number;
   quantity: number;
-  image: string;
+  image: File | null;
   sku: string;
   barcode: string;
 };
@@ -29,6 +31,17 @@ export default function AddProductComponent() {
   const [contentCalling, setContentCalling] = useState(`<p>${productData.contentCalling}</p>`);
   const [videos, setVideos] = useState<File[]>([]);
   const [photos, setPhotos] = useState<File[]>([]);
+  const [isOpenSelectPhoto, setIsOpenSelectPhoto] = useState(false);
+  const [indCurrent, setIndCurrent] = useState(0);
+  const openModal = () => {
+    document.body.style.overflow = 'hidden';
+    setIsOpenSelectPhoto(true);
+  };
+
+  const closeModal = () => {
+    document.body.style.overflow = 'unset';
+    setIsOpenSelectPhoto(false);
+  };
   const [listVariantDetails, setListVariantDetails] = useState<
     variantDetails[]
   >([]);
@@ -42,6 +55,7 @@ export default function AddProductComponent() {
 
   const handleChange = (e: any, key: string) => {
     let value = e.target.value;
+    console.log(value);
     /// cac gia tri price
     if (
       key === "price" ||
@@ -198,7 +212,7 @@ export default function AddProductComponent() {
           price: productData.price,
           comparePrice: productData.comparePrice,
           quantity: 1,
-          image: "",
+          image: photos.length > 0 ? photos[0] : null,
           sku: "",
           barcode: "",
         };
@@ -208,23 +222,19 @@ export default function AddProductComponent() {
     }
   }, [listVariant]);
 
-
-  //file and images
-
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleAddVideoClick = () => {
-    fileInputRef.current?.click(); // Kích hoạt sự kiện click của input
+    fileInputRef.current?.click();
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files?.[0];
     if (files) {
-      // Xử lý tệp được chọn ở đây
       const temp = [...videos];
       temp.push(files)
       if (temp.length === 3) {
-        temp.splice(0, 1); // Xóa video đầu tiên
+        temp.splice(0, 1);
       }
       setVideos(temp);
     }
@@ -253,21 +263,34 @@ export default function AddProductComponent() {
 
   const handleSave = () => {
     console.log(productData);
+    console.log(videos);
+    console.log(photos);
   }
+
+  const handleSelectVariantImg = (img: File) => {
+    const variantInd = indCurrent;
+    const temp = [...listVariantDetails].map((details: variantDetails, index) => {
+      if (variantInd === index) {
+        return { ...details, image: img };
+      }
+      return details;
+    })
+    setListVariantDetails(temp);
+    closeModal();
+  }
+
   return (
-    <div>
-      <div className="flex flex-row items-center justify-between">
-        <div>
-          <p>
-            Build a landing page to display demos on search pages or sell products
-            on the market
-          </p>
-        </div>
-        <button onClick={handleSave} className="flex items-center bg-blue-500 hover:bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
-          <Save size={16} className="mr-2" />
-          Save
-        </button>
+    <div className="relative  flex justify-between items-center w-full flex-wrap">
+      <div className="w-1/2">
+        <p>
+          Build a landing page to display demos on search pages or sell products
+          on the market
+        </p>
       </div>
+      <button onClick={handleSave} className="sticky top-4 right-2  flex  items-center bg-blue-500 hover:bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
+        <Save size={16} className="mr-2" />
+        Save
+      </button>
       <div className="flex flex-row w-full add-component py-4 space-x-2">
         <div className="flex flex-col w-2/3 px-2 space-y-6">
           <div className="border px-4 py-4 text-neutral-600 space-y-4 shadow-lg">
@@ -381,7 +404,7 @@ export default function AddProductComponent() {
           </div>
 
 
-          <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
+          {/* <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
             <div className="flex flex-row justify-between items-center">
               <span className="font-bold">
                 Photos ({photos.length}/10) (dang phat trien ...)
@@ -413,7 +436,7 @@ export default function AddProductComponent() {
                 ))}
               </div>
             )}
-          </div>
+          </div> */}
 
 
 
@@ -627,7 +650,7 @@ export default function AddProductComponent() {
             </div>
             <div className="">
               {listVariantDetails.length > 0 && (
-                <table className="table-auto max-w-full">
+                <table className="table-auto min-w-full">
                   <thead className=" border-b">
                     <tr>
                       <th className="py-4">Variant</th>
@@ -646,14 +669,48 @@ export default function AddProductComponent() {
                           <td className="px-2 py-2 text-sm truncate">
                             {variantItem.name}
                           </td>
-                          <td className="px-2 py-2">
-                            <Image
-                              src={"/image/default/AIgen.jpg"}
-                              alt={"image"}
-                              width={200}
-                              height={50}
-                              className="rounded cursor-pointer"
-                            ></Image>
+                          <td className="px-2 py-2 w-36">
+                            <div>
+                              <button onClick={() => { openModal(); setIndCurrent(childInd) }}>
+                                {variantItem.image ?
+                                  <img
+                                    src={URL.createObjectURL(variantItem.image)}
+                                    alt={"image"}
+                                    className="rounded cursor-pointer w-32 h-32 object-cover border shadow-lg"
+                                  /> :
+                                  <div className="w-32 h-32 bg-gray-500 rounded">
+                                    Roong
+                                  </div>
+                                }
+                              </button>
+
+                              <Modal
+                                isOpen={isOpenSelectPhoto}
+                                onRequestClose={closeModal}
+                                contentLabel="Select Image"
+                                className="modal z-40 relative"
+                              >
+                                <button className="absolute top-2 right-2 bg-gray-200 p-2 rounded hover:bg-gray-400" onClick={closeModal}>
+                                  <X />
+                                </button>
+                                <span className="border-b font-bold text-xl">Select an Image</span>
+                                <div className="image-gallery p-2">
+                                  {photos.length > 0 && (
+                                    <div className="grid grid-cols-5 gap-4 pt-4 ">
+                                      {photos.map((item: File, photoInd) => (
+                                        <div onClick={() => handleSelectVariantImg(item)} key={photoInd} className="flex flex-col items-center rounded-lg border shadow-xl overflow-hidden">
+                                          <img
+                                            src={URL.createObjectURL(item)} // Tạo URL tạm thời cho ảnh
+                                            alt={item.name}
+                                            className="w-36 h-36 object-cover" // Kích thước ảnh
+                                          />
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              </Modal>
+                            </div>
                           </td>
                           <td className="px-2 py-2">
                             <input
@@ -734,7 +791,8 @@ export default function AddProductComponent() {
               </p>
             </div>
             <label className="inline-flex items-center cursor-pointer">
-              <input type="checkbox" checked={productData.isPersonal} onChange={e=>handleChange(e,"isPersonal")} className="sr-only peer" />
+              <input type="checkbox" checked={productData.isPersonal} onChange={e => handleChange(e, "isPersonal")} className="sr-only peer" />
+              <span>{productData.isPersonal ? "true" : "false"}</span>
               <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
             </label>
           </div>
@@ -888,7 +946,7 @@ export default function AddProductComponent() {
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                 focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                 value={productData.genderTarget}
-                onChange={e=>handleChange(e,"genderTarget")}
+                onChange={e => handleChange(e, "genderTarget")}
                 required
                 defaultValue={"All"}
               >
@@ -932,16 +990,16 @@ export default function AddProductComponent() {
             </p>
 
             <div className="flex items-center">
-              <input value={productData.status} onChange={e=>handleChange(e,"status")} type="checkbox" className="rounded cursor-pointer" />
+              <input value={productData.status} onChange={e => handleChange(e, "status")} type="checkbox" className="rounded cursor-pointer" />
               <span className="ml-2 text-sm">Available listing product</span>
             </div>
             <div className="flex items-center">
-              <input type="checkbox" className="rounded cursor-pointer" value={productData.serviceType} onChange={e=>handleChange(e,"serviceType")} />
+              <input type="checkbox" className="rounded cursor-pointer" value={productData.serviceType} onChange={e => handleChange(e, "serviceType")} />
               <span className="ml-2 text-sm mr-1">Premium </span>
               <Crown size={16} color="black" />
             </div>
             <div className="flex items-center">
-              <input type="checkbox" className="rounded cursor-pointer"/>
+              <input type="checkbox" className="rounded cursor-pointer" />
               <span className="ml-2 text-sm mr-1">Free </span>
             </div>
           </div>

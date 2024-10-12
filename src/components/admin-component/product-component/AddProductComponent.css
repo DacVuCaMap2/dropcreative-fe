@@ -1,4 +1,37 @@
-.add-component input::placeholder{
-    color: #b5b9be; /* Màu xám */
-    opacity: 1; /* Đảm bảo độ mờ là 100% */
+.add-component input::placeholder {
+    color: #b5b9be;
+    /* Màu xám */
+    opacity: 1;
+    /* Đảm bảo độ mờ là 100% */
+}
+
+.modal {
+    max-width: 50%;
+    min-height: 50%; /* Đặt chiều rộng tối đa cho modal */
+    margin: auto; /* Căn giữa modal */
+    margin-top: 10%;
+    padding: 20px; /* Thêm padding bên trong */
+    border-radius: 8px; /* Bo góc modal */
+    background-color: white; /* Màu nền cho modal */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho modal */
+}
+
+.modal h2 {
+    font-size: 24px; /* Kích thước tiêu đề */
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap; /* Để hình ảnh có thể xuống dòng */
+    gap: 10px; /* Khoảng cách giữa các hình ảnh */
+}
+
+.image-gallery div {
+    cursor: pointer; /* Thay đổi con trỏ khi hover */
+    transition: transform 0.2s; /* Hiệu ứng khi hover */
+}
+
+.image-gallery div:hover {
+    transform: scale(1.05); /* Phóng to hình ảnh khi hover */
 }
