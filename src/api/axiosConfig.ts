@@ -3,6 +3,7 @@ import { message } from 'antd';
 
 const axiosInstance = axios.create({
   baseURL: 'http://172.235.52.241:8080', 
+  // baseURL: 'http://localhost:8080', 
   timeout: 10000, 
   headers: {
     'Content-Type': 'application/json',
