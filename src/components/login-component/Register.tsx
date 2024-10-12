@@ -133,6 +133,17 @@ const Register = (props: IProps) => {
                     </span>
                   </div>
                 </Form.Item>
+                <p className="text-center mb-2.5 text-gray-400">
+                  By continuing, you agree to Freepik Company&#39;ts
+                  <span className="text-gray-400 font-medium">
+                    &nbsp;Terms of Use&nbsp;
+                  </span>
+                  and&nbsp;
+                  <span className="text-gray-400 font-medium">
+                    Privacy Policy
+                  </span>
+                  .
+                </p>
                 <Form.Item>
                   <Button
                     htmlType="submit"
