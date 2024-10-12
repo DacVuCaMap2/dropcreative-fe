@@ -1,6 +1,13 @@
 import axios from 'axios';
 import { message } from 'antd'; 
 
+
+const getCookie = (name:string) => {
+  const matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([$?*|{}()[\]\\/+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+};
 const axiosInstance = axios.create({
   // baseURL: 'https://api.dropcreative.io/', 
   baseURL: process.env.NEXT_PUBLIC_API_URL, 
@@ -12,7 +19,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = getCookie('auth_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Button, Form, Input, message } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 import { ChevronLeft } from "lucide-react";
 import { FieldType, IProps } from "./types";
 import EnterCode from "./EnterCode";
@@ -124,7 +124,7 @@ const Register = (props: IProps) => {
                 >
                   <Input className="w-60 rounded-md h-9 border-slate-300" />
                 </Form.Item>
-                {/* <Form.Item<FieldType> name="remember" valuePropName="checked">
+                <Form.Item<FieldType> name="isCheck" valuePropName="checked">
                   <div className="w-60">
                     <Checkbox className="mt-1" />
                     <span className="ml-2">
@@ -132,7 +132,7 @@ const Register = (props: IProps) => {
                       Company by email.
                     </span>
                   </div>
-                </Form.Item> */}
+                </Form.Item>
                 <Form.Item>
                   <Button
                     htmlType="submit"

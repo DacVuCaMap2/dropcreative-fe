@@ -4,7 +4,8 @@ export type FieldType = {
     password?: string;
     phoneNumber?: string;
     isRemember?:boolean;
-    activeCode?:string
+    activeCode?:string;
+    isCheck?:boolean;
 };
 export type IProps = {
     setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;

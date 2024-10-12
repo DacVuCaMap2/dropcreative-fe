@@ -6,6 +6,7 @@ export type TypeLogin ={
 export type TypeResponse =  {
     status: number;
     message: string;
+    jwt?:string
 }
 export type TypeRegister ={
     email:string,
@@ -13,3 +14,7 @@ export type TypeRegister ={
     userName:string,
     phoneNumber:string
 }
+
+export type CookieOptions = {
+    [key: string]: string | boolean;
+};
