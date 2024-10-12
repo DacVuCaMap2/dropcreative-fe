@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./AddProductComponent.css";
-import { CircleAlert, Crown, Save, Trash, Type, X } from "lucide-react";
+import { CircleAlert, Crown, FileImage, Save, Trash, Type, X } from "lucide-react";
 import { Tooltip } from "react-tooltip";
 import TinyMCEEditor from "@/components/TinyMCE/TinyMCEEditor";
 import Product, { getNewProduct } from "@/model/Product";
@@ -55,6 +55,9 @@ export default function AddProductComponent() {
 
   const handleChange = (e: any, key: string) => {
     let value = e.target.value;
+    if (key==="isPersonal") {
+      value = e.target.checked;
+    }
     console.log(value);
     /// cac gia tri price
     if (
@@ -678,8 +681,8 @@ export default function AddProductComponent() {
                                     alt={"image"}
                                     className="rounded cursor-pointer w-32 h-32 object-cover border shadow-lg"
                                   /> :
-                                  <div className="w-32 h-32 bg-gray-500 rounded">
-                                    Roong
+                                  <div className="w-32 h-32 bg-gray-200 rounded flex items-center justify-center">
+                                    <FileImage size={40} />
                                   </div>
                                 }
                               </button>
@@ -792,7 +795,6 @@ export default function AddProductComponent() {
             </div>
             <label className="inline-flex items-center cursor-pointer">
               <input type="checkbox" checked={productData.isPersonal} onChange={e => handleChange(e, "isPersonal")} className="sr-only peer" />
-              <span>{productData.isPersonal ? "true" : "false"}</span>
               <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
             </label>
           </div>
@@ -948,11 +950,11 @@ export default function AddProductComponent() {
                 value={productData.genderTarget}
                 onChange={e => handleChange(e, "genderTarget")}
                 required
-                defaultValue={"All"}
+                defaultValue={0}
               >
-                <option value="All">All</option>
-                <option value="MALE">MALE</option>
-                <option value="FEMALE">FEMALE</option>
+                <option value={0}>All</option>
+                <option value={1}>MALE</option>
+                <option value={2}>FEMALE</option>
               </select>
             </div>
             <div className="flex flex-row space-x-4">
@@ -994,12 +996,12 @@ export default function AddProductComponent() {
               <span className="ml-2 text-sm">Available listing product</span>
             </div>
             <div className="flex items-center">
-              <input type="checkbox" className="rounded cursor-pointer" value={productData.serviceType} onChange={e => handleChange(e, "serviceType")} />
+              <input type="checkbox" className="rounded cursor-pointer" checked={productData.serviceType===2 || productData.serviceType===3 ? true : false} onChange={e => handleChange(e, "serviceType")} />
               <span className="ml-2 text-sm mr-1">Premium </span>
               <Crown size={16} color="black" />
             </div>
             <div className="flex items-center">
-              <input type="checkbox" className="rounded cursor-pointer" />
+              <input type="checkbox" className="rounded cursor-pointer" checked={productData.serviceType===1 || productData.serviceType===3 ? true : false} onChange={e => handleChange(e, "serviceType")}  />
               <span className="ml-2 text-sm mr-1">Free </span>
             </div>
           </div>

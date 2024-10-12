@@ -4,7 +4,7 @@ export function middleware(request: NextRequest) {
     const isLogin = request.cookies.get('accountId');
 
     // Kiểm tra nếu URL là trang admin và cookie không tồn tại
-    if (request.nextUrl.pathname.startsWith('/admin') && !isLogin) {
+    if (request.nextUrl.pathname.startsWith('/sssss') && !isLogin) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
 
