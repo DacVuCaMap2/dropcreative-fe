@@ -10,6 +10,7 @@ import PhotoGallery from "@/components/imgdrag/ImageDrag";
 import Modal from 'react-modal';
 import { div, form } from "framer-motion/client";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -296,6 +297,7 @@ export default function AddProductComponent(props:Props) {
     closeModal();
   }
 
+  const router = useRouter();
 
   const handleSubmit = async () => {
     console.log(productData);
@@ -339,7 +341,8 @@ export default function AddProductComponent(props:Props) {
           'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
         },
       });
-      console.log('Success:', response.data.data);
+      console.log('Success:', response.data);
+      router.push('/admin/all-product');
     } catch (error) {
       console.error('Error:', error);
     }
