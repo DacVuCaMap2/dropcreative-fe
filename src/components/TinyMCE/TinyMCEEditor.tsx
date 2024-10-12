@@ -11,7 +11,7 @@ const TinyMCEEditor: React.FC<TinyMCEEditorProps> = ({ onEditorChange, initialVa
     return (
         <Editor
             apiKey={process.env.NEXT_PUBLIC_API_TINY}
-            initialValue="<p>This is the initial content of the editor.</p>"
+            initialValue={initialValue}
             init={{
                 height: 300,
                 menubar: false,

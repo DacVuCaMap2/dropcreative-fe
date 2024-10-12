@@ -6,9 +6,7 @@ import { Tooltip } from "react-tooltip";
 import TinyMCEEditor from "@/components/TinyMCE/TinyMCEEditor";
 import Product, { getNewProduct } from "@/model/Product";
 import Image from "next/image";
-import { Button, ButtonGroup } from "@material-tailwind/react";
-import { div, option } from "framer-motion/client";
-
+import PhotoGallery from "@/components/imgdrag/ImageDrag";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -27,15 +25,14 @@ type variantDetails = {
 export default function AddProductComponent() {
   const [productData, setProductData] = useState<Product>(getNewProduct());
   const [listVariant, setListVariant] = useState<productVariant[]>([]);
-  const [description, setDescription] = useState("<p>Initial content</p>");
-  const [contentCalling, setContentCalling] = useState(
-    "<p>Initial content</p>"
-  );
+  const [description, setDescription] = useState(`<p>${productData.description}</p>`);
+  const [contentCalling, setContentCalling] = useState(`<p>${productData.contentCalling}</p>`);
   const [videos, setVideos] = useState<File[]>([]);
   const [photos, setPhotos] = useState<File[]>([]);
   const [listVariantDetails, setListVariantDetails] = useState<
     variantDetails[]
   >([]);
+
   const handleEditorChange = (newContent: any) => {
     setDescription(newContent);
   };
@@ -240,9 +237,9 @@ export default function AddProductComponent() {
     if (files) {
       const newPhotos = Array.from(files);
       const oldLenght = photos.length;
-      let tempList =  [...photos, ...newPhotos];
-      if (tempList.length-10>0) {
-        tempList = tempList.slice(tempList.length-10, tempList.length)
+      let tempList = [...photos, ...newPhotos];
+      if (tempList.length - 10 > 0) {
+        tempList = tempList.slice(tempList.length - 10, tempList.length)
       }
       setPhotos(tempList);
     }
@@ -252,6 +249,11 @@ export default function AddProductComponent() {
       fileImgtRef.current.click();
     }
   };
+
+
+  const handleSave = () => {
+    console.log(productData);
+  }
   return (
     <div>
       <div className="flex flex-row items-center justify-between">
@@ -261,7 +263,7 @@ export default function AddProductComponent() {
             on the market
           </p>
         </div>
-        <button className="flex items-center bg-blue-500 hover:bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
+        <button onClick={handleSave} className="flex items-center bg-blue-500 hover:bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
           <Save size={16} className="mr-2" />
           Save
         </button>
@@ -359,7 +361,7 @@ export default function AddProductComponent() {
             {videos.length > 0 &&
               <div className="flex flex-row border-t pt-4 justify-center space-x-4">
                 {videos.map((item: File, index) => (
-                  <div key={index} className="mb-4 rounded-2xl overflow-auto shadow-xl">
+                  <div key={index} className="mb-4 rounded-2xl overflow-auto shadow-xl relative">
                     <video
                       width="320"
                       height="240"
@@ -368,6 +370,11 @@ export default function AddProductComponent() {
                     >
                       Your browser does not support the video tag.
                     </video>
+                    <div className="absolute right-2 top-2">
+                      <button onClick={() => setVideos(videos.filter((vid: File, ind) => ind != index))} className="p-2 bg-white">
+                        <Trash size={16} />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>}
@@ -406,8 +413,12 @@ export default function AddProductComponent() {
                 ))}
               </div>
             )}
-
           </div>
+
+
+
+          <PhotoGallery photos={photos} setPhotos={setPhotos} />
+
           <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-4">
             <span className="font-bold">Pricing</span>
 
@@ -723,7 +734,7 @@ export default function AddProductComponent() {
               </p>
             </div>
             <label className="inline-flex items-center cursor-pointer">
-              <input type="checkbox" value="" className="sr-only peer" />
+              <input type="checkbox" checked={productData.isPersonal} onChange={e=>handleChange(e,"isPersonal")} className="sr-only peer" />
               <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
             </label>
           </div>
@@ -736,7 +747,8 @@ export default function AddProductComponent() {
               </label>
               <input
                 type="text"
-                value={productData.title}
+                value={productData.facebookPixel}
+                onChange={e => handleChange(e, "facebookPixel")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                 placeholder="Type title"
@@ -750,7 +762,8 @@ export default function AddProductComponent() {
               </label>
               <input
                 type="text"
-                value={productData.title}
+                value={productData.googleAnalytics}
+                onChange={e => handleChange(e, "googleAnalytics")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                 placeholder="Type title"
@@ -772,24 +785,27 @@ export default function AddProductComponent() {
               <select
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                 focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                value={productData.categoryId}
                 defaultValue="" // Sử dụng defaultValue để thiết lập giá trị mặc định
                 required
               >
-                <option value="" disabled>
+                <option value="0" disabled>
                   Select Categories
                 </option>
-                <option value="PRODUCT_FASHION">Fashion</option>
-                <option value="PRODUCT_BEAUTY">Beauty</option>
-                <option value="PRODUCT_GAMING">Gaming</option>
-                <option value="PRODUCT_KITCHEN">Kitchen</option>
-                <option value="PRODUCT_HOME_DECOR">Home Decor</option>
-                <option value="PRODUCT_OFFICE_SUPPLIES">Office Supplies</option>
+                <option value="1">Fashion</option>
+                <option value="2">Beauty</option>
+                <option value="3">Gaming</option>
+                <option value="4">Kitchen</option>
+                <option value="5">Home Decor</option>
+                <option value="6">Office Supplies</option>
               </select>
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold">CR (%)</label>
               <input
-                type="text"
+                type="number"
+                value={productData.cr}
+                onChange={e => handleChange(e, "cr")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                 placeholder="Type CR %"
@@ -800,7 +816,9 @@ export default function AddProductComponent() {
             <div className="space-y-2">
               <label className="block text-xs font-bold">AOV</label>
               <input
-                type="text"
+                type="number"
+                value={productData.aov}
+                onChange={e => handleChange(e, "aov")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                 placeholder="Type AOV"
@@ -814,6 +832,8 @@ export default function AddProductComponent() {
               </label>
               <input
                 type="text"
+                value={productData.paymentGatewayUnit}
+                onChange={e => handleChange(e, "paymentGatewayUnit")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                 placeholder="Type unit"
@@ -824,6 +844,8 @@ export default function AddProductComponent() {
               <label className="block text-xs font-bold">Fullfill unit</label>
               <input
                 type="text"
+                value={productData.fullfillUnit}
+                onChange={e => handleChange(e, "fullfillUnit")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                 placeholder="Type unit"
@@ -833,8 +855,10 @@ export default function AddProductComponent() {
             <div className="space-y-2">
               <label className="block text-xs font-bold">Content</label>
               <textarea
+                value={productData.content}
+                onChange={e => handleChange(e, "content")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-    focus:ring-blue-500 focus:border-blue-500 block w-full p-3 max-h-40 min-h-20"
+                focus:ring-blue-500 focus:border-blue-500 block w-full p-3 max-h-40 min-h-20"
                 placeholder="Type unit"
                 required
               />
@@ -843,6 +867,8 @@ export default function AddProductComponent() {
             <div className="space-y-2">
               <label className="block text-xs font-bold">Country target</label>
               <select
+                value={productData.countryTarget}
+                onChange={e => handleChange(e, "countryTarget")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                 focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                 required
@@ -861,6 +887,8 @@ export default function AddProductComponent() {
               <select
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                 focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                value={productData.genderTarget}
+                onChange={e=>handleChange(e,"genderTarget")}
                 required
                 defaultValue={"All"}
               >
@@ -874,6 +902,8 @@ export default function AddProductComponent() {
                 <label className="block text-xs font-bold">Start Age</label>
                 <input
                   type="text"
+                  value={productData.startAge}
+                  onChange={e => handleChange(e, "startAge")}
                   className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                     focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                   placeholder="Type "
@@ -884,6 +914,8 @@ export default function AddProductComponent() {
                 <label className="block text-xs font-bold">End Age</label>
                 <input
                   type="text"
+                  value={productData.endAge}
+                  onChange={e => handleChange(e, "endAge")}
                   className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                     focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                   placeholder="Type "
@@ -900,16 +932,16 @@ export default function AddProductComponent() {
             </p>
 
             <div className="flex items-center">
-              <input type="checkbox" className="rounded cursor-pointer" />
+              <input value={productData.status} onChange={e=>handleChange(e,"status")} type="checkbox" className="rounded cursor-pointer" />
               <span className="ml-2 text-sm">Available listing product</span>
             </div>
             <div className="flex items-center">
-              <input type="checkbox" className="rounded cursor-pointer" />
+              <input type="checkbox" className="rounded cursor-pointer" value={productData.serviceType} onChange={e=>handleChange(e,"serviceType")} />
               <span className="ml-2 text-sm mr-1">Premium </span>
               <Crown size={16} color="black" />
             </div>
             <div className="flex items-center">
-              <input type="checkbox" className="rounded cursor-pointer" />
+              <input type="checkbox" className="rounded cursor-pointer"/>
               <span className="ml-2 text-sm mr-1">Free </span>
             </div>
           </div>

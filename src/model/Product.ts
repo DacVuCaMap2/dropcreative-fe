@@ -20,6 +20,7 @@ class Product {
     domain: string;
     fullfillUnit: string;
     facebookPixel: string;
+    googleAnalytics:string;
     paymentGatewayUnit: string; 
     paymentMethod: string; 
     isPersonal: boolean; 
@@ -49,6 +50,7 @@ class Product {
         domain: string;
         fullfillUnit: string;   
         facebookPixel: string;
+        googleAnalytics:string;
         paymentGatewayUnit: string; 
         paymentMethod: string; 
         isPersonal: boolean;   
@@ -77,6 +79,7 @@ class Product {
         this.domain = parameters.domain;
         this.fullfillUnit = parameters.fullfillUnit;   
         this.facebookPixel = parameters.facebookPixel;
+        this.googleAnalytics = parameters.googleAnalytics;
         this.paymentGatewayUnit = parameters.paymentGatewayUnit; 
         this.paymentMethod = parameters.paymentMethod; 
         this.isPersonal = parameters.isPersonal;   
@@ -112,6 +115,7 @@ export const getNewProduct = (): Product => {
         domain: "",
         fullfillUnit: "",
         facebookPixel: "",
+        googleAnalytics:"",
         paymentGatewayUnit: "",
         paymentMethod: "",
         isPersonal: false,
@@ -120,3 +124,36 @@ export const getNewProduct = (): Product => {
         productVariants: []
     });
 };
+
+// export const getNewProduct = (): Product => {
+//     return new Product({
+//         id: null,
+//         title: "namvu",
+//         description: "day la dess",  
+//         accountId: 1, 
+//         categoryId: 1,
+//         status: 1,
+//         serviceType: 1,
+//         variant: "",
+//         price: 129,
+//         comparePrice: 123,
+//         costPerPrice: 232,
+//         shippingFee: 323,
+//         cr: 10,
+//         aov: 50,
+//         countryTarget: "US",
+//         genderTarget: 1,
+//         content: "Dep trai",
+//         contentCalling: "DEP TRAI",
+//         domain: "abc",
+//         fullfillUnit: "OKE",
+//         facebookPixel: "CONDE",
+//         googleAnalytics:"OK",
+//         paymentGatewayUnit: "VAI",
+//         paymentMethod: "pay",
+//         isPersonal: false,
+//         startAge: 10,
+//         endAge: 20,
+//         productVariants: []
+//     });
+// };
