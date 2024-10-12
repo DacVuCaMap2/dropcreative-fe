@@ -6,7 +6,9 @@ export type TypeLogin ={
 export type TypeResponse =  {
     status: number;
     message: string;
-    jwt?:string
+    jwt?:string;
+    id:number;
+    expired?:number
 }
 export type TypeRegister ={
     email:string,

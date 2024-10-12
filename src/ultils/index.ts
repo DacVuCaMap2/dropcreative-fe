@@ -2,7 +2,7 @@ import { CookieOptions } from "@/types/common";
 
 export const setCookie = (
     name: string,
-    value: string,
+    value: string | number,
     options: CookieOptions = {}
   ): void => {
     let updatedCookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
