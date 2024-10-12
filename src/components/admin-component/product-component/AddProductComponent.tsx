@@ -27,9 +27,12 @@ type variantDetails = {
   value: string;
   status: number;
 };
-
-export default function AddProductComponent() {
-  const accountId = 1;
+type Props = {
+  accountId:string
+}
+export default function AddProductComponent(props:Props) {
+  const accountId = props.accountId;
+  console.log(accountId);
   const [productData, setProductData] = useState<Product>(getNewProduct());
   const [listVariant, setListVariant] = useState<productVariant[]>([]);
   const [description, setDescription] = useState(`<p>${productData.description}</p>`);
@@ -301,16 +304,18 @@ export default function AddProductComponent() {
     console.log(listVariantDetails);
     console.log(serviceT);
     const productVariants = listVariantDetails.map((item: variantDetails, index) => {
-      return { value: item.name,status:item.status,price:item.price,comparePrice:item.comparePrice,quantity:item.quantity,
-        sku:item.sku,barcode:item.barcode, fileName: item.image ? `${index}-${accountId}image${Date.now()}` : '' }
+      return {
+        value: item.name, status: item.status, price: item.price, comparePrice: item.comparePrice, quantity: item.quantity,
+        sku: item.sku, barcode: item.barcode, fileName: item.image ? `${index}-${accountId}image${Date.now()}` : ''
+      }
     })
     let serviceType = 4;
     serviceType = serviceT.free && serviceT.premium ? 3 : serviceType;
     serviceType = serviceT.free && !serviceT.premium ? 1 : serviceType;
     serviceType = !serviceT.free && serviceT.premium ? 2 : serviceType;
     let variantValue = listVariant.map(item => item.optionName).join('./');
-    let postData = { ...productData, productVariants: productVariants, serviceType: serviceType, accountId: accountId,variant:variantValue };
-    const {id,...filterPostData} = postData;
+    let postData = { ...productData, productVariants: productVariants, serviceType: serviceType, accountId: accountId, variant: variantValue };
+    const { id, ...filterPostData } = postData;
     const formData = new FormData();
     formData.append("data", JSON.stringify(filterPostData));
 
@@ -324,7 +329,7 @@ export default function AddProductComponent() {
         formData.append(`videos`, video); // Ghi chú: tên "videos" phải khớp với tên ở server
       });
     }
-    console.log(photos,videos);
+    console.log(photos, videos);
     console.log(filterPostData);
     let url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
     try {
@@ -337,7 +342,7 @@ export default function AddProductComponent() {
       console.log('Success:', response.data.data);
     } catch (error) {
       console.error('Error:', error);
-    } 
+    }
   }
   return (
     <div className="relative  flex justify-between items-center w-full flex-wrap">
