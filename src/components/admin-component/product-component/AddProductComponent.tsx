@@ -313,8 +313,8 @@ export default function AddProductComponent(props:Props) {
     serviceType = serviceT.free && serviceT.premium ? 3 : serviceType;
     serviceType = serviceT.free && !serviceT.premium ? 1 : serviceType;
     serviceType = !serviceT.free && serviceT.premium ? 2 : serviceType;
-    let variantValue = listVariant.map(item => item.optionName).join('./');
-    let postData = { ...productData, productVariants: productVariants, serviceType: serviceType, accountId: accountId, variant: variantValue };
+    const variantValue = listVariant.map(item => item.optionName).join('./');
+    const postData = { ...productData, productVariants: productVariants, serviceType: serviceType, accountId: accountId, variant: variantValue };
     const { id, ...filterPostData } = postData;
     const formData = new FormData();
     formData.append("data", JSON.stringify(filterPostData));
@@ -331,7 +331,7 @@ export default function AddProductComponent(props:Props) {
     }
     console.log(photos, videos);
     console.log(filterPostData);
-    let url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
+    const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
     try {
 
       const response = await axios.post(url, formData, {
