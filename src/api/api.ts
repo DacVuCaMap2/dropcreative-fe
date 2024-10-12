@@ -13,8 +13,13 @@ const checkActiveCode = (code?:string, email?:string):Promise<AxiosResponse<Type
     return axios.get(`/api/auth/active?code=${code}&email=${email}`); 
 };
 
+// const checkStatus = ():Promise<AxiosResponse<TypeResponse>> => {
+//     return axios.get("/api/auth/check"); 
+// };
+
 export {
     authLogin,
     authRegister,
-    checkActiveCode
+    checkActiveCode,
+    // checkStatus
 };

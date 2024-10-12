@@ -8,6 +8,7 @@ import { authLogin } from "@/api/api";
 import { AxiosResponse } from "axios";
 import { TypeLogin, TypeResponse } from "@/types/common";
 import { redirect, useRouter } from "next/navigation";
+import { setCookie } from "@/ultils";
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -32,11 +33,30 @@ const Login = () => {
   const handleLogin = async (data: TypeLogin) => {
     try {
       const res: AxiosResponse<TypeResponse> = await authLogin(data);
-      if (res.data.status === 0) {
-        message.error(res.data.message);
-      } else {
-        router.push("/");
+      const { status, message: resMessage, jwt, id, expired } = res.data;
+      if (status === 0) {
+        message.error(resMessage);
+        return;
       }
+
+      if (jwt) {
+        setCookie("auth_token", jwt, {
+          path: "/",
+          secure: true,
+          "max-age": `${expired}`, // Cookie expires after 1 hour
+          sameSite: "Strict", // Cookie sent only with same-site requests
+        });
+      }
+
+      if (id) {
+        setCookie("account_id", id, {
+          path: "/",
+          secure: true,
+          "max-age": `${expired}`, // Cookie expires after 1 hour
+          sameSite: "Strict", // Cookie sent only with same-site requests
+        });
+      }
+      router.push("/");
     } catch (error: any) {
       message.error("error", error?.data?.message);
     }
