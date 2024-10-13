@@ -14,8 +14,8 @@ const Layout = ({
             <div className='h-full'>
                 <SideBar />
             </div>
-            <main className=" w-full">
-                <HeadNavBar/>
+            <main className=" w-full flex flex-col">
+                <HeadNavBar />
                 {children}
             </main>
         </div>

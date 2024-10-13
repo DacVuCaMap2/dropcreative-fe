@@ -323,12 +323,12 @@ export default function AddProductComponent(props: Props) {
 
     if (photos.length > 0) {
       photos.forEach((photo, index) => {
-        formData.append(`images`, photo); // Ghi chú: tên "images" phải khớp với tên ở server
+        formData.append(`images`, photo);
       });
     }
     if (videos.length > 0) {
       videos.forEach((video, index) => {
-        formData.append(`videos`, video); // Ghi chú: tên "videos" phải khớp với tên ở server
+        formData.append(`videos`, video);
       });
     }
     console.log(photos, videos);
@@ -357,7 +357,7 @@ export default function AddProductComponent(props: Props) {
       </div>
       <button onClick={handleSubmit} className="sticky top-4 right-2  flex  items-center bg-blue-500 hover:bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
         <Save size={16} className="mr-2" />
-        Save
+        Upload
       </button>
       <div className="flex flex-row w-full add-component py-4 space-x-2">
         <div className="flex flex-col w-2/3 px-2 space-y-6">
@@ -1054,12 +1054,11 @@ export default function AddProductComponent(props: Props) {
               <div className="space-y-2">
                 <label className="block text-xs font-bold">Videos</label>
                 {videos.length > 0 &&
-                  <div className="flex flex-row border-t pt-4 justify-center space-x-4">
+                  <div className="flex flex-row border-t pt-4 justify-center space-x-4 w-full bg-red-600">
                     {videos.map((item: File, index) => (
                       <div key={index} className="mb-4 rounded-2xl overflow-auto shadow-xl relative">
                         <video
-                          width="160"
-                          height="120"
+                          className="w-full h-full"
                           controls
                           src={URL.createObjectURL(item)} // Tạo URL tạm thời cho video
                         >

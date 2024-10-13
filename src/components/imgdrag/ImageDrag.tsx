@@ -52,14 +52,71 @@ const ImageItem: React.FC<ImageItemProps> = ({ id, photo }) => {
     );
 };
 
+const cropToSquare = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Unable to get 2D context'));
+            return;
+          }
+          const size = Math.min(img.width, img.height);
+          canvas.width = size;
+          canvas.height = size;
+          
+          // Calculate positioning to crop from center
+          const xOffset = (img.width - size) / 2;
+          const yOffset = (img.height - size) / 2;
+          
+          ctx.drawImage(img, xOffset, yOffset, size, size, 0, 0, size, size);
+          
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              reject(new Error('Failed to create blob'));
+              return;
+            }
+            resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() }));
+          }, 'image/jpeg', 0.8); // You can adjust quality here
+        };
+        img.onerror = () => {
+          reject(new Error('Failed to load image'));
+        };
+        if (e.target && e.target.result) {
+          img.src = e.target.result as string;
+        } else {
+          reject(new Error('Failed to read file'));
+        }
+      };
+      reader.onerror = () => {
+        reject(new Error('Failed to read file'));
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+  
+  // Function to process multiple files
+  const processFiles = async (files: FileList): Promise<File[]> => {
+    const processedFiles = await Promise.all(
+      Array.from(files).map(file => cropToSquare(file).catch(error => {
+        console.error(`Error processing file ${file.name}:`, error);
+        return null;
+      }))
+    );
+    return processedFiles.filter((file): file is File => file !== null);
+  };
+
 const PhotoGallery: React.FC<Props> = (props: Props) => {
     const [photos, setPhotos] = useState<File[]>([]);
 
-    const handleImgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImgChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
-            const newPhotos = Array.from(files);
-
+            // const newPhotos = Array.from(files);
+            const newPhotos = await processFiles(files)
             // Filter out files that already exist in photos by name
             const existingNames = new Set(photos.map((photo) => photo.name));
             const uniqueNewPhotos = newPhotos.filter(
@@ -143,7 +200,7 @@ const PhotoGallery: React.FC<Props> = (props: Props) => {
                                     <ImageItem id={item.name} photo={item} />
                                     <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                         <button onClick={() => handleDelPhoto(index)} className="p-2 bg-white">
-                                            <Trash size={16}/>
+                                            <Trash size={16} />
                                         </button>
                                     </div>
                                 </div>
