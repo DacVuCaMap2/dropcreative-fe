@@ -1,117 +1,115 @@
+export function validatePostData(postData: any) {
+    // Function to check for empty strings
+    const isEmptyString = (value: any) => typeof value === 'string' && value.trim() === '';
 
-
-export function validatePostData(postData:any) {
-    // Hàm kiểm tra chuỗi rỗng
-    const isEmptyString = (value:any) => typeof value === 'string' && value.trim() === '';
-
-    // Kiểm tra accountId
+    // Check accountId
     if (isEmptyString(postData.accountId)) {
-        return "accountId không được để trống.";
+        return "accountId cannot be empty.";
     }
-    // Kiểm tra aov
+    // Check aov
     if (typeof postData.aov !== 'number') {
-        return "aov phải là một số.";
+        return "aov must be a number.";
     }
-    // Kiểm tra categoryId
-    if (typeof postData.categoryId !== 'number' || postData.categoryId==0) {
-        return "Choose Category";
+    // Check categoryId
+    if (typeof postData.categoryId !== 'number' || postData.categoryId === 0) {
+        return "Choose a category.";
     }
-    // Kiểm tra comparePrice
+    // Check comparePrice
     if (typeof postData.comparePrice !== 'number') {
-        return "comparePrice phải là một số.";
+        return "comparePrice must be a number.";
     }
-    // Kiểm tra content
+    // Check content
     if (isEmptyString(postData.content)) {
-        return "Content không được để trống.";
+        return "Content cannot be empty.";
     }
-    // Kiểm tra contentCalling
+    // Check contentCalling
     if (isEmptyString(postData.contentCalling)) {
-        return "Content calling không được để trống.";
+        return "Content calling cannot be empty.";
     }
-    // Kiểm tra costPerPrice
+    // Check costPerPrice
     if (typeof postData.costPerPrice !== 'number') {
-        return "costPerPrice phải là một số.";
+        return "costPerPrice must be a number.";
     }
-    // Kiểm tra countryTarget
+    // Check countryTarget
     if (isEmptyString(postData.countryTarget)) {
-        return "countryTarget không được để trống.";
+        return "countryTarget cannot be empty.";
     }
-    // Kiểm tra cr
+    // Check cr
     if (typeof postData.cr !== 'number') {
-        return "cr phải là một số.";
+        return "cr must be a number.";
     }
-    // Kiểm tra description
+    // Check description
     if (isEmptyString(postData.description)) {
-        return "description không được để trống.";
+        return "description cannot be empty.";
     }
-    // // Kiểm tra domain
+    // // Check domain
     // if (isEmptyString(postData.domain)) {
-    //     return "domain không được để trống.";
+    //     return "domain cannot be empty.";
     // }
-    // Kiểm tra endAge
+    // Check endAge
     if (typeof postData.endAge !== 'number') {
-        return "endAge phải là một số.";
+        return "endAge must be a number.";
     }
-    // // Kiểm tra facebookPixel
+    // // Check facebookPixel
     // if (isEmptyString(postData.facebookPixel)) {
-    //     return "Facebook Pixel không được để trống.";
+    //     return "Facebook Pixel cannot be empty.";
     // }
-    // Kiểm tra fullfillUnit
+    // Check fullfillUnit
     if (isEmptyString(postData.fullfillUnit)) {
-        return "Full Fill Unit không được để trống.";
+        return "Full Fill Unit cannot be empty.";
     }
-    // Kiểm tra genderTarget
+    // Check genderTarget
     if (typeof postData.genderTarget !== 'number') {
-        return "genderTarget phải là một số.";
+        return "Gender Target must be a number.";
     }
-    // // Kiểm tra googleAnalytics
+    // // Check googleAnalytics
     // if (isEmptyString(postData.googleAnalytics)) {
-    //     return "Google Analytics không được để trống.";
+    //     return "Google Analytics cannot be empty.";
     // }
-    // Kiểm tra isPersonal
+    // Check isPersonal
     if (typeof postData.isPersonal !== 'boolean') {
-        return "isPersonal phải là một boolean.";
+        return "isPersonal must be a boolean.";
     }
-    // Kiểm tra paymentGatewayUnit
+    // Check paymentGatewayUnit
     if (isEmptyString(postData.paymentGatewayUnit)) {
-        return "Payment Gateway unit không được để trống.";
+        return "Payment Gateway unit cannot be empty.";
     }
-    // // Kiểm tra paymentMethod
+    // // Check paymentMethod
     // if (isEmptyString(postData.paymentMethod)) {
-    //     return "Payment method không được để trống.";
+    //     return "Payment method cannot be empty.";
     // }
-    // Kiểm tra price
+    // Check price
     if (typeof postData.price !== 'number') {
-        return "price phải là một số.";
+        return "price must be a number.";
     }
-    // Kiểm tra productVariants
+    // Check productVariants
     if (!Array.isArray(postData.productVariants)) {
-        return "productVariants phải là một mảng.";
+        return "productVariants must be an array.";
     }
-    // Kiểm tra serviceType
+    // Check serviceType
     if (typeof postData.serviceType !== 'number') {
-        return "serviceType phải là một số.";
+        return "serviceType must be a number.";
     }
-    // Kiểm tra shippingFee
+    // Check shippingFee
     if (typeof postData.shippingFee !== 'number') {
-        return "shippingFee phải là một số.";
+        return "shippingFee must be a number.";
     }
-    // Kiểm tra startAge
+    // Check startAge
     if (typeof postData.startAge !== 'number') {
-        return "startAge phải là một số.";
+        return "startAge must be a number.";
     }
-    // Kiểm tra status
+    // Check status
     if (typeof postData.status !== 'number') {
-        return "status phải là một số.";
+        return "status must be a number.";
     }
-    // Kiểm tra title
+    // Check title
     if (isEmptyString(postData.title)) {
-        return "title không được để trống.";
+        return "title cannot be empty.";
     }
-    // Kiểm tra variant
+    // Check variant
     if (typeof postData.variant !== 'string') {
-        return "variant phải là một chuỗi.";
+        return "variant must be a string.";
     }
 
-    return ""; // Không có lỗi
+    return ""; // No errors
 }

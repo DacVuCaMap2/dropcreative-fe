@@ -84,7 +84,7 @@ export default function AddProductComponent(props: Props) {
       key === "price" ||
       key === "comparePrice" ||
       key === "costPerPrice" ||
-      key === "shippingFee" || key==="aov" || key==="cr" || key==="categoryId" || key==="startAge" || key==="endAge"
+      key === "shippingFee" || key==="aov" || key==="cr" || key==="categoryId" || key==="startAge" || key==="endAge" || key==="genderTarget"
     ) {
       value = value ? parseFloat(value) : 0;
     }
