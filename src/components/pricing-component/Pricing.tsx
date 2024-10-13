@@ -1,6 +1,8 @@
-import { Card } from "antd";
+import { Button, Card } from "antd";
+import { Check, TriangleAlertIcon, X } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import Footer from "../home-component/Footer";
 
 const Pricing = () => {
   return (
@@ -28,26 +30,227 @@ const Pricing = () => {
               All with one subscription.
             </p>
             <div className="mt-4 flex gap-10">
-              {/* <Card hoverable style={{ width: 240 }}>
-                <Meta
-                  title="Europe Street beat"
-                  description="www.instagram.com"
-                />
-              </Card> */}
-
               <Card hoverable className="flex-1">
-                aaa
+                <div className="flex gap-5 flex-col gap-10">
+                  <p className="text-black text-2xl font-medium">Essential</p>
+                  <div>
+                    <span className="text-4xl text-black font-semibold">
+                      3,75 EUR&nbsp;
+                    </span>
+                    <span className="text-base text-gray-600">/month</span>
+                    <p className="text-sm text-gray-500">
+                      45 EUR. Billed annually
+                    </p>
+                  </div>
+                  <p className="text-base text-black font-semibold flex">
+                    <TriangleAlertIcon
+                      width={15}
+                      height={15}
+                      className="mt-1"
+                    />
+                    This plan doesn’t cover Premium content
+                  </p>
+                  <div>
+                    <p className="text-base font-semibold text-black">
+                      AI & Tools
+                    </p>
+                    <div className="mt-3">
+                      <p className="flex">
+                        <Check
+                          color="green"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        84000 AI credits /year
+                      </p>
+                      <p className="flex">
+                        <Check
+                          color="green"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        Easy-to-use online design tools
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-base font-semibold text-gray-400">
+                      No Premium stock contents
+                    </p>
+                    <div className="mt-3">
+                      <p className="flex">
+                        <X
+                          color="gray"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        84000 AI credits /year
+                      </p>
+                      <p className="flex">
+                        <X
+                          color="gray"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        Easy-to-use online design tools
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </Card>
               <Card hoverable className="flex-1">
-                aaa
+                <div className="flex gap-5 flex-col gap-10">
+                  <p className="text-black text-2xl font-medium">Premium</p>
+                  <div>
+                    <span className="text-4xl text-black font-semibold">
+                      9 EUR&nbsp;
+                    </span>
+                    <span className="text-base text-gray-600">/month</span>
+                    <p className="text-sm text-gray-500">
+                      108 EUR. Billed annually
+                    </p>
+                  </div>
+                  <div>
+                    <Button
+                      className="w-full h-10 text-base font-semibold"
+                      type="primary"
+                    >
+                      Get premium
+                    </Button>
+                  </div>
+                  <div>
+                    <p className="text-base font-semibold text-black">
+                      AI & Tools
+                    </p>
+                    <div className="mt-3">
+                      <p className="flex">
+                        <Check
+                          color="green"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        216000 AI credits /year
+                      </p>
+                      <p className="flex">
+                        <Check
+                          color="green"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        Easy-to-use online design tools
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-base font-semibold text-gray-400">
+                      Premium stock content
+                    </p>
+                    <div className="mt-3">
+                      <p className="flex">
+                        <Check
+                          color="gray"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        All Premium stock content
+                      </p>
+                      <p className="flex">
+                        <Check
+                          color="gray"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        Unlimited downloads
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </Card>
               <Card hoverable className="flex-1">
-                aaa
+                <div className="flex gap-5 flex-col gap-10">
+                  <p className="text-black text-2xl font-medium">Premium+</p>
+                  <div>
+                    <span className="text-4xl text-black font-semibold">
+                      21 EUR&nbsp;
+                    </span>
+                    <span className="text-base text-gray-600">/month</span>
+                    <p className="text-sm text-gray-500">
+                      252 EUR. Billed annually
+                    </p>
+                  </div>
+                  <div>
+                    <Button
+                      className="w-full h-10 text-base font-semibold"
+                      type="primary"
+                    >
+                      Get premium+
+                    </Button>
+                  </div>
+                  <div>
+                    <p className="text-base font-semibold text-black">
+                      AI & Tools
+                    </p>
+                    <div className="mt-3">
+                      <p className="flex">
+                        <Check
+                          color="green"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        540000 AI credits /year
+                      </p>
+                      <p className="flex">
+                        <Check
+                          color="green"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        Easy-to-use online design tools
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-base font-semibold text-gray-400">
+                      Premium stock content
+                    </p>
+                    <div className="mt-3">
+                      <p className="flex">
+                        <X
+                          color="gray"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        All Premium stock content
+                      </p>
+                      <p className="flex">
+                        <X
+                          color="gray"
+                          width={15}
+                          height={15}
+                          className="mt-1 mr-1"
+                        />
+                        Unlimited downloads
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </Card>
             </div>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
