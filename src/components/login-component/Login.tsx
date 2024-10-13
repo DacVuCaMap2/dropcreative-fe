@@ -7,7 +7,7 @@ import { FieldType } from "./types";
 import { authLogin } from "@/api/api";
 import { AxiosResponse } from "axios";
 import { TypeLogin, TypeResponse } from "@/types/common";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { setCookie } from "@/ultils";
 
 const Login = () => {
