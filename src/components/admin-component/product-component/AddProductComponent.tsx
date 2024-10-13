@@ -11,6 +11,9 @@ import Modal from 'react-modal';
 import { div, form } from "framer-motion/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { message } from "antd";
+import Message from "@/components/common-component/Message";
+import { validatePostData } from "@/data/function";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -81,7 +84,7 @@ export default function AddProductComponent(props: Props) {
       key === "price" ||
       key === "comparePrice" ||
       key === "costPerPrice" ||
-      key === "shippingFee"
+      key === "shippingFee" || key==="aov" || key==="cr" || key==="categoryId" || key==="startAge" || key==="endAge"
     ) {
       value = value ? parseFloat(value) : 0;
     }
@@ -300,24 +303,29 @@ export default function AddProductComponent(props: Props) {
   const router = useRouter();
 
   const handleSubmit = async () => {
-    console.log(productData);
-    console.log(videos);
-    console.log(photos);
-    console.log(listVariantDetails);
-    console.log(serviceT);
     const productVariants = listVariantDetails.map((item: variantDetails, index) => {
       return {
         value: item.name, status: item.status, price: item.price, comparePrice: item.comparePrice, quantity: item.quantity,
         sku: item.sku, barcode: item.barcode, fileName: item.image ? `${index}-${accountId}image${Date.now()}` : ''
       }
     })
+
+    
+
+    
     let serviceType = 4;
     serviceType = serviceT.free && serviceT.premium ? 3 : serviceType;
     serviceType = serviceT.free && !serviceT.premium ? 1 : serviceType;
     serviceType = !serviceT.free && serviceT.premium ? 2 : serviceType;
     const variantValue = listVariant.map(item => item.optionName).join('./');
-    const postData = { ...productData, productVariants: productVariants, serviceType: serviceType, accountId: accountId, variant: variantValue };
+    const postData = { ...productData,status:1, productVariants: productVariants, serviceType: serviceType, accountId: accountId, variant: variantValue,contentCalling:contentCalling,description:description };
     const { id, ...filterPostData } = postData;
+    let errMess = "";
+    errMess = validatePostData(filterPostData);
+    if (errMess) {
+      message.error(errMess);
+      return;
+    }
     const formData = new FormData();
     formData.append("data", JSON.stringify(filterPostData));
 
@@ -331,8 +339,9 @@ export default function AddProductComponent(props: Props) {
         formData.append(`videos`, video);
       });
     }
-    console.log(photos, videos);
-    console.log(filterPostData);
+    // console.log(photos, videos);
+    // console.log(filterPostData);
+
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
     try {
 
@@ -1076,23 +1085,23 @@ export default function AddProductComponent(props: Props) {
             }
 
 
-            {photos.length>0 &&
-            <div className="space-y-2">
-              <label className="block text-xs font-bold">Photos</label>
-              {photos.length > 0 && (
-                <div className="grid grid-cols-5 gap-4 border-t pt-4 ">
-                  {photos.map((item: File, index) => (
-                    <div key={index} className="flex flex-col items-center rounded-lg border shadow-xl">
-                      <img
-                        src={URL.createObjectURL(item)} // Tạo URL tạm thời cho ảnh
-                        alt={item.name}
-                        className="w-16 h-16 object-cover" // Kích thước ảnh
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            {photos.length > 0 &&
+              <div className="space-y-2">
+                <label className="block text-xs font-bold">Photos</label>
+                {photos.length > 0 && (
+                  <div className="grid grid-cols-5 gap-4 border-t pt-4 ">
+                    {photos.map((item: File, index) => (
+                      <div key={index} className="flex flex-col items-center rounded-lg border shadow-xl">
+                        <img
+                          src={URL.createObjectURL(item)} // Tạo URL tạm thời cho ảnh
+                          alt={item.name}
+                          className="w-16 h-16 object-cover" // Kích thước ảnh
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             }
           </div>
 

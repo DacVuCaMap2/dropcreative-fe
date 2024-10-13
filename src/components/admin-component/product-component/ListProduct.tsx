@@ -41,7 +41,7 @@ export default function ListProduct(props: Props) {
                     </div>
                 </div>
             </div>
-            <div className='w-full pt-8 grid grid-cols-4 gap-5 px-4'>
+            <div className='w-full pt-8 grid grid-cols-4 gap-6 px-4'>
                 {listData.map((item: any, index) => (
                     <Link href={'/'} key={index}>
                         <CardProductItem product={item}/>
