@@ -5,8 +5,8 @@ import React from 'react'
 
 export default async function page() {
   const cookie = cookies();
-  let accountId = cookie.get('account_id')?.value;
-  let url = process.env.NEXT_PUBLIC_API_URL+`/api/product?accountId=${accountId}&size=10&page=1`;
+  const accountId = cookie.get('account_id')?.value;
+  const url = process.env.NEXT_PUBLIC_API_URL+`/api/product?accountId=${accountId}&size=10&page=1`;
   const dataList = await GetApi(url);
 
   return (
