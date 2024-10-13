@@ -11,12 +11,12 @@ export function validatePostData(postData: any) {
         return "aov must be a number.";
     }
     // Check categoryId
-    if (typeof postData.categoryId !== 'number' || postData.categoryId === 0) {
+    if ( postData.categoryIds.length===0) {
         return "Choose a category.";
     }
     // Check comparePrice
     if (typeof postData.comparePrice !== 'number') {
-        return "comparePrice must be a number.";
+        return "Compare Price must be a number.";
     }
     // Check content
     if (isEmptyString(postData.content)) {
@@ -32,7 +32,7 @@ export function validatePostData(postData: any) {
     }
     // Check countryTarget
     if (isEmptyString(postData.countryTarget)) {
-        return "countryTarget cannot be empty.";
+        return "Country Target cannot be empty.";
     }
     // Check cr
     if (typeof postData.cr !== 'number') {

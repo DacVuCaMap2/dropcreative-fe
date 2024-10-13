@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./AddProductComponent.css";
-import { CircleAlert, Crown, FileImage, Save, Trash, Type, X } from "lucide-react";
+import { CircleAlert, Crown, FileImage, Plus, Save, Trash, Type, X } from "lucide-react";
 import { Tooltip } from "react-tooltip";
 import TinyMCEEditor from "@/components/TinyMCE/TinyMCEEditor";
 import Product, { getNewProduct } from "@/model/Product";
@@ -11,9 +11,11 @@ import Modal from 'react-modal';
 import { div, form } from "framer-motion/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { message } from "antd";
+import { message, Select, Space } from "antd";
 import Message from "@/components/common-component/Message";
 import { validatePostData } from "@/data/function";
+import { generalCategoriesSelect, generalOptionHoliday, generalOptionsCat, generalOptionSeasons } from "@/data/generalData";
+import GetApi from "@/api/GetApi";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -31,6 +33,16 @@ type variantDetails = {
   value: string;
   status: number;
 };
+type ComboSale = {
+  quantity: number,
+  value: number
+}
+type BoughtTogether = {
+  name: string,
+  imgUrl: string,
+  id: number,
+  value: number,
+}
 type Props = {
   accountId: string
 }
@@ -44,13 +56,57 @@ export default function AddProductComponent(props: Props) {
   const [videos, setVideos] = useState<File[]>([]);
   const [photos, setPhotos] = useState<File[]>([]);
   const [isOpenSelectPhoto, setIsOpenSelectPhoto] = useState(false);
+  const [isOpenSelectProduct, setIsOpenSelectProduct] = useState(false);
   const [indCurrent, setIndCurrent] = useState(0);
+  const [listProductSelect, setListProductSelect] = useState<any[]>([]);
+  const [listComboSale, setListComboSale] = useState<ComboSale[]>([]);
+  const [thisBoughtTogether,setThisBoughtTogether] = useState<BoughtTogether>({name:"",imgUrl:"",id:0,value:0});
+  const [listBoughtTogerther, setListBoughtTogether] = useState<BoughtTogether[]>([{
+    name: "",
+    imgUrl: "",
+    id: -1,
+    value: 0,
+  }, {
+    name: "",
+    imgUrl: "",
+    id: -1,
+    value: 0,
+  },]);
+
+  ///get list Product select
+  useEffect(() => {
+
+    if (listProductSelect.length == 0) {
+      const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=30&page=1`;
+      const fetchData = async () => {
+        const response = await GetApi(url);
+        console.log(response);
+        if (Array.isArray(response.data)) {
+          setListProductSelect(response.data);
+        }
+      }
+      fetchData();
+    }
+  }, [])
+
+
+
+
   const [serviceT, setServiceT] = useState({
     free: productData.serviceType === 1 || productData.serviceType === 3 ? true : false
     , premium: productData.serviceType === 2 || productData.serviceType === 3 ? true : false
   });
 
   const [listVariantDetails, setListVariantDetails] = useState<variantDetails[]>([]);
+  const [listCat,setListCat] = useState<any[]>([]);
+  const optionsCategories = generalOptionsCat;
+  const catList = generalCategoriesSelect;
+  const optionSeasons = generalOptionSeasons;
+  const seasonList = generalOptionSeasons;
+  const optionHolidays = generalOptionHoliday;
+  const seasonHolidays = generalOptionHoliday;
+
+
   const openModal = () => {
     document.body.style.overflow = 'hidden';
     setIsOpenSelectPhoto(true);
@@ -59,6 +115,15 @@ export default function AddProductComponent(props: Props) {
   const closeModal = () => {
     document.body.style.overflow = 'unset';
     setIsOpenSelectPhoto(false);
+  };
+  const openModalProduct = () => {
+    document.body.style.overflow = 'hidden';
+    setIsOpenSelectProduct(true);
+  };
+
+  const closeModalProduct = () => {
+    document.body.style.overflow = 'unset';
+    setIsOpenSelectProduct(false);
   };
 
 
@@ -84,7 +149,7 @@ export default function AddProductComponent(props: Props) {
       key === "price" ||
       key === "comparePrice" ||
       key === "costPerPrice" ||
-      key === "shippingFee" || key==="aov" || key==="cr" || key==="categoryId" || key==="startAge" || key==="endAge" || key==="genderTarget"
+      key === "shippingFee" || key === "aov" || key === "cr" || key === "categoryId" || key === "startAge" || key === "endAge" || key === "genderTarget"
     ) {
       value = value ? parseFloat(value) : 0;
     }
@@ -309,16 +374,38 @@ export default function AddProductComponent(props: Props) {
         sku: item.sku, barcode: item.barcode, fileName: item.image ? `${index}-${accountId}image${Date.now()}` : ''
       }
     })
+    let comboSale = "";
+    const arrComboSaleQuant : string[] = [];
+    const arrComboSaleVal : string[] = [];
+    listComboSale.forEach(item=>{
+      arrComboSaleQuant.push(item.quantity.toString());
+      arrComboSaleVal.push(item.value.toString());
+    })
+    if (arrComboSaleQuant.length>0 && arrComboSaleVal.length>0 && arrComboSaleQuant.length===arrComboSaleVal.length) {
+      comboSale = arrComboSaleQuant.join('./')+"|"+arrComboSaleVal.join('./');
+    }
+    let boughtTogether = "0|"+thisBoughtTogether.value;
+    const arrBTId : string[] = [];
+    const arrBTval : string[] = [];
+    listBoughtTogerther.forEach(item=>{
+      if (item.id!=-1) {
+        arrBTId.push(item.id.toString());
+        arrBTval.push(item.value.toString());
+      }
+    })
+    if (arrBTId.length>0 && arrBTval.length>0 && arrBTId.length===arrBTval.length) {
+      boughtTogether = "0./"+arrBTId.join("./")+"|"+thisBoughtTogether.value+"./"+arrBTval.join("./");
+    }
 
-    
-
-    
     let serviceType = 4;
     serviceType = serviceT.free && serviceT.premium ? 3 : serviceType;
     serviceType = serviceT.free && !serviceT.premium ? 1 : serviceType;
     serviceType = !serviceT.free && serviceT.premium ? 2 : serviceType;
     const variantValue = listVariant.map(item => item.optionName).join('./');
-    const postData = { ...productData,status:1, productVariants: productVariants, serviceType: serviceType, accountId: accountId, variant: variantValue,contentCalling:contentCalling,description:description };
+    const postData = { ...productData, status: 1, productVariants: productVariants, serviceType: serviceType
+      , accountId: accountId, variant: variantValue
+      , contentCalling: contentCalling, description: description
+      , comboSale:comboSale,boughtTogether:boughtTogether,categoryIds:listCat };
     const { id, ...filterPostData } = postData;
     let errMess = "";
     errMess = validatePostData(filterPostData);
@@ -340,7 +427,7 @@ export default function AddProductComponent(props: Props) {
       });
     }
     // console.log(photos, videos);
-    // console.log(filterPostData);
+    console.log(filterPostData);
 
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
     try {
@@ -355,6 +442,81 @@ export default function AddProductComponent(props: Props) {
     } catch (error) {
       console.error('Error:', error);
     }
+  }
+
+  const handleChangeCat = (value: any[]) => {
+    let tempCat : any[]= [...listCat];
+    tempCat=[];
+    value.forEach(item=>{
+      const idCat = catList.find(cat=>cat.title===item);
+      if (idCat) {
+        tempCat.push(idCat.value);
+      }
+    })
+    setListCat(tempCat);
+  }
+  const handleChangeSeason = (value: any[]) => {
+
+  }
+  const handleChangeHoliday = (value: any[]) => {
+
+  }
+
+  const handleChangeComboSale = (e: any, ind: number, key: string) => {
+    let value = e.target.value;
+    value = value ? parseFloat(value) : 0;
+    const tempList = [...listComboSale].map((item: ComboSale, index) => {
+      if (index === ind && value < 101) {
+        return { ...item, [key]: value };
+      }
+      return item;
+    });
+    setListComboSale(tempList);
+  }
+
+  const handleSelectProductBT = (select: any) => {
+    const tempList = [...listBoughtTogerther].map((item: BoughtTogether, index) => {
+      if (indCurrent === index) {
+        return {
+          ...item
+          , name: select.title
+          , imgUrl: select.imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${select.imageUrl}` : "/image/nophotos.png"
+          , id: select.id
+        }
+      }
+      return item;
+    })
+    setListBoughtTogether(tempList);
+    closeModalProduct();
+  }
+  const handleDelBT = (index: any) => {
+    const tempList = [...listBoughtTogerther].map((item: BoughtTogether, index) => {
+      if (indCurrent === index) {
+        return {
+          ...item
+          , name: ""
+          , imgUrl: "/image/nophotos.png"
+          , id: -1
+        }
+      }
+      return item;
+    })
+    setListBoughtTogether(tempList);
+  }
+
+  const handleChangeBT = (e: any, ind: number) => {
+    let value = e.target.value;
+    value = value ? parseFloat(value) : 0;
+    const tempList = [...listBoughtTogerther].map((item: BoughtTogether, index) => {
+      if (ind === index) {
+        return {
+          ...item
+          , value: value
+        }
+      }
+      return item;
+    })
+    setListBoughtTogether(tempList);
   }
   return (
     <div className="relative  flex justify-between items-center w-full flex-wrap">
@@ -386,6 +548,59 @@ export default function AddProductComponent(props: Props) {
                 {productData.title.length}/225
               </label>
             </div>
+
+
+            <div className="space-y-2">
+              <label className="block text-xs font-bold">Categories</label>
+              <Select
+                mode="multiple"
+                style={{ width: '100%' }}
+                placeholder="select Category"
+                defaultValue={[]}
+                onChange={handleChangeCat}
+                options={optionsCategories}
+                optionRender={(option) => (
+                  <Space>
+                    {option.data.desc}
+                  </Space>
+                )}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-xs font-bold">Seasons</label>
+              <Select
+                mode="multiple"
+                style={{ width: '100%' }}
+                placeholder="select Season"
+                defaultValue={[]}
+                onChange={handleChangeSeason}
+                options={optionSeasons}
+                optionRender={(option) => (
+                  <Space>
+                    {option.data.desc}
+                  </Space>
+                )}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-xs font-bold">Holiday</label>
+              <Select
+                mode="multiple"
+                style={{ width: '100%' }}
+                placeholder="select Season"
+                defaultValue={[]}
+                onChange={handleChangeHoliday}
+                options={optionHolidays}
+                optionRender={(option) => (
+                  <Space>
+                    {option.data.desc}
+                  </Space>
+                )}
+              />
+            </div>
+
 
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
@@ -528,7 +743,7 @@ export default function AddProductComponent(props: Props) {
                   Price
                 </span>
                 <div className="flex">
-                  <div className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-300 border-none rounded-s-lg focus:ring-4 focus:outline-none focus:ring-gray-100">
+                  <div className="flex text-gray-500 bg-gray-300 h-full font-medium text-center items-center rounded-s-lg px-4">
                     USD
                   </div>
                   <div className="relative w-full">
@@ -548,7 +763,7 @@ export default function AddProductComponent(props: Props) {
                   Compare at price
                 </span>
                 <div className="flex">
-                  <div className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-300 border-none rounded-s-lg focus:ring-4 focus:outline-none focus:ring-gray-100">
+                  <div className="flex text-gray-500 bg-gray-300 h-full font-medium text-center items-center rounded-s-lg px-4">
                     USD
                   </div>
                   <div className="relative w-full">
@@ -572,7 +787,7 @@ export default function AddProductComponent(props: Props) {
                   Cost per price
                 </span>
                 <div className="flex">
-                  <div className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-300 border-none rounded-s-lg focus:ring-4 focus:outline-none focus:ring-gray-100">
+                  <div className="flex text-gray-500 bg-gray-300 h-full font-medium text-center items-center rounded-s-lg px-4">
                     USD
                   </div>
                   <div className="relative w-full">
@@ -596,7 +811,7 @@ export default function AddProductComponent(props: Props) {
                   Shipping fee
                 </span>
                 <div className="flex">
-                  <div className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-500 bg-gray-300 border-none rounded-s-lg focus:ring-4 focus:outline-none focus:ring-gray-100">
+                  <div className="flex text-gray-500 bg-gray-300 h-full font-medium text-center items-center rounded-s-lg px-4">
                     USD
                   </div>
                   <div className="relative w-full">
@@ -776,11 +991,13 @@ export default function AddProductComponent(props: Props) {
                                     <div className="grid grid-cols-5 gap-4 pt-4 ">
                                       {photos.map((item: File, photoInd) => (
                                         <div onClick={() => handleSelectVariantImg(item)} key={photoInd} className="flex flex-col items-center rounded-lg border shadow-xl overflow-hidden">
-                                          <img
+                                          <Image
                                             src={URL.createObjectURL(item)} // Tạo URL tạm thời cho ảnh
                                             alt={item.name}
+                                            width={144}
+                                            height={144}
                                             className="w-36 h-36 object-cover" // Kích thước ảnh
-                                          />
+                                          ></Image>
                                         </div>
                                       ))}
                                     </div>
@@ -914,27 +1131,7 @@ export default function AddProductComponent(props: Props) {
               <p>Product description on sample search page</p>
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-xs font-bold">Categories</label>
-              <select
-                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-                focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
-                value={productData.categoryId}
-                defaultValue="" // Sử dụng defaultValue để thiết lập giá trị mặc định
-                required
-                onChange={e => handleChange(e, "categoryId")}
-              >
-                <option value="0" disabled>
-                  Select Categories
-                </option>
-                <option value="1">Fashion</option>
-                <option value="2">Beauty</option>
-                <option value="3">Gaming</option>
-                <option value="4">Kitchen</option>
-                <option value="5">Home Decor</option>
-                <option value="6">Office Supplies</option>
-              </select>
-            </div>
+
             <div className="space-y-2">
               <label className="block text-xs font-bold">CR (%)</label>
               <input
@@ -1144,6 +1341,185 @@ export default function AddProductComponent(props: Props) {
             <button className="border p-2 rounded font-bold hover:bg-neutral-300">
               Select domain
             </button>{" "}
+          </div>
+
+
+          <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
+            <div className="flex flex-row justify-between items-center ">
+              <div>
+                <span className="font-bold">
+                  Combo Sale
+                </span>
+                <p>Set quantity and sale percent to buy more save more</p>
+              </div>
+              <div className="flex flex-col">
+                <button onClick={() => { const tempListCombo: ComboSale[] = [...listComboSale]; tempListCombo.push({ quantity: 0, value: 0 }); setListComboSale(tempListCombo) }} className="text-blue-500 hover:underline">
+                  Add
+                </button>
+              </div>
+            </div>
+            {listComboSale.length > 0 &&
+              <div className="">
+                {listComboSale.map((item: ComboSale, index) => (
+                  <div key={index} className="flex flex-row space-x-4 space-y-4 items-center justify-center">
+                    <div className="flex flex-col mt-4">
+                      <label htmlFor="" className="font-bold text-sm">
+                        Quantity
+                      </label>
+                      <input
+                        type="number"
+                        onChange={e => handleChangeComboSale(e, index, "quantity")}
+                        value={item.quantity === 0 ? '' : item.quantity}
+                        className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                        focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                        placeholder="Type item quantity"
+                        required
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <label htmlFor="" className="font-bold text-sm">
+                        Sale Percent (%)
+                      </label>
+                      <input
+                        type="number"
+                        value={item.value === 0 ? '' : item.value}
+                        onChange={e => handleChangeComboSale(e, index, "value")}
+                        className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                        focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                        placeholder="Type sale percent"
+                        required
+                      />
+                    </div>
+                    <div className="pt-4">
+                      <button
+                        onClick={() => { const tempList = [...listComboSale].filter((item: ComboSale, childInd) => childInd != index); setListComboSale(tempList) }}
+                        className="p-2 hover:bg-gray-200 rounded"
+                      >
+                        <Trash />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            }
+          </div>
+
+          <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
+            <div className="flex flex-row justify-between items-center ">
+              <div>
+                <span className="font-bold">
+                  Bought Together
+                </span>
+                <p>Set quantity and sale percent to buy more save more</p>
+              </div>
+            </div>
+            {listBoughtTogerther.length > 0 &&
+              <div className="">
+                <div className="flex flex-row justify-center items-center space-x-2 border-b pb-2 mb-4 text-sm font-bold">
+                  <div className="w-full">
+                    <span>Product</span>
+                  </div>
+                  <div className="w-1/3 ">
+                    <p className="">Percent (%)</p>
+                  </div>
+                  <div
+                    className="p-4"
+                  >
+                  </div>
+                </div>
+                <div>
+                  <div className="flex flex-row justify-center items-center space-x-2 border-b pb-2 mb-4">
+                    <div className="flex flex-row w-full overflow-hidden items-center space-x-2">
+                      <Image src={photos.length > 0 ? URL.createObjectURL(photos[0]) : "/image/nophotos.png"} alt="image" width={50} height={50} className="rounded"></Image>
+                      <p className="truncate">{productData.title ? productData.title : "This Product"}</p>
+                    </div>
+                    <div className="w-1/3">
+                      <input
+                        type="number"
+                        onChange={(e) => setThisBoughtTogether({...thisBoughtTogether,value:e.target.value ? parseFloat(e.target.value) : 0})}
+                        value={thisBoughtTogether.value === 0 ? '' : thisBoughtTogether.value}
+                        className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                      focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                        placeholder="Type item quantity"
+                        required
+                      />
+                    </div>
+                    <div
+                      className="p-5"
+                    >
+                    </div>
+                  </div>
+                </div>
+                {listBoughtTogerther.map((item: BoughtTogether, index) => (
+                  <div key={index}>
+                    {item.id != -1 ?
+                      <div className="flex flex-row justify-center items-center space-x-2 border-b pb-2 mb-4">
+                        <div className="flex flex-row w-full overflow-hidden items-center space-x-2">
+                          <Image src={item.imgUrl} alt="image" width={50} height={50} className="rounded"></Image>
+                          <p className="truncate">{item.name}</p>
+                        </div>
+                        <div className="w-1/3">
+                          <input
+                            type="number"
+                            onChange={(e) => handleChangeBT(e, index)}
+                            value={item.value === 0 ? '' : item.value}
+                            className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                          focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                            placeholder="Type item quantity"
+                            required
+                          />
+                        </div>
+                        <button
+                          onClick={() => handleDelBT(index)}
+                          className="p-2 hover:bg-gray-200 rounded"
+                        >
+                          <X />
+                        </button>
+                      </div>
+                      :
+                      <div className="p-2">
+                        <button onClick={() => { openModalProduct(); setIndCurrent(index) }} className="flex flex-row justify-center items-center w-full py-2 border-neutral-300 border rounded hover:bg-neutral-200">
+                          <Plus />
+                          <span>Add product bought together</span>
+                        </button>
+
+                        <Modal
+                          isOpen={isOpenSelectProduct}
+                          onRequestClose={closeModalProduct}
+                          contentLabel="Select Image"
+                          className="modal relative"
+                        >
+                          <button className="absolute top-2 right-2 bg-gray-200 p-2 rounded hover:bg-gray-400" onClick={closeModalProduct}>
+                            <X />
+                          </button>
+                          <span className="border-b font-bold text-xl">Select an Product</span>
+                          <div className="image-gallery p-2">
+                            {listProductSelect.length > 0 && (
+                              <div className="grid grid-cols-5 gap-4 pt-4 w-full">
+                                {listProductSelect.map((proSelect: any, proInd) => (
+                                  <div onClick={() => handleSelectProductBT(proSelect)} key={proInd} className="flex flex-col items-center rounded-lg border shadow-xl overflow-hidden">
+                                    <Image
+                                      src={proSelect.imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${proSelect.imageUrl}` : '/image/nophotos.png'} // Tạo URL tạm thời cho ảnh
+                                      alt={proSelect.name}
+                                      width={144}
+                                      height={144}
+                                      className="w-36 h-36 object-cover" // Kích thước ảnh
+                                    ></Image>
+                                    <div className="h-20 overflow-hidden px-2">
+                                      <span className="px-1 text-sm font-bold">{proSelect.title}</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </Modal>
+                      </div>
+                    }
+                  </div>
+                ))}
+              </div>
+            }
           </div>
         </div>
       </div>

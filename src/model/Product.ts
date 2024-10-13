@@ -3,7 +3,7 @@ class Product {
     title: string;
     description: string;
     accountId: number|null; 
-    categoryId: number; 
+    categoryIds: number[]; 
     status: number;
     serviceType: number; 
     variant: string;
@@ -33,7 +33,7 @@ class Product {
         title: string;
         description: string; 
         accountId: number|null;   
-        categoryId: number;  
+        categoryIds: number[];  
         status: number;
         serviceType: number;  
         variant: string;
@@ -62,7 +62,7 @@ class Product {
         this.title = parameters.title;
         this.description = parameters.description; 
         this.accountId = parameters.accountId;   
-        this.categoryId = parameters.categoryId;  
+        this.categoryIds = parameters.categoryIds;  
         this.status = parameters.status;
         this.serviceType = parameters.serviceType;  
         this.variant = parameters.variant;
@@ -98,7 +98,7 @@ export const getNewProduct = (): Product => {
         title: "",
         description: "",  
         accountId: null, 
-        categoryId: 0,
+        categoryIds: [],
         status: 0,
         serviceType: 0,
         variant: "",
@@ -131,7 +131,7 @@ export const getNewProduct = (): Product => {
 //         title: "namvu",
 //         description: "day la dess",  
 //         accountId: 1, 
-//         categoryId: 1,
+//         categoryIds: [],
 //         status: 1,
 //         serviceType: 1,
 //         variant: "",

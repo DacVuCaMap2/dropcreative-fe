@@ -8,6 +8,8 @@
 .modal {
     max-width: 50%;
     min-height: 50%; /* Đặt chiều rộng tối đa cho modal */
+    max-height: 70%;
+    overflow: auto;
     margin: auto; /* Căn giữa modal */
     margin-top: 10%;
     padding: 20px; /* Thêm padding bên trong */
