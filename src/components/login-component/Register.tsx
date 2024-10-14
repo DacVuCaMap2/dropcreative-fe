@@ -52,12 +52,12 @@ const Register = (props: IProps) => {
               <Image
                 src="/image/logo-font.png"
                 alt="Logo"
-                width={250}
+                width={200}
                 height={0}
                 className="object-contain"
               />
             </div>
-            <p className="text-center mt-1 text-2xl text-gray-700 font-medium">
+            <p className="text-center mt-1 text-xl text-gray-700 font-medium">
               Create an account
             </p>
             <div className="flex justify-center">
@@ -128,13 +128,13 @@ const Register = (props: IProps) => {
                   <div className="w-60">
                     <Checkbox className="mt-1" />
                     <span className="ml-2">
-                      I do not wish to receive news and promotions from Freepik
-                      Company by email.
+                      I do not wish to receive news and promotions from
+                      DropCreative Company by email.
                     </span>
                   </div>
                 </Form.Item>
                 <p className="text-center mb-2.5 text-gray-400">
-                  By continuing, you agree to Freepik Company&#39;ts
+                  By continuing, you agree to DropCreative Company&#39;ts
                   <span className="text-gray-400 font-medium">
                     &nbsp;Terms of Use&nbsp;
                   </span>
