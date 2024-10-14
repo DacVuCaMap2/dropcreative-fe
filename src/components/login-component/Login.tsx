@@ -56,7 +56,8 @@ const Login = () => {
           sameSite: "Strict", // Cookie sent only with same-site requests
         });
       }
-      router.push("/");
+      // router.push("/");
+      window.location.href="/";
     } catch (error: any) {
       message.error("error", error?.data?.message);
     }

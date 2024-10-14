@@ -4,8 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(request: NextRequest) {
     const cookie = cookies();
     const loggedIn = cookie.get('account_id')?.value
-
-    console.log(loggedIn);
     if (!loggedIn) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
