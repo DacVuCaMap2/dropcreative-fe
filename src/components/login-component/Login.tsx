@@ -7,7 +7,7 @@ import { FieldType } from "./types";
 import { authLogin } from "@/api/api";
 import { AxiosResponse } from "axios";
 import { TypeLogin, TypeResponse } from "@/types/common";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { setCookie } from "@/ultils";
 
 const Login = () => {
@@ -94,12 +94,12 @@ const Login = () => {
                 <Image
                   src="/image/logo-font.png"
                   alt="Logo"
-                  width={250}
+                  width={200}
                   height={0}
                   className="object-contain"
                 />
               </div>
-              <p className="text-center mt-3 text-2xl text-gray-700 font-semibold">
+              <p className="text-center mt-3 text-xl text-gray-700 font-semibold">
                 Login
               </p>
               <div className="flex justify-center">
