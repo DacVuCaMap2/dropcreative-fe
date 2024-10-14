@@ -8,7 +8,8 @@ export type TypeResponse =  {
     message: string;
     jwt?:string;
     id:number;
-    expired?:number
+    expired?:number;
+    role:string;
 }
 export type TypeRegister ={
     email:string,

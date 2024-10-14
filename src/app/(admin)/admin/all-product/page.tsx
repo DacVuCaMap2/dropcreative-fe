@@ -6,10 +6,11 @@ import React from 'react'
 export default async function page() {
   const cookie = cookies();
   const accountId = cookie.get('account_id')?.value;
+  const roleStr = cookie.get('role')?.value;
   const url = process.env.NEXT_PUBLIC_API_URL+`/api/product?accountId=${accountId}&size=30&page=1`;
   const dataList = await GetApi(url);
 
   return (
-    <AllProductComponent listProduct={dataList}/>
+    <AllProductComponent listProduct={dataList} roleStr={roleStr}/>
   )
 }

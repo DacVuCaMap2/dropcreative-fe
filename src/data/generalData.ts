@@ -109,3 +109,5 @@ export const generalOptionsCat = generalCategoriesSelect.map(item=>{
 export const generalOptionSeasons = generalSeasonList.map(item=>{
     return{label:item.title,value:item.title,emoji:'',desc:item.title}
 });
+
+export const generalRoles = ['user_role','admin_role'];
