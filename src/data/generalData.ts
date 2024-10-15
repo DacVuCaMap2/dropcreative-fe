@@ -40,19 +40,19 @@ export const generalCategoriesSelect = [
 export const generalSeasonList = [
     {
         title:"Spring",
-        value:1
+        value:0
     },
     {
         title:"Summer",
-        value:2
+        value:1
     },
     {
         title:"Autumn (Fall)",
-        value:3
+        value:2
     },
     {
         title:"Winter",
-        value:4
+        value:3
     }
 ] 
 
