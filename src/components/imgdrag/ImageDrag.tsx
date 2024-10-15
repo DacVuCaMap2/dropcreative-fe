@@ -126,8 +126,8 @@ const PhotoGallery: React.FC<Props> = (props: Props) => {
             // Combine new unique photos with existing ones, limiting the number to 10
             let tempList = [...photos, ...uniqueNewPhotos];
             // If there are more than 10, keep the most recent 10
-            if (tempList.length > 70) {
-                tempList = tempList.slice(-70);
+            if (tempList.length > 100) {
+                tempList = tempList.slice(-100);
             }
 
             setPhotos(tempList);
