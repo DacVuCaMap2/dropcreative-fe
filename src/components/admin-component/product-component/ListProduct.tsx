@@ -43,9 +43,9 @@ export default function ListProduct(props: Props) {
             </div>
             <div className='w-full pt-8 grid grid-cols-4 gap-6 px-4'>
                 {listData.map((item: any, index) => (
-                    <Link href={'/'} key={index}>
+                    <div key={index}>
                         <CardProductItem product={item}/>
-                    </Link>
+                    </div>
                 ))}
             </div>
         </div>

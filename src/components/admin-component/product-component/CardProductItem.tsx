@@ -1,13 +1,14 @@
 "use client";
 
-import { Card } from "flowbite-react";
 import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   product: any
 }
 export function CardProductItem(props: Props) {
   const data = props.product;
+  console.log(data.id);
   return (
     <div className="border text-neutral-600 border-neutral-400 rounded-lg h-96 flex flex-col p-2 hover:shadow-xl transition-shadow duration-300 ease-in-out overflow-hidden hover:bg-gray-100">
       <div className="h-40 overflow-hidden flex items-center justify-center py-2 mb-2">
@@ -19,15 +20,17 @@ export function CardProductItem(props: Props) {
         {data.title}
       </p>
       <div className="flex flex-row text-sm">
-        <div className="flex flex-col w-full space-y-2">
-          <span>Categories</span>
-          <span>Shipping fee</span>
+        <div className="flex flex-col w-full">
+          {/* <span>Categories</span> */}
+          <span>Ship fee</span>
           <span>Date</span>
+          <span>Demo:</span>
         </div>
-        <div className="flex flex-col w-full space-y-2">
+        <div className="flex flex-col w-full">
           <span>{data.category}</span>
-          <span>12 $</span>
+          <span>12$</span>
           <span>11/11/2024</span>
+          <Link className="underline cursor-pointer text-blue-500" href={`/landing-page/product/${data.id}`}>{process.env.NEXT_PUBLIC_THIS_URL}+/landing-page/product/{data.id}</Link>
         </div>
       </div>
     </div>

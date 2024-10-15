@@ -11,13 +11,13 @@ export function validatePostData(postData: any) {
         return "aov must be a number.";
     }
     // Check categoryId
-    if ( postData.categoryIds.length===0) {
+    if (postData.categoryIds.length === 0) {
         return "Choose a category.";
     }
-    if (postData.holiday.length===0){
+    if (postData.holiday.length === 0) {
         return "Choose holiday.";
     }
-    if (postData.season.length===0){
+    if (postData.season.length === 0) {
         return "Choose seasons.";
     }
     // Check comparePrice
@@ -118,4 +118,37 @@ export function validatePostData(postData: any) {
     }
 
     return ""; // No errors
+}
+
+export const stringToVariant = (variantTitle: string, productVariant: string[]) : string[][] => {
+    const listResult: string[][] = [[], [], []];
+    const listVariantName: string[] = variantTitle.split("./");
+    productVariant.map(str => {
+        const arrStr = str.split(',');
+        for (let i = 0; i < listVariantName.length; i++) {
+            let flag = true;
+            if (!listResult[i].find(item=>item===arrStr[i]) && flag) {
+                listResult[i].push(arrStr[i]);
+                flag = false;
+            }
+        }
+    })
+    // console.log(listResult);
+    // //
+    // let strResult = "";
+    // for (let i = 0; i < listResult.length; i++) {
+    //     if (listResult[i].length>0 && i!=0) {
+    //         strResult+="|"
+    //     }
+    //     if (listResult[i].length > 0) {
+    //         for (let j = 0; j < listResult[i].length; j++) {
+    //             strResult+=listResult[i][j]
+    //             if (j<listResult[i].length-1) {
+    //                 strResult+="./";
+    //             }
+    //         }
+            
+    //     }
+    // }
+    return listResult;
 }
