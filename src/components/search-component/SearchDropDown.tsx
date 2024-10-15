@@ -33,10 +33,10 @@ export default function SearchDropDown() {
     };
   }, []);
   return (
-    <div className="h-full relative border-r" ref={dropdownRef}>
+    <div className="h-10 relative border-r mb-4" ref={dropdownRef}>
       <button
         onClick={() => setOpen(!isOpen)}
-        className="bg-gray-300 flex items-center flex-row px-4 py-4 space-x-2 h-10 w-48 mt-2"
+        className="bg-gray-200 flex items-center flex-row px-4 py-4 space-x-2 w-48"
       >
         {selectItem.drop1.icon && <selectItem.drop1.icon size={16} />}
         <span className="flex-grow text-left truncate">
