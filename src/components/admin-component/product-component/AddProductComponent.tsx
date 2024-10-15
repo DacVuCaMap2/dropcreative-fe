@@ -445,7 +445,8 @@ export default function AddProductComponent(props: Props) {
         },
       });
       console.log('Success:', response.data);
-      router.push('/admin/all-product');
+      // router.push('/admin/all-product');
+      window.location.href='/admin/all-product'
     } catch (error) {
       console.error('Error:', error);
     }
