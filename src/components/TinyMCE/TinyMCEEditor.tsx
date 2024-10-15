@@ -8,10 +8,12 @@ interface TinyMCEEditorProps {
 }
 
 const TinyMCEEditor: React.FC<TinyMCEEditorProps> = ({ onEditorChange, initialValue }) => {
+
     return (
         <Editor
             apiKey={process.env.NEXT_PUBLIC_API_TINY}
             initialValue={initialValue}
+            onEditorChange={onEditorChange}
             init={{
                 height: 300,
                 menubar: false,

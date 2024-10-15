@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { message, Select, Space } from "antd";
 import Message from "@/components/common-component/Message";
 import { validatePostData } from "@/data/function";
-import { generalCategoriesSelect, generalOptionHoliday, generalOptionsCat, generalOptionSeasons } from "@/data/generalData";
+import { generalCategoriesSelect, generalHolidayList, generalOptionHoliday, generalOptionsCat, generalOptionSeasons, generalSeasonList } from "@/data/generalData";
 import GetApi from "@/api/GetApi";
 type productVariant = {
   optionName: string;
@@ -48,7 +48,6 @@ type Props = {
 }
 export default function AddProductComponent(props: Props) {
   const accountId = props.accountId;
-  console.log(accountId);
   const [productData, setProductData] = useState<Product>(getNewProduct());
   const [listVariant, setListVariant] = useState<productVariant[]>([]);
   const [description, setDescription] = useState(`<p>${productData.description}</p>`);
@@ -60,7 +59,7 @@ export default function AddProductComponent(props: Props) {
   const [indCurrent, setIndCurrent] = useState(0);
   const [listProductSelect, setListProductSelect] = useState<any[]>([]);
   const [listComboSale, setListComboSale] = useState<ComboSale[]>([]);
-  const [thisBoughtTogether,setThisBoughtTogether] = useState<BoughtTogether>({name:"",imgUrl:"",id:0,value:0});
+  const [thisBoughtTogether, setThisBoughtTogether] = useState<BoughtTogether>({ name: "", imgUrl: "", id: 0, value: 0 });
   const [listBoughtTogerther, setListBoughtTogether] = useState<BoughtTogether[]>([{
     name: "",
     imgUrl: "",
@@ -98,13 +97,15 @@ export default function AddProductComponent(props: Props) {
   });
 
   const [listVariantDetails, setListVariantDetails] = useState<variantDetails[]>([]);
-  const [listCat,setListCat] = useState<any[]>([]);
+  const [listCat, setListCat] = useState<any[]>([]);
+  const [listSea, setListSeasons] = useState<any[]>([]);
+  const [listHol, setListHolidays] = useState<any[]>([]);
   const optionsCategories = generalOptionsCat;
   const catList = generalCategoriesSelect;
   const optionSeasons = generalOptionSeasons;
-  const seasonList = generalOptionSeasons;
+  const seasonList = generalSeasonList;
   const optionHolidays = generalOptionHoliday;
-  const seasonHolidays = generalOptionHoliday;
+  const holidayList = generalHolidayList;
 
 
   const openModal = () => {
@@ -128,9 +129,11 @@ export default function AddProductComponent(props: Props) {
 
 
   const handleEditorChange = (newContent: any) => {
+    console.log('Content changed:', newContent);
     setDescription(newContent);
   };
   const handleContentCalling = (newContent: any) => {
+    console.log('Content changed:', newContent);
     setContentCalling(contentCalling);
   };
   const handleServiceType = (e: any, key: string) => {
@@ -375,26 +378,26 @@ export default function AddProductComponent(props: Props) {
       }
     })
     let comboSale = "";
-    const arrComboSaleQuant : string[] = [];
-    const arrComboSaleVal : string[] = [];
-    listComboSale.forEach(item=>{
+    const arrComboSaleQuant: string[] = [];
+    const arrComboSaleVal: string[] = [];
+    listComboSale.forEach(item => {
       arrComboSaleQuant.push(item.quantity.toString());
       arrComboSaleVal.push(item.value.toString());
     })
-    if (arrComboSaleQuant.length>0 && arrComboSaleVal.length>0 && arrComboSaleQuant.length===arrComboSaleVal.length) {
-      comboSale = arrComboSaleQuant.join('./')+"|"+arrComboSaleVal.join('./');
+    if (arrComboSaleQuant.length > 0 && arrComboSaleVal.length > 0 && arrComboSaleQuant.length === arrComboSaleVal.length) {
+      comboSale = arrComboSaleQuant.join('./') + "|" + arrComboSaleVal.join('./');
     }
-    let boughtTogether = "0|"+thisBoughtTogether.value;
-    const arrBTId : string[] = [];
-    const arrBTval : string[] = [];
-    listBoughtTogerther.forEach(item=>{
-      if (item.id!=-1) {
+    let boughtTogether = "0|" + thisBoughtTogether.value;
+    const arrBTId: string[] = [];
+    const arrBTval: string[] = [];
+    listBoughtTogerther.forEach(item => {
+      if (item.id != -1) {
         arrBTId.push(item.id.toString());
         arrBTval.push(item.value.toString());
       }
     })
-    if (arrBTId.length>0 && arrBTval.length>0 && arrBTId.length===arrBTval.length) {
-      boughtTogether = "0./"+arrBTId.join("./")+"|"+thisBoughtTogether.value+"./"+arrBTval.join("./");
+    if (arrBTId.length > 0 && arrBTval.length > 0 && arrBTId.length === arrBTval.length) {
+      boughtTogether = "0./" + arrBTId.join("./") + "|" + thisBoughtTogether.value + "./" + arrBTval.join("./");
     }
 
     let serviceType = 4;
@@ -402,10 +405,14 @@ export default function AddProductComponent(props: Props) {
     serviceType = serviceT.free && !serviceT.premium ? 1 : serviceType;
     serviceType = !serviceT.free && serviceT.premium ? 2 : serviceType;
     const variantValue = listVariant.map(item => item.optionName).join('./');
-    const postData = { ...productData, status: 1, productVariants: productVariants, serviceType: serviceType
+    const postData = {
+      ...productData, status: 1, productVariants: productVariants, serviceType: serviceType
       , accountId: accountId, variant: variantValue
       , contentCalling: contentCalling, description: description
-      , comboSale:comboSale,boughtTogether:boughtTogether,categoryIds:listCat };
+      , comboSale: comboSale, boughtTogether: boughtTogether, categoryIds: listCat
+      ,holiday:listHol
+      ,season:listSea
+    };
     const { id, ...filterPostData } = postData;
     let errMess = "";
     errMess = validatePostData(filterPostData);
@@ -445,10 +452,10 @@ export default function AddProductComponent(props: Props) {
   }
 
   const handleChangeCat = (value: any[]) => {
-    let tempCat : any[]= [...listCat];
-    tempCat=[];
-    value.forEach(item=>{
-      const idCat = catList.find(cat=>cat.title===item);
+    let tempCat: any[] = [...listCat];
+    tempCat = [];
+    value.forEach(item => {
+      const idCat = catList.find(cat => cat.title === item);
       if (idCat) {
         tempCat.push(idCat.value);
       }
@@ -456,10 +463,28 @@ export default function AddProductComponent(props: Props) {
     setListCat(tempCat);
   }
   const handleChangeSeason = (value: any[]) => {
-
+    console.log(value);
+    let temSea: any[] = [...listSea];
+    temSea = [];
+    value.forEach(item => {
+      const idSea = seasonList.find(sea => sea.title === item);
+      if (idSea) {
+        temSea.push(idSea.value);
+      }
+    })
+    setListSeasons(temSea);
   }
   const handleChangeHoliday = (value: any[]) => {
-
+    let tempHol: any[] = [...listHol];
+    tempHol = [];
+    console.log(holidayList);
+    value.forEach(item => {
+      const idHol = holidayList.find(hol => hol.title === item);
+      if (idHol) {
+        tempHol.push(idHol.value);
+      }
+    })
+    setListHolidays(tempHol);
   }
 
   const handleChangeComboSale = (e: any, ind: number, key: string) => {
@@ -992,6 +1017,7 @@ export default function AddProductComponent(props: Props) {
                                       {photos.map((item: File, photoInd) => (
                                         <div onClick={() => handleSelectVariantImg(item)} key={photoInd} className="flex flex-col items-center rounded-lg border shadow-xl overflow-hidden">
                                           <Image
+                                            quality={50}
                                             src={URL.createObjectURL(item)} // Tạo URL tạm thời cho ảnh
                                             alt={item.name}
                                             width={144}
@@ -1436,7 +1462,7 @@ export default function AddProductComponent(props: Props) {
                     <div className="w-1/3">
                       <input
                         type="number"
-                        onChange={(e) => setThisBoughtTogether({...thisBoughtTogether,value:e.target.value ? parseFloat(e.target.value) : 0})}
+                        onChange={(e) => setThisBoughtTogether({ ...thisBoughtTogether, value: e.target.value ? parseFloat(e.target.value) : 0 })}
                         value={thisBoughtTogether.value === 0 ? '' : thisBoughtTogether.value}
                         className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                       focus:ring-blue-500 focus:border-blue-500 block w-full p-3"

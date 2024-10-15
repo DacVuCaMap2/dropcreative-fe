@@ -1,3 +1,4 @@
+"use client"
 import { Plus } from 'lucide-react'
 import React from 'react'
 import ListProduct from './ListProduct'
@@ -9,6 +10,7 @@ type Props = {
 }
 export default function AllProductComponent(props: Props) {
     const roleUser = generalRoles[1];
+    console.log(roleUser,props.roleStr);
     return (
         <div className='w-full flex flex-col space-y-4'>
             <div className='flex justify-end w-full'>
