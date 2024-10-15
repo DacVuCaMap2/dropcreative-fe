@@ -36,10 +36,10 @@ const Register = (props: IProps) => {
           setIsNavigateEnterCode={setIsNavigateEnterCode}
         />
       ) : (
-        <div className="w-3/12">
-          <div className="w-80 flex flex-col gap-7">
+        <div className="relative">
+          <div className="flex flex-col gap-7">
             <div
-              className="flex gap-2 text-blue-700 font-semibold text-sm cursor-pointer"
+              className="absolute top-0 left-[-60px] flex gap-2 text-blue-700 font-semibold text-sm cursor-pointer"
               onClick={() => {
                 setIsRegister(false);
                 setIsLogin(true);
@@ -52,12 +52,12 @@ const Register = (props: IProps) => {
               <Image
                 src="/image/logo-font.png"
                 alt="Logo"
-                width={200}
+                width={180}
                 height={0}
                 className="object-contain"
               />
             </div>
-            <p className="text-center mt-1 text-xl text-gray-700 font-medium">
+            <p className="text-center mt-1 text-base text-gray-700 font-bold">
               Create an account
             </p>
             <div className="flex justify-center">
@@ -67,7 +67,7 @@ const Register = (props: IProps) => {
                 onFinish={(values) => handleRegister(values)}
                 initialValues={{ remember: true }}
                 autoComplete="off"
-                className="w-9/12"
+                className=""
               >
                 <label className="text-sm font-medium	">
                   Email<span className="text-red-500">*</span>

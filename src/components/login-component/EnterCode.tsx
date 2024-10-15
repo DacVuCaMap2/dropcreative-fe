@@ -32,10 +32,10 @@ const EnterCode = (props: IPropsEnterCode) => {
     <>
       {isNavigateEnterCode && (
         <>
-          <div className="w-3/12">
-            <div className="w-80 flex flex-col gap-7">
+          <div className="relative">
+            <div className="flex flex-col gap-7">
               <div
-                className="flex gap-2 text-blue-700 font-semibold text-sm cursor-pointer"
+                className="absolute left-[-60px] flex gap-2 text-blue-700 font-semibold text-sm cursor-pointer"
                 onClick={() => {
                   setIsRegister(true);
                   setIsNavigateEnterCode(false);
@@ -44,11 +44,11 @@ const EnterCode = (props: IPropsEnterCode) => {
                 <ChevronLeft width={20} height={20} />
                 <span className="text-sm">Back</span>
               </div>
-              <div className="flex justify-center">
+              <div className="flex justify-center pt-10">
                 <Image
                   src="/image/logo-font.png"
                   alt="Logo"
-                  width={250}
+                  width={180}
                   height={0}
                   className="object-contain"
                 />
@@ -69,7 +69,7 @@ const EnterCode = (props: IPropsEnterCode) => {
                   onFinish={handleSubmitCode}
                   initialValues={{ remember: true }}
                   autoComplete="off"
-                  className="w-9/12"
+                  className=""
                 >
                   <div className="flex flex-col justify-center">
                     <Form.Item<FieldType>

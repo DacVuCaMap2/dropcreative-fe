@@ -9,6 +9,7 @@ import { AxiosResponse } from "axios";
 import { TypeLogin, TypeResponse } from "@/types/common";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/ultils";
+import Link from "next/link";
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -90,13 +91,15 @@ const Login = () => {
         {isLogin && (
           <div className="pt-16 flex flex-col gap-7 ">
             <div className="flex flex-col justify-center items-center">
-              <Image
-                src="/image/logo-font.png"
-                alt="Logo"
-                width={180}
-                height={0}
-                className=" object-contain"
-              />
+              <Link href={'/'}>
+                <Image
+                  src="/image/logo-font.png"
+                  alt="Logo"
+                  width={180}
+                  height={0}
+                  className=" object-contain"
+                />
+              </Link>
             </div>
             <p className="text-center mt-3 text-lg text-gray-700 font-semibold">
               Login
