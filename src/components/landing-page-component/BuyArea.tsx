@@ -36,13 +36,13 @@ export default function BuyArea(props: Props) {
   }
 
   /// get variant select
-  let arrVariantsDetails: string[] = productData.productVariants.map((item: any) => {
+  const arrVariantsDetails: string[] = productData.productVariants.map((item: any) => {
     return item.value;
   })
-  let variantsSelectList = stringToVariant(productData.product.variant, arrVariantsDetails);
+  const variantsSelectList = stringToVariant(productData.product.variant, arrVariantsDetails);
 
   const handleSelectedVariant = (index: number, childIndex: number) => {
-    let tempSelected = [...selectedVariant];
+    const tempSelected = [...selectedVariant];
     tempSelected[index] = childIndex;
     setSelectedVariant(tempSelected);
   }
