@@ -3,73 +3,23 @@ import React, { useState } from "react";
 import SearchDropDown from "./SearchDropDown";
 import {
   ArrowLeftFromLine,
+  Check,
   FileTerminal,
   Image,
   Scan,
   Search,
   SlidersHorizontal,
 } from "lucide-react";
-import { Button, Input, Menu, MenuProps } from "antd";
-
-type MenuItem = Required<MenuProps>["items"][number];
-
-const items: MenuItem[] = [
-  {
-    key: "sub1",
-    label: <p className="text-sm font-semibold text-black">Asset type</p>,
-    children: [
-      {
-        key: "g1",
-        type: "group",
-        children: [
-          { key: "1", label: "Option 1" },
-          { key: "2", label: "Option 2" },
-        ],
-      },
-    ],
-  },
-  {
-    key: "sub2",
-    label: "Navigation Two",
-    children: [
-      { key: "5", label: "Option 5" },
-      { key: "6", label: "Option 6" },
-      {
-        key: "sub3",
-        label: "Submenu",
-        children: [
-          { key: "7", label: "Option 7" },
-          { key: "8", label: "Option 8" },
-        ],
-      },
-    ],
-  },
-  {
-    type: "divider",
-  },
-  {
-    key: "sub4",
-    label: "Navigation Three",
-    children: [
-      { key: "9", label: "Option 9" },
-      { key: "10", label: "Option 10" },
-      { key: "11", label: "Option 11" },
-      { key: "12", label: "Option 12" },
-    ],
-  },
-  {
-    key: "grp",
-    label: "Group",
-    type: "group",
-    children: [
-      { key: "13", label: "Option 13" },
-      { key: "14", label: "Option 14" },
-    ],
-  },
-];
+import { Button, Checkbox, Collapse, Input, Switch } from "antd";
 
 const SearchProduct = () => {
+  const { Panel } = Collapse;
   const [isOpenFilter, setIsOpenFilter] = useState(true);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
+  const handleClick = (color: string) => {
+    setSelectedColor(color === selectedColor ? null : color);
+  };
   return (
     <div className="flex flex-col">
       <div className="h-14 main-menu"></div>
@@ -103,19 +53,250 @@ const SearchProduct = () => {
                 onClick={() => setIsOpenFilter(false)}
               />
             </div>
-            <Menu
-              style={{
-                width: 256,
-                flexGrow: 1,
-                overflowY: "auto",
-                height: 730,
-                overflow: "auto",
-              }}
-              defaultSelectedKeys={["1"]}
-              defaultOpenKeys={["sub1"]}
-              mode="inline"
-              items={items}
-            />
+            <div className="w-80">
+              <Collapse defaultActiveKey={["1"]} ghost expandIconPosition="end">
+                <Panel
+                  header={
+                    <span className="text-sm font-semibold">Asset type</span>
+                  }
+                  key="1"
+                >
+                  <div className="w-12/12 flex flex-wrap gap-2">
+                    {[
+                      "Vectors",
+                      "Photos",
+                      "Videos",
+                      "PSD",
+                      "Templates",
+                      "Mockups",
+                    ].map((type) => (
+                      <Button color="default" variant="outlined" key={type}>
+                        {type}
+                      </Button>
+                    ))}
+                  </div>
+                </Panel>
+
+                {/* License */}
+                <Panel
+                  header={
+                    <span className="text-sm font-semibold">License</span>
+                  }
+                  key="2"
+                >
+                  <div className="w-12/12 flex flex-wrap gap-2">
+                    <Button color="default" variant="outlined">
+                      Free
+                    </Button>
+                    <Button color="default" variant="outlined">
+                      Premium
+                    </Button>
+                  </div>
+                </Panel>
+
+                {/* AI-generated */}
+                <Panel
+                  header={
+                    <span className="text-sm font-semibold">AI-generated</span>
+                  }
+                  key="3"
+                >
+                  <div className="w-12/12 flex flex-wrap gap-2">
+                    <Button color="default" variant="outlined">
+                      Exclude AI-generated
+                    </Button>
+                    <Button color="default" variant="outlined">
+                      Only AI-generated
+                    </Button>
+                  </div>
+                </Panel>
+                {/* Base model */}
+                <Panel
+                  header={
+                    <span className="text-sm font-semibold">Base model</span>
+                  }
+                  key="4"
+                >
+                  <div className="w-12/12 flex flex-wrap gap-2">
+                    <Button color="default" variant="outlined">
+                      Midjourney
+                    </Button>
+                    <Button color="default" variant="outlined">
+                      Stable Diffusion
+                    </Button>
+                    <Button color="default" variant="outlined">
+                      Dall-e
+                    </Button>
+                    <Button color="default" variant="outlined">
+                      Freepik
+                    </Button>
+                  </div>
+                </Panel>
+
+                {/* Color */}
+                <Panel
+                  header={<span className="text-sm font-semibold">Color</span>}
+                  key="5"
+                >
+                  <div className="flex w-full flex-wrap gap-2">
+                    {[
+                      "#FFFFFF",
+                      "#FB5252",
+                      "#FCA120",
+                      "#FCDB7E",
+                      "#4AD395",
+                      "#1273EB",
+                      "#8080F1",
+                      "#1D262D",
+                      "#BAC8D3",
+                    ].map((color) => (
+                      <div
+                        key={color}
+                        className="w-6 h-6 rounded-full border cursor-pointer flex items-center justify-center"
+                        style={{ backgroundColor: color }}
+                        onClick={() => handleClick(color)}
+                      >
+                        {selectedColor === color && (
+                          <Check className="text-white w-4 h-4" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </Panel>
+
+                {/* Include Prompt */}
+                <Panel
+                  header={
+                    <span className="text-sm font-semibold">
+                      Include prompt
+                    </span>
+                  }
+                  key="6"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500">
+                      Only show images that include a prompt
+                    </span>
+                    <Switch />
+                  </div>
+                </Panel>
+                {/* People */}
+                <Panel
+                  header={<span className="text-sm font-semibold">People</span>}
+                  key="7"
+                >
+                  <div className="w-12/12 flex flex-wrap gap-2">
+                    <Button color="default" variant="outlined">
+                      With people
+                    </Button>
+                    <Button color="default" variant="outlined">
+                      No people
+                    </Button>
+                  </div>
+                  <Collapse
+                    defaultActiveKey={["1"]}
+                    ghost
+                    expandIconPosition="end"
+                  >
+                    {/* Number of people */}
+                    <Panel
+                      header={
+                        <span className="text-sm font-semibold text-gray-400">
+                          Number of people
+                        </span>
+                      }
+                      key="1"
+                    >
+                      <div className="w-12/12 flex flex-wrap gap-2">
+                        {["1", "2", "3", "4+"].map((type) => (
+                          <Button color="default" variant="outlined" key={type}>
+                            {type}
+                          </Button>
+                        ))}
+                      </div>
+                    </Panel>
+
+                    {/* Age */}
+                    <Panel
+                      header={
+                        <span className="text-sm font-semibold text-gray-400">
+                          Age
+                        </span>
+                      }
+                      key="2"
+                    >
+                      <div className="w-12/12 flex flex-wrap gap-2">
+                        {[
+                          "Infant",
+                          "Child",
+                          "Teen",
+                          "Young adult",
+                          "Adult",
+                          "Senior",
+                          "Elder",
+                        ].map((type) => (
+                          <Button color="default" variant="outlined" key={type}>
+                            {type}
+                          </Button>
+                        ))}
+                      </div>
+                    </Panel>
+
+                    {/* Gender */}
+                    <Panel
+                      header={
+                        <span className="text-sm font-semibold text-gray-400">
+                          Gender
+                        </span>
+                      }
+                      key="3"
+                    >
+                      <div className="w-12/12 flex flex-wrap gap-2">
+                        {["Male", "Female"].map((type) => (
+                          <Button color="default" variant="outlined" key={type}>
+                            {type}
+                          </Button>
+                        ))}
+                      </div>
+                    </Panel>
+
+                    {/* Ethnicity */}
+                    <Panel
+                      header={
+                        <span className="text-sm font-semibold text-gray-400">
+                          Ethnicity
+                        </span>
+                      }
+                      key="3"
+                    >
+                      <div className="w-12/12 flex flex-wrap gap-2">
+                        {[
+                          "WaterColor",
+                          "Child",
+                          "Teen",
+                          "Young adult",
+                          "Adult",
+                          "Senior",
+                          "Elder",
+                        ].map((type) => (
+                          <Button color="default" variant="outlined" key={type}>
+                            {type}
+                          </Button>
+                        ))}
+                      </div>
+                    </Panel>
+
+                    {/* Include Prompt */}
+                    <Panel header="Include prompt" key="5">
+                      <div className="flex items-center justify-between">
+                        <span>Only show images that include a prompt</span>
+                        <Switch />
+                      </div>
+                    </Panel>
+                  </Collapse>
+                </Panel>
+              </Collapse>
+            </div>
           </div>
         ) : (
           ""
