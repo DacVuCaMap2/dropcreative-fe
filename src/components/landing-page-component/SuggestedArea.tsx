@@ -12,12 +12,10 @@ export default function SuggestedArea(props:Props) {
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
     const [sugProduct, setSugProduct] = useState<any[]>([]);
     const accountId = props.accountId;
-    console.log(accountId);
     useEffect(() => {
         const fetchData = async () => {
             const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=8&page=1`;
             const response = await GetApi(url);
-            console.log(response, url);
             if (response.data && Array.isArray(response.data)) {
                 setSugProduct(response.data);
             }

@@ -15,7 +15,7 @@ export function CardProductItem(props: Props) {
           <Image width={200} height={200} src={data.imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${data.imageUrl}` : '/image/nophotos.png'} alt="image 1" />
         </div>
       </div>
-      <p className="text-lg font-bold tracking-tight">
+      <p className="text-lg font-bold tracking-tight h-20 overflow-hidden">
         {data.title}
       </p>
       <div className="flex flex-row text-sm">

@@ -9,13 +9,12 @@ export default function ContentArea(props: Props) {
   const productData = props.productData;
   const desc = productData.product.description;
   const accountId = productData.product.accountId;
-  console.log(productData.product.accountId);
   return (
     <div className='py-10 flex flex-col justify-center items-center space-y-4 w-full'>
-      <div className='border-b w-full flex justify-center space-x-4 items-center flex-row border-neutral-300'>
-        <span className='font-bold text-lg border-b-2 border-black'>DESCRIPSION</span>
-        <span className='font-bold text-lg text-neutral-500'>SHIPPING</span>
-        <span className='font-bold text-lg text-neutral-500'>RETURN & WARRANTY</span>
+      <div className='border-b w-full flex justify-center space-x-8 items-center flex-row border-neutral-300'>
+        <button className='font-bold text-lg border-b-2 border-black'>DESCRIPSION</button>
+        <button className='font-bold text-lg text-neutral-500'>SHIPPING</button>
+        <button className='font-bold text-lg text-neutral-500'>RETURN & WARRANTY</button>
       </div>
       <div className='w-[800px]'>
         <div dangerouslySetInnerHTML={{ __html: desc }} />

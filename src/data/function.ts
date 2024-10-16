@@ -153,3 +153,16 @@ export const stringToVariant = (variantTitle: string, productVariant: string[]) 
     return listResult;
 }
 
+export const tranObjectFromStrTwoKey = (value:string) : any[]=>{
+    if (!value) {
+        return [];
+    }
+    const arr = value.split("|");
+    const arr1 = arr[0].split("./");
+    const arr2 = arr[1].split("./");
+    const result : any[] = [];
+    for (let i = 0; i < arr1.length; i++) {
+        result.push({key1:arr1[i],key2:arr2[i]})
+    }
+    return result;
+}

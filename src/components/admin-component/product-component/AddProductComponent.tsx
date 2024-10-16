@@ -16,6 +16,7 @@ import Message from "@/components/common-component/Message";
 import { validatePostData } from "@/data/function";
 import { generalCategoriesSelect, generalHolidayList, generalOptionHoliday, generalOptionsCat, generalOptionSeasons, generalSeasonList } from "@/data/generalData";
 import GetApi from "@/api/GetApi";
+import { ScaleLoader } from "react-spinners";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -48,11 +49,12 @@ type Props = {
 }
 export default function AddProductComponent(props: Props) {
   const accountId = props.accountId;
+  const [loading, setLoading] = useState(0);
   const [productData, setProductData] = useState<Product>(getNewProduct());
   const [listVariant, setListVariant] = useState<productVariant[]>([]);
   const [description, setDescription] = useState(`<p>${productData.description}</p>`);
-  const [shippingDesc,setShippingDesc] = useState(`<p>${productData.shippingDescription}</p>`);
-  const [WarrantyDesc,setWarrantyDesc] = useState(`<p>${productData.warrantyDescription}</p>`);
+  const [shippingDesc, setShippingDesc] = useState(`<p>${productData.shippingDescription}</p>`);
+  const [WarrantyDesc, setWarrantyDesc] = useState(`<p>${productData.warrantyDescription}</p>`);
   const [contentCalling, setContentCalling] = useState(`<p>${productData.contentCalling}</p>`);
   const [videos, setVideos] = useState<File[]>([]);
   const [photos, setPhotos] = useState<File[]>([]);
@@ -115,7 +117,6 @@ export default function AddProductComponent(props: Props) {
   const seasonList = generalSeasonList;
   const optionHolidays = generalOptionHoliday;
   const holidayList = generalHolidayList;
-
 
   const openModal = () => {
     document.body.style.overflow = 'hidden';
@@ -426,8 +427,8 @@ export default function AddProductComponent(props: Props) {
       , comboSale: comboSale, boughtTogether: boughtTogether, categoryIds: listCat
       , holiday: listHol
       , season: listSea
-      ,shippingDescription:shippingDesc
-      ,warrantyDescription:WarrantyDesc
+      , shippingDescription: shippingDesc
+      , warrantyDescription: WarrantyDesc
     };
     const { id, ...filterPostData } = postData;
     let errMess = "";
@@ -454,7 +455,10 @@ export default function AddProductComponent(props: Props) {
 
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
     try {
-
+      setLoading(1);
+      setTimeout(() => {
+        setLoading(0)
+      }, 3000);
       const response = await axios.post(url, formData, {
         headers: {
           'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
@@ -562,6 +566,11 @@ export default function AddProductComponent(props: Props) {
   }
   return (
     <div className="relative  flex justify-between items-center w-full flex-wrap">
+      {loading === 1 &&
+        <div className="flex items-center justify-center fixed top-0 left-0 z-50 h-screen w-screen bg-neutral-700 opacity-80">
+          <ScaleLoader color="white" height={100} width={10} />
+        </div>
+      }
       <div className="w-1/2">
         <p>
           Build a landing page to display demos on search pages or sell products
@@ -671,30 +680,30 @@ export default function AddProductComponent(props: Props) {
             </div> */}
 
             <div className="space-y-2">
-              <div className="flex flex-row items-center space-x-5 border-b justify-center">
+              <div className="flex flex-row items-center space-x-5 ">
                 <button onClick={() => setSelectDesc(0)} className={`text-sm font-bold border-black   ${selectDesc === 0 ? 'border-b-2' : ''}`}>Description</button>
                 <button onClick={() => setSelectDesc(1)} className={`text-sm font-bold border-black   ${selectDesc === 1 ? 'border-b-2' : ''}`}>Shipping</button>
                 <button onClick={() => setSelectDesc(2)} className={`text-sm font-bold border-black   ${selectDesc === 2 ? 'border-b-2' : ''}`}>Return & Warranty</button>
               </div>
               {/* description */}
-              <div className={` ${selectDesc===0 ? '' : 'hidden'}`}>
+              <div className={` ${selectDesc === 0 ? '' : 'hidden'}`}>
                 <TinyMCEEditor
                   initialValue={""}
                   onEditorChange={handleEditorChange}
                 />
               </div>
-              <div className={`${selectDesc===1 ? '' : 'hidden'}`}>
-                  <TinyMCEEditor
-                    initialValue={""}
-                    onEditorChange={handleShippingChange}
-                  />
-                </div>
-                <div className={`${selectDesc===2 ? '' : 'hidden'}`}>
-                  <TinyMCEEditor
-                    initialValue={""}
-                    onEditorChange={handleWarrantyChange}
-                  />
-                </div>
+              <div className={`${selectDesc === 1 ? '' : 'hidden'}`}>
+                <TinyMCEEditor
+                  initialValue={""}
+                  onEditorChange={handleShippingChange}
+                />
+              </div>
+              <div className={`${selectDesc === 2 ? '' : 'hidden'}`}>
+                <TinyMCEEditor
+                  initialValue={""}
+                  onEditorChange={handleWarrantyChange}
+                />
+              </div>
             </div>
           </div>
 

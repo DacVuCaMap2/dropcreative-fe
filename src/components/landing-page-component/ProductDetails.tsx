@@ -17,6 +17,7 @@ export default function ProductDetails(props: Props) {
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     };
 
+    console.log(props.productData);
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > 0) {
