@@ -23,8 +23,8 @@ export default function BuyArea(props: Props) {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const productVariantTitle: string[] = productData.product.variant.split("./");
   const [selectedVariant, setSelectedVariant] = useState([0, 0, 0]);
-  const [changeStatus,setChangeStatus] = useState(0);
-  const [currentImg,setCurrentImg] = useState(0);
+  const [changeStatus, setChangeStatus] = useState(0);
+  const [currentImg, setCurrentImg] = useState(0);
   let urlMainPhoto = "";
   let photos: any[] = [];
   let loop = false;
@@ -43,28 +43,35 @@ export default function BuyArea(props: Props) {
     return item.value;
   })
   const variantsSelectList = stringToVariant(productData.product.variant, arrVariantsDetails);
-  console.log(variantsSelectList);
+  // console.log(variantsSelectList);
   const handleSelectedVariant = (index: number, childIndex: number) => {
     const tempSelected = [...selectedVariant];
     tempSelected[index] = childIndex;
     setSelectedVariant(tempSelected);
   }
 
-  const goToSlide = (index:number) => {
+  const goToSlide = (index: number) => {
     if (swiperRef) {
       swiperRef.slideTo(index);
     }
   };
 
-  useEffect(()=>{
-    let keySearch = "";
+  useEffect(() => {
+    const arrSearch: string[] = [];
     for (let i = 0; i < variantsSelectList.length; i++) {
-      if (variantsSelectList[i].length>0) {
-        keySearch+=variantsSelectList[selectedVariant[i]];
+      if (variantsSelectList[i].length > 0) {
+        arrSearch.push(variantsSelectList[i][selectedVariant[i]]);
       }
     }
-    console.log(keySearch);
-  },[selectedVariant])
+    const keySearch = arrSearch.join(",");
+    const current = productData.productVariants.map((item: any, index: number) => {
+      if (keySearch === item.value) {
+        setCurrentImg(index);
+        goToSlide(index);
+      }
+      return item;
+    });
+  }, [selectedVariant])
   return (
     <div className='w-[1100px] flex flex-row space-x-2 py-4 justify-between'>
       <div className='flex flex-col space-y-8 '>
@@ -109,7 +116,7 @@ export default function BuyArea(props: Props) {
           >
             {photos.map((image: any, index: number) => (
               <SwiperSlide key={index}>
-                <button className='flex h-full w-full items-center justify-center'>
+                <button onClick={() => setCurrentImg(index)} className={`flex h-full w-full items-center justify-center border-neutral-500 overflow-hidden ${currentImg === index ? "border-4" : ''}`}>
                   <Image
                     src={process.env.NEXT_PUBLIC_API_URL + image.url}
                     alt={"image"}
@@ -124,15 +131,17 @@ export default function BuyArea(props: Props) {
         </div>
         <div className='grid grid-cols-2 gap-2 px-6'>
           {photos.map((image: any, index) => {
-            if (index<6) {
+            if (index < 6) {
               return (<div key={index} className='rounded-xl overflow-hidden hover:scale-105 cursor-pointer transition-transform transform shadow'>
-                <Image
-                  src={process.env.NEXT_PUBLIC_API_URL + image.url}
-                  alt={"image"}
-                  className='block h-full w-full object-cover'
-                  width={400}
-                  height={0}
-                />
+                <button onClick={()=>{setCurrentImg(index);goToSlide(index)}}>
+                  <Image
+                    src={process.env.NEXT_PUBLIC_API_URL + image.url}
+                    alt={"image"}
+                    className='block h-full w-full object-cover'
+                    width={400}
+                    height={0}
+                  />
+                </button>
               </div>)
             }
           })}
