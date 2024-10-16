@@ -1,48 +1,18 @@
 'use client'
 import GetApi from '@/api/GetApi';
-import { useAccount } from '@/context/AccountContext';
-import { homeCategories } from '@/data/home-data/homeListData';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react'
-
-export default function SuggestedArea() {
+import React, { useEffect, useState } from 'react'
+import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import "./SuggestedArea.css"
+type Props = {
+    accountId : any
+}
+export default function SuggestedArea(props:Props) {
+    const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
     const [sugProduct, setSugProduct] = useState<any[]>([]);
-    const { accountId } = useAccount();
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const [hiddenBtn, setHiddenBtn] = useState({ left: false, right: true });
-    const [scrollLocation, setScrollLocation] = useState(-210);
-    const scroll = (direction: 'left' | 'right') => {
-        if (scrollRef.current) {
-            const scrollAmount = direction === 'left' ? -210 : 210; // Điều chỉnh giá trị này nếu cần
-            setScrollLocation(scrollAmount);
-            scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-            const hidLeft = scrollAmount === -210;
-            const hidRight = scrollAmount === 210;
-            setHiddenBtn({ left: hidLeft, right: hidRight });
-        }
-    };
-    useEffect(() => {
-        const checkOverflow = () => {
-            if (scrollRef.current) {
-                const { scrollWidth, clientWidth } = scrollRef.current;
-                let hidLeft = scrollWidth <= clientWidth;
-                hidLeft = scrollLocation === -210 ? true : hidLeft;
-
-                setHiddenBtn({
-                    left: hidLeft,
-                    right: scrollWidth <= clientWidth,
-                });
-            }
-        };
-
-        checkOverflow();
-        window.addEventListener('resize', checkOverflow);
-        return () => {
-            window.removeEventListener('resize', checkOverflow);
-        };
-    }, []);
+    const accountId = props.accountId;
+    console.log(accountId);
     useEffect(() => {
         const fetchData = async () => {
             const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=8&page=1`;
@@ -58,37 +28,44 @@ export default function SuggestedArea() {
 
     }, [accountId])
     return (
-        <div className='flex flex-col space-y-4'>
-            <span className='font-bold text-xl'>Categories</span>
-            <div className='flex items-center relative'>
-                <button
-                    onClick={() => scroll('left')}
-                    className={`absolute left-0 z-20 p-2 bg-gray-300 rounded-full ${hiddenBtn.left && 'opacity-0 pointer-events-none'}`}
-                >
-                    <ChevronLeft />
-                </button>
-                <div ref={scrollRef} className='flex flex-row w-full space-x-6 overflow-hidden text-sm'>
-                    {sugProduct.map((item, index) => (
-                        <Link key={index} href={"/"}>
-                            <div>
-                                <Image
-                                    src={item.img}
-                                    alt='Image'
-                                    width={300}
-                                    height={300}
-                                    className="transition-transform duration-300 ease-in-out group-hover:scale-110"
-                                />
+        <div className='relative'>
+            <Swiper
+                onSwiper={setThumbsSwiper}
+                loop={false}
+                spaceBetween={12}
+                slidesPerView={4}
+                freeMode={true}
+                watchSlidesProgress={true}
+                modules={[FreeMode, Navigation, Thumbs]}
+                navigation={{
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                }}
+                className='thumbs mt-3 w-full rounded-lg'
+            >
+                {sugProduct.map((item: any, index: number) => (
+                    <SwiperSlide key={index}>
+                        <div className='bg-white space-y-2 pb-4 h-[350px]'>
+                            <div className='h-[250px]'>
+                                <Image width={400} height={400} src={item.imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${item.imageUrl}` : '/image/nophotos.png'} alt="image 1" />
                             </div>
-                        </Link>
-                    ))}
-                </div>
-                <button
-                    onClick={() => scroll('right')}
-                    className={`absolute right-0 z-20 p-2 bg-gray-300 rounded-full ${hiddenBtn.right && 'opacity-0 pointer-events-none'}`}
-                >
-                    <ChevronRight />
-                </button>
-            </div>
+                            <div className='px-2'>
+                            <div className='max-h-12 overflow-hidden mb-2'>
+                                <span className=''>{item.title}</span>
+                            </div>
+                            <div className='space-x-2'>
+                                <span className='font-bold'>${item.price}</span>
+                                <span className='line-through text-neutral-400 text-xs'>${item.comparePrice}</span>
+                            </div>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
+            <button className="swiper-button-prev absolute left-0 top-1/2">
+            </button>
+            <button className="swiper-button-next absolute right-0 top-1/2">
+            </button>
         </div>
     );
 }

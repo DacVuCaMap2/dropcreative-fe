@@ -3,10 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { FreeMode, Navigation, Pagination, Thumbs } from 'swiper/modules'
 
-// These styles should be imported in your _app.tsx or layout.tsx
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
+
 import Image from 'next/image'
 import { Flame, Minus, Plus, Star } from 'lucide-react'
 import { Rate } from 'antd'
