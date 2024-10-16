@@ -87,10 +87,14 @@ export default function BuyArea(props: Props) {
             if (index > 0) {
               const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + item.key1;
               const response = await GetApi(url);
-              temp.push(response);
+              if (response.product) {
+                temp.push(response);
+              }
+              
             }
           })
           setBoughttTogetherShow(temp);
+          console.log(temp);
         }
       }
       fetchData();
@@ -248,7 +252,7 @@ export default function BuyArea(props: Props) {
             </div>
             {boughtTogetherShow.map((item: any, index) => (
               <div key={index} className='relative border'>
-                <Image src={`${item.images.length > 0 ? process.env.NEXT_PUBLIC_API_URL + item.images[0].url : "/image/nophotos.png"}`} alt='image' width={160} height={160}></Image>
+                <Image src={`${(Array.isArray(item.images) && item.images.length > 0) ? process.env.NEXT_PUBLIC_API_URL + item.images[0].url : "/image/nophotos.png"}`} alt='image' width={160} height={160}></Image>
                 <div className='absolute z-20 left-[-14px] top-[75px] rounded-full bg-blue-500 text-white '><Plus size={20} /></div>
               </div>
             ))}
@@ -257,11 +261,11 @@ export default function BuyArea(props: Props) {
             <div className='space-y-1'>
               <div className='flex flex-row space-x-2 text-sm justify-between'>
                 <div className='flex flex-row'>
-                  <input type="checkbox" className='rounded mr-2' name="" id=""  />
+                  <input type="checkbox" className='rounded mr-2' name="" id="" />
                   <span className='font-bold mr-2'>This Product:</span>
                   <span className='truncate max-w-64'>{productData.product.title}</span>
                 </div>
-                <span>${(boughtTogetherList.length>0 && parseFloat(boughtTogetherList[0].key2)!=0) ? (100 - (currentVariant.price / parseFloat(boughtTogetherList[0].key2)) * 100).toFixed(2) : currentVariant.price}</span>
+                <span>${(boughtTogetherList.length > 0 && parseFloat(boughtTogetherList[0].key2) != 0) ? (100 - (currentVariant.price / parseFloat(boughtTogetherList[0].key2)) * 100).toFixed(2) : currentVariant.price}</span>
               </div>
               <div>
                 <select name="" id="" className='border rounded w-96 h-8 text-xs text-neutral-500'>
@@ -273,14 +277,15 @@ export default function BuyArea(props: Props) {
             </div>
             {boughtTogetherShow.map((item: any, index) => (
               <div key={index} className='space-y-1'>
-                <div className='flex flex-row space-x-2 text-sm justify-between'>
-
-                  <div className='flex flex-row'>
-                    <input type="checkbox" className='rounded mr-2' name="" id="" />
-                    <span className='truncate max-w-96'>{item.product.title}</span>
+                {item.product &&
+                  <div className='flex flex-row space-x-2 text-sm justify-between'>
+                    <div className='flex flex-row'>
+                      <input type="checkbox" className='rounded mr-2' name="" id="" />
+                      <span className='truncate max-w-96'>{item.product.title}</span>
+                    </div>
+                    <span>${parseFloat(boughtTogetherList[index + 1].key2) != 0 ? (100 - (item.product.price / parseFloat(boughtTogetherList[index + 1].key2)) * 100).toFixed(2) : item.product.price}</span>
                   </div>
-                  <span>${parseFloat(boughtTogetherList[index+1].key2)!=0 ? (100 - (item.product.price / parseFloat(boughtTogetherList[index+1].key2)) * 100).toFixed(2) : item.product.price}</span>
-                </div>
+                }
                 <div>
                   <select name="" id="" className='border rounded w-96 h-8 text-xs text-neutral-500'>
                     {item.productVariants.map((item: any, varIndex: number) => (
