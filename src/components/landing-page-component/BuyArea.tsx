@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { FreeMode, Navigation, Pagination, Thumbs } from 'swiper/modules'
 
@@ -19,9 +19,12 @@ type Props = {
 
 export default function BuyArea(props: Props) {
   const productData: any = props.productData;
+  const [swiperRef, setSwiperRef] = useState<any>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const productVariantTitle: string[] = productData.product.variant.split("./");
   const [selectedVariant, setSelectedVariant] = useState([0, 0, 0]);
+  const [changeStatus,setChangeStatus] = useState(0);
+  const [currentImg,setCurrentImg] = useState(0);
   let urlMainPhoto = "";
   let photos: any[] = [];
   let loop = false;
@@ -40,66 +43,100 @@ export default function BuyArea(props: Props) {
     return item.value;
   })
   const variantsSelectList = stringToVariant(productData.product.variant, arrVariantsDetails);
-
+  console.log(variantsSelectList);
   const handleSelectedVariant = (index: number, childIndex: number) => {
     const tempSelected = [...selectedVariant];
     tempSelected[index] = childIndex;
     setSelectedVariant(tempSelected);
   }
+
+  const goToSlide = (index:number) => {
+    if (swiperRef) {
+      swiperRef.slideTo(index);
+    }
+  };
+
+  useEffect(()=>{
+    let keySearch = "";
+    for (let i = 0; i < variantsSelectList.length; i++) {
+      if (variantsSelectList[i].length>0) {
+        keySearch+=variantsSelectList[selectedVariant[i]];
+      }
+    }
+    console.log(keySearch);
+  },[selectedVariant])
   return (
     <div className='w-[1100px] flex flex-row space-x-2 py-4 justify-between'>
-      <div className='w-full'>
-        <Swiper
-          loop={loop}
-          spaceBetween={10}
-          navigation={false}
-          thumbs={{
-            swiper:
-              thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
-          }}
-          modules={[FreeMode, Navigation, Thumbs]}
-          className='w-[450px] h-[450px] rounded-lg'
-        >
-          {photos.map((image: any, index: number) => (
-            <SwiperSlide key={index}>
-              <div className='flex h-full w-full items-center justify-center'>
-                <Image
-                  src={process.env.NEXT_PUBLIC_API_URL + image.url}
-                  alt={"image"}
-                  className='block h-full w-full object-cover'
-                  width={500}
-                  height={0}
-                />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+      <div className='flex flex-col space-y-8 '>
+        <div className='w-full border-b border-neutral-300 pb-4'>
+          <Swiper
+            loop={loop}
+            spaceBetween={10}
+            onSwiper={setSwiperRef}
+            navigation={false}
+            thumbs={{
+              swiper:
+                thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
+            }}
+            modules={[FreeMode, Navigation, Thumbs]}
+            className='w-[450px] h-[450px] rounded-lg'
+          >
+            {photos.map((image: any, index: number) => (
+              <SwiperSlide key={index}>
+                <div className='flex h-full w-full items-center justify-center'>
+                  <Image
+                    src={process.env.NEXT_PUBLIC_API_URL + image.url}
+                    alt={"image"}
+                    className='block h-full w-full object-cover'
+                    width={500}
+                    height={0}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
 
-        {/* Thumbnail */}
-        <Swiper
-          onSwiper={setThumbsSwiper}
-          loop={loop}
-          spaceBetween={12}
-          slidesPerView={5}
-          freeMode={true}
-          watchSlidesProgress={true}
-          modules={[FreeMode, Navigation, Thumbs]}
-          className='thumbs mt-3 max-h-32 w-[450px] rounded-lg'
-        >
-          {photos.map((image: any, index: number) => (
-            <SwiperSlide key={index}>
-              <button className='flex h-full w-full items-center justify-center'>
+          {/* Thumbnail */}
+          <Swiper
+            onSwiper={setThumbsSwiper}
+            loop={loop}
+            spaceBetween={12}
+            slidesPerView={5}
+            freeMode={true}
+            watchSlidesProgress={true}
+            modules={[FreeMode, Navigation, Thumbs]}
+            className='thumbs mt-3 max-h-32 w-[450px] rounded-lg'
+          >
+            {photos.map((image: any, index: number) => (
+              <SwiperSlide key={index}>
+                <button className='flex h-full w-full items-center justify-center'>
+                  <Image
+                    src={process.env.NEXT_PUBLIC_API_URL + image.url}
+                    alt={"image"}
+                    className='block h-full w-full object-cover'
+                    width={500}
+                    height={0}
+                  />
+                </button>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+        <div className='grid grid-cols-2 gap-2 px-6'>
+          {photos.map((image: any, index) => {
+            if (index<6) {
+              return (<div key={index} className='rounded-xl overflow-hidden hover:scale-105 cursor-pointer transition-transform transform shadow'>
                 <Image
                   src={process.env.NEXT_PUBLIC_API_URL + image.url}
                   alt={"image"}
                   className='block h-full w-full object-cover'
-                  width={500}
+                  width={400}
                   height={0}
                 />
-              </button>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </div>)
+            }
+          })}
+        </div>
       </div>
       <div className='w-full flex flex-col space-y-4'>
         <div className='max-h-10 overflow-hidden '>
@@ -131,7 +168,7 @@ export default function BuyArea(props: Props) {
           <CountDownComponent />
         </div>
         <div className='flex flex-row justify-between h-20 items-center'>
-          <div className='flex flex-row w-40 border border-neutral-300 h-14 items-center'>
+          <div className='flex flex-row w-36 border border-neutral-300 h-14 items-center'>
             <button className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Minus /></button>
             <span className='w-full text-center'>1</span>
 
@@ -146,14 +183,8 @@ export default function BuyArea(props: Props) {
             <span>Pay with </span><Image src={'/image/landingpage/paypal.png'} alt={'image'} width={80} height={80}></Image>
           </button>
         </div>
-        <p className='border-b py-2 text-center w-full'>More pay options</p>
         <div className='flex flex-row space-x-2'>
-          <Image src={'/image/landingpage/mastercard.svg'} alt='image' width={50} height={50}></Image>
-          <Image src={'/image/landingpage/visa.svg'} alt='image' width={50} height={50}></Image>
-          <Image src={'/image/landingpage/discover.svg'} alt='image' width={50} height={50}></Image>
-          <Image src={'/image/landingpage/paypal.svg'} alt='image' width={50} height={50}></Image>
-          <Image src={'/image/landingpage/stripe.svg'} alt='image' width={50} height={50}></Image>
-          <Image src={'/image/landingpage/jcb.svg'} alt='image' width={50} height={50}></Image>
+          <Image src={'/image/landingpage/guardsafe.png'} alt='image' width={600} height={50}></Image>
         </div>
         <div className='flex flex-col space-y-2 '>
           <span className='font-bold text-xl mb-2 '>Buy More Save More!</span>
@@ -225,7 +256,7 @@ export default function BuyArea(props: Props) {
             </div>
             <div>
               <select name="" id="" className='border rounded w-96 h-8 text-xs text-neutral-500'>
-                {productData.productVariants.map((item:any,varIndex:number)=>(
+                {productData.productVariants.map((item: any, varIndex: number) => (
                   <option key={varIndex} value="" >{item.value}</option>
                 ))}
               </select>

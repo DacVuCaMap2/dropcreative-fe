@@ -14,12 +14,12 @@ export function validatePostData(postData: any) {
     if (postData.categoryIds.length === 0) {
         return "Choose a category.";
     }
-    if (postData.holiday.length === 0) {
-        return "Choose holiday.";
-    }
-    if (postData.season.length === 0) {
-        return "Choose seasons.";
-    }
+    // if (postData.holiday.length === 0) {
+    //     return "Choose holiday.";
+    // }
+    // if (postData.season.length === 0) {
+    //     return "Choose seasons.";
+    // }
     // Check comparePrice
     if (typeof postData.comparePrice !== 'number') {
         return "Compare Price must be a number.";

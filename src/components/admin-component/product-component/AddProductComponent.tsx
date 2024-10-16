@@ -387,6 +387,7 @@ export default function AddProductComponent(props: Props) {
     if (arrComboSaleQuant.length > 0 && arrComboSaleVal.length > 0 && arrComboSaleQuant.length === arrComboSaleVal.length) {
       comboSale = arrComboSaleQuant.join('./') + "|" + arrComboSaleVal.join('./');
     }
+    // let boughtTogether = "0|" + thisBoughtTogether.value;
     let boughtTogether = "0|" + thisBoughtTogether.value;
     const arrBTId: string[] = [];
     const arrBTval: string[] = [];
