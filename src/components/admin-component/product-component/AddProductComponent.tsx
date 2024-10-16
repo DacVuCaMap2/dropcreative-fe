@@ -677,19 +677,19 @@ export default function AddProductComponent(props: Props) {
                 <button onClick={() => setSelectDesc(2)} className={`text-sm font-bold border-black   ${selectDesc === 2 ? 'border-b-2' : ''}`}>Return & Warranty</button>
               </div>
               {/* description */}
-              <div className={`p-2 ${selectDesc===0 ? '' : 'hidden'}`}>
+              <div className={` ${selectDesc===0 ? '' : 'hidden'}`}>
                 <TinyMCEEditor
                   initialValue={""}
                   onEditorChange={handleEditorChange}
                 />
               </div>
-              <div className={`p-2 ${selectDesc===1 ? '' : 'hidden'}`}>
+              <div className={`${selectDesc===1 ? '' : 'hidden'}`}>
                   <TinyMCEEditor
                     initialValue={""}
                     onEditorChange={handleShippingChange}
                   />
                 </div>
-                <div className={`p-2 ${selectDesc===2 ? '' : 'hidden'}`}>
+                <div className={`${selectDesc===2 ? '' : 'hidden'}`}>
                   <TinyMCEEditor
                     initialValue={""}
                     onEditorChange={handleWarrantyChange}
