@@ -152,3 +152,4 @@ export const stringToVariant = (variantTitle: string, productVariant: string[]) 
     // }
     return listResult;
 }
+

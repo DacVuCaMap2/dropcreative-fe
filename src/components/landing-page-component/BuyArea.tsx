@@ -157,7 +157,7 @@ export default function BuyArea(props: Props) {
           <div className='space-x-2  my-4 flex flex-row items-center'>
             <span className='text-2xl'>${productData.product.price}</span>
             <span className='line-through text-neutral-400 text-lg'>${productData.product.comparePrice}</span>
-            <span className='bg-black text-white py-1 px-4 rounded text-xs'>{100-(productData.product.price/productData.product.comparePrice)*100}%</span>
+            <span className='bg-black text-white py-1 px-4 rounded text-xs'>{(100-(productData.product.price/productData.product.comparePrice)*100).toFixed(2)}%</span>
           </div>
           <div className='space-y-4'>
             {productVariantTitle.map((item: any, index) => (
