@@ -53,16 +53,13 @@ export default function ListProduct(props: Props) {
             </div>
 
             <div className='text-neutral-500 text-sm w-full mt-4 mb-64 border-b border-neutral-400 pb-2 pt-4 px-2'>
-                <div className='font-bold '>
-                    Categories
-                </div>
                 <div className='w-full flex flex-col py-4 text-xs'>
                     <div className=' flex flex-row flex-wrap justify-center items-center space-x-4'>
-                        <Link href={pathName} className={`py-2 px-4 border border-black rounded hover:bg-black hover:text-white ${cat === "" ? "bg-black text-white" : ""}`}>
+                        <Link href={pathName} className={`py-2 px-4  hover:bg-black hover:text-white ${cat === "" ? "border-b-2 border-black" : ""}`}>
                             <span >All</span>
                         </Link>
                         {listCategories.map((item: any, index) => (
-                            <Link key={index} href={pathName + "?category=" + item.value} className={`p-2 border border-black rounded my-2 hover:bg-black hover:text-white ${cat === item.value.toString() ? "bg-black text-white" : ""}`}>
+                            <Link key={index} href={pathName + "?category=" + item.value} className={`p-2  my-2 hover:bg-black hover:text-white ${cat === item.value.toString() ? "border-b-2 border-black" : ""}`}>
                                 <span >{item.title}</span>
                             </Link>
                         ))}

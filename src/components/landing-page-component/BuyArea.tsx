@@ -74,7 +74,7 @@ export default function BuyArea(props: Props) {
   return (
     <div className='w-[1100px] flex flex-row space-x-2 py-4 justify-between'>
       <div className='flex flex-col space-y-8 '>
-        <div className='w-full border-b border-neutral-300 pb-4'>
+        <div className='overflow-hidden border-b border-neutral-300 pb-4'>
           <Swiper
             loop={loop}
             spaceBetween={10}

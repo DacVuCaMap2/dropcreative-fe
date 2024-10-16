@@ -644,7 +644,7 @@ export default function AddProductComponent(props: Props) {
             </div>
 
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <label className="text-sm font-bold">
                   Content calling for purchases *
@@ -662,14 +662,13 @@ export default function AddProductComponent(props: Props) {
                   </Tooltip>
                 </div>
               </div>
-              {/* contentCalling */}
               <div className="text-right">
                 <TinyMCEEditor
                   initialValue={""}
                   onEditorChange={handleContentCalling}
                 />
               </div>
-            </div>
+            </div> */}
 
             <div className="space-y-2">
               <div className="flex flex-row items-center space-x-5 border-b justify-center">
@@ -678,24 +677,21 @@ export default function AddProductComponent(props: Props) {
                 <button onClick={() => setSelectDesc(2)} className={`text-sm font-bold border-black   ${selectDesc === 2 ? 'border-b-2' : ''}`}>Return & Warranty</button>
               </div>
               {/* description */}
-              <div className={`p-4 ${selectDesc===0 ? '' : 'hidden'}`}>
-                <span className="font-bold">Description</span>
+              <div className={`p-2 ${selectDesc===0 ? '' : 'hidden'}`}>
                 <TinyMCEEditor
                   initialValue={""}
                   onEditorChange={handleEditorChange}
                 />
               </div>
-              <div className={`p-4 ${selectDesc===1 ? '' : 'hidden'}`}>
-                  <span className="font-bold">Shipping</span>
+              <div className={`p-2 ${selectDesc===1 ? '' : 'hidden'}`}>
                   <TinyMCEEditor
-                    initialValue={"Shipping"}
+                    initialValue={""}
                     onEditorChange={handleShippingChange}
                   />
                 </div>
-                <div className={`p-4 ${selectDesc===2 ? '' : 'hidden'}`}>
-                  <span className="font-bold">Return & Warranty</span>
+                <div className={`p-2 ${selectDesc===2 ? '' : 'hidden'}`}>
                   <TinyMCEEditor
-                    initialValue={"Return & Warranty"}
+                    initialValue={""}
                     onEditorChange={handleWarrantyChange}
                   />
                 </div>
