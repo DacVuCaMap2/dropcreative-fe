@@ -86,7 +86,7 @@ export default function BuyArea(props: Props) {
                 thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
             }}
             modules={[FreeMode, Navigation, Thumbs]}
-            className='w-[450px] h-[450px] rounded-lg'
+            className='w-[550px] h-[550px] rounded-lg'
           >
             {photos.map((image: any, index: number) => (
               <SwiperSlide key={index}>
@@ -95,7 +95,7 @@ export default function BuyArea(props: Props) {
                     src={process.env.NEXT_PUBLIC_API_URL + image.url}
                     alt={"image"}
                     className='block h-full w-full object-cover'
-                    width={500}
+                    width={900}
                     height={0}
                   />
                 </div>
@@ -112,7 +112,7 @@ export default function BuyArea(props: Props) {
             freeMode={true}
             watchSlidesProgress={true}
             modules={[FreeMode, Navigation, Thumbs]}
-            className='thumbs mt-3 max-h-32 w-[450px] rounded-lg'
+            className='thumbs mt-3 max-h-32 w-[550px] rounded-lg'
           >
             {photos.map((image: any, index: number) => (
               <SwiperSlide key={index}>
@@ -154,9 +154,10 @@ export default function BuyArea(props: Props) {
         </div>
         <div>
           <p className='font-bold text-xl'>{productData.product.title}</p>
-          <div className='space-x-2  my-4'>
+          <div className='space-x-2  my-4 flex flex-row items-center'>
             <span className='text-2xl'>${productData.product.price}</span>
             <span className='line-through text-neutral-400 text-lg'>${productData.product.comparePrice}</span>
+            <span className='bg-black text-white py-1 px-4 rounded text-xs'>{100-(productData.product.price/productData.product.comparePrice)*100}%</span>
           </div>
           <div className='space-y-4'>
             {productVariantTitle.map((item: any, index) => (
