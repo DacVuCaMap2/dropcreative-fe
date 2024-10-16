@@ -5,8 +5,8 @@ import ListProduct from './ListProduct'
 import Link from 'next/link'
 import { generalRoles } from '@/data/generalData'
 type Props = {
-    listProduct: any,
-    roleStr: any
+    roleStr: any,
+    accountId:any
 }
 export default function AllProductComponent(props: Props) {
     const roleUser = generalRoles[1];
@@ -22,7 +22,7 @@ export default function AllProductComponent(props: Props) {
                     </Link>
                 }
             </div>
-            <ListProduct listProduct={props.listProduct} />
+            <ListProduct accountId={props.accountId} />
         </div >
     )
 }

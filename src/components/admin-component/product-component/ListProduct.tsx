@@ -1,19 +1,40 @@
 "use client"
 import { Search } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ProductCategories from './ProductCategories'
 import { CardProductItem } from './CardProductItem'
 import Link from 'next/link'
 import './ListProduct.css'
+import { generalCategoriesSelect } from '@/data/generalData'
+import { usePathname, useSearchParams } from 'next/navigation'
+import GetApi from '@/api/GetApi'
+import { ClipLoader } from 'react-spinners'
 type Props = {
-    listProduct: any
+    accountId: any
 }
 export default function ListProduct(props: Props) {
-    let listData: any[] = [];
-    if (Array.isArray(props.listProduct.data)) {
-        listData = props.listProduct.data;
-    }
-    console.log(listData);
+    const pathName = usePathname();
+    const searchParams = useSearchParams();
+    const [loading, setLoading] = useState(true);
+    const [listData, setListData] = useState([]);
+    let cat = searchParams.get("category");
+    cat = cat ? cat : "";
+    console.log(cat);
+    let pathUrl = "";
+    const listCategories = generalCategoriesSelect;
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            pathUrl+= cat ? cat :"";
+            const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${props.accountId}&size=1000&page=1${pathUrl}` ;
+            const response = await GetApi(url);
+            if (response && response.data && Array.isArray(response.data)) {
+                setListData(response.data);
+                setLoading(false);
+            }
+        }
+        fetchData();
+    }, [cat])
     return (
         <div className='flex flex-col w-full space-y-2'>
             <div className='space-x-4 text-sm py-2 mb-4'>
@@ -35,19 +56,33 @@ export default function ListProduct(props: Props) {
                 <div className='font-bold '>
                     Categories
                 </div>
-                <div className='overflow-auto w-full flex flex-col items-center justify-center '>
-                    <div className=' max-w-[1200px] flex items-center justify-center'>
-                        <ProductCategories />
+                <div className='w-full flex flex-col py-4 text-xs'>
+                    <div className=' flex flex-row flex-wrap justify-center items-center space-x-4'>
+                        <Link href={pathName} className={`py-2 px-4 border border-black rounded hover:bg-black hover:text-white ${cat === "" ? "bg-black text-white" : ""}`}>
+                            <span >All</span>
+                        </Link>
+                        {listCategories.map((item: any, index) => (
+                            <Link key={index} href={pathName + "?category=" + item.value} className={`p-2 border border-black rounded my-2 hover:bg-black hover:text-white ${cat === item.value.toString() ? "bg-black text-white" : ""}`}>
+                                <span >{item.title}</span>
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </div>
-            <div className='w-full pt-8 grid grid-cols-4 gap-6 px-4'>
-                {listData.map((item: any, index) => (
-                    <div key={index}>
-                        <CardProductItem product={item}/>
-                    </div>
-                ))}
-            </div>
+            {loading ?
+                <div className='w-full h-96 flex felx-row justify-center items-center '>
+                    <ClipLoader />
+                </div>
+                :
+                <div className='w-full pt-8 grid grid-cols-4 gap-6 px-4 min-h-[300px] '>
+
+                    {listData.map((item: any, index) => (
+                        <div key={index}>
+                            <CardProductItem product={item} />
+                        </div>
+                    ))}
+                </div>
+            }
         </div>
     )
 }

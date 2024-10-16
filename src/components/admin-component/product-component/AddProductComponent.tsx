@@ -51,6 +51,8 @@ export default function AddProductComponent(props: Props) {
   const [productData, setProductData] = useState<Product>(getNewProduct());
   const [listVariant, setListVariant] = useState<productVariant[]>([]);
   const [description, setDescription] = useState(`<p>${productData.description}</p>`);
+  const [shippingDesc,setShippingDesc] = useState(`<p>${productData.shippingDescription}</p>`);
+  const [WarrantyDesc,setWarrantyDesc] = useState(`<p>${productData.warrantyDescription}</p>`);
   const [contentCalling, setContentCalling] = useState(`<p>${productData.contentCalling}</p>`);
   const [videos, setVideos] = useState<File[]>([]);
   const [photos, setPhotos] = useState<File[]>([]);
@@ -59,6 +61,7 @@ export default function AddProductComponent(props: Props) {
   const [indCurrent, setIndCurrent] = useState(0);
   const [listProductSelect, setListProductSelect] = useState<any[]>([]);
   const [listComboSale, setListComboSale] = useState<ComboSale[]>([]);
+  const [selectDesc, setSelectDesc] = useState(0);
   const [thisBoughtTogether, setThisBoughtTogether] = useState<BoughtTogether>({ name: "", imgUrl: "", id: 0, value: 0 });
   const [listBoughtTogerther, setListBoughtTogether] = useState<BoughtTogether[]>([{
     name: "",
@@ -71,6 +74,12 @@ export default function AddProductComponent(props: Props) {
     id: -1,
     value: 0,
   },]);
+  /// just save editor tiny
+
+
+
+
+
 
   ///get list Product select
   useEffect(() => {
@@ -129,12 +138,16 @@ export default function AddProductComponent(props: Props) {
 
 
   const handleEditorChange = (newContent: any) => {
-    console.log('Content changed:', newContent);
     setDescription(newContent);
   };
+  const handleShippingChange = (newContent: any) => {
+    setShippingDesc(newContent);
+  };
+  const handleWarrantyChange = (newContent: any) => {
+    setWarrantyDesc(newContent);
+  };
   const handleContentCalling = (newContent: any) => {
-    console.log('Content changed:', newContent);
-    setContentCalling(contentCalling);
+    setContentCalling(newContent);
   };
   const handleServiceType = (e: any, key: string) => {
     const value = e.target.checked;
@@ -411,8 +424,10 @@ export default function AddProductComponent(props: Props) {
       , accountId: accountId, variant: variantValue
       , contentCalling: contentCalling, description: description
       , comboSale: comboSale, boughtTogether: boughtTogether, categoryIds: listCat
-      ,holiday:listHol
-      ,season:listSea
+      , holiday: listHol
+      , season: listSea
+      ,shippingDescription:shippingDesc
+      ,warrantyDescription:WarrantyDesc
     };
     const { id, ...filterPostData } = postData;
     let errMess = "";
@@ -447,7 +462,7 @@ export default function AddProductComponent(props: Props) {
       });
       console.log('Success:', response.data);
       // router.push('/admin/all-product');
-      window.location.href='/admin/all-product'
+      window.location.href = '/admin/all-product'
     } catch (error) {
       console.error('Error:', error);
     }
@@ -647,38 +662,43 @@ export default function AddProductComponent(props: Props) {
                   </Tooltip>
                 </div>
               </div>
-
+              {/* contentCalling */}
               <div className="text-right">
                 <TinyMCEEditor
-                  initialValue={contentCalling}
+                  initialValue={""}
                   onEditorChange={handleContentCalling}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <label className="text-sm font-bold">Description *</label>
-                <div className="circle-alert cursor-pointer">
-                  <CircleAlert size={20} />
-                  <Tooltip
-                    anchorSelect=".circle-alert"
-                    place="right"
-                    className="text-xs"
-                  >
-                    Certain special text styles from other sources will be
-                    automatically removed to maintain consistency with your
-                    website style
-                  </Tooltip>
-                </div>
+              <div className="flex flex-row items-center space-x-5 border-b justify-center">
+                <button onClick={() => setSelectDesc(0)} className={`text-sm font-bold border-black   ${selectDesc === 0 ? 'border-b-2' : ''}`}>Description</button>
+                <button onClick={() => setSelectDesc(1)} className={`text-sm font-bold border-black   ${selectDesc === 1 ? 'border-b-2' : ''}`}>Shipping</button>
+                <button onClick={() => setSelectDesc(2)} className={`text-sm font-bold border-black   ${selectDesc === 2 ? 'border-b-2' : ''}`}>Return & Warranty</button>
               </div>
-
-              <div className="text-right">
+              {/* description */}
+              <div className={`p-4 ${selectDesc===0 ? '' : 'hidden'}`}>
+                <span className="font-bold">Description</span>
                 <TinyMCEEditor
-                  initialValue={description}
+                  initialValue={""}
                   onEditorChange={handleEditorChange}
                 />
               </div>
+              <div className={`p-4 ${selectDesc===1 ? '' : 'hidden'}`}>
+                  <span className="font-bold">Shipping</span>
+                  <TinyMCEEditor
+                    initialValue={"Shipping"}
+                    onEditorChange={handleShippingChange}
+                  />
+                </div>
+                <div className={`p-4 ${selectDesc===2 ? '' : 'hidden'}`}>
+                  <span className="font-bold">Return & Warranty</span>
+                  <TinyMCEEditor
+                    initialValue={"Return & Warranty"}
+                    onEditorChange={handleWarrantyChange}
+                  />
+                </div>
             </div>
           </div>
 

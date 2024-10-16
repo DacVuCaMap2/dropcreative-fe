@@ -2,6 +2,8 @@ class Product {
     id: any;
     title: string;
     description: string;
+    shippingDescription:string;
+    warrantyDescription:string;
     accountId: number|null; 
     categoryIds: number[]; 
     status: number;
@@ -32,6 +34,8 @@ class Product {
         id: any;
         title: string;
         description: string; 
+        shippingDescription:string;
+        warrantyDescription:string;
         accountId: number|null;   
         categoryIds: number[];  
         status: number;
@@ -61,6 +65,8 @@ class Product {
         this.id = parameters.id;
         this.title = parameters.title;
         this.description = parameters.description; 
+        this.shippingDescription = parameters.shippingDescription; 
+        this.warrantyDescription = parameters.warrantyDescription; 
         this.accountId = parameters.accountId;   
         this.categoryIds = parameters.categoryIds;  
         this.status = parameters.status;
@@ -97,6 +103,8 @@ export const getNewProduct = (): Product => {
         id: null,
         title: "",
         description: "",  
+        shippingDescription:"",
+        warrantyDescription:"",
         accountId: null, 
         categoryIds: [],
         status: 0,

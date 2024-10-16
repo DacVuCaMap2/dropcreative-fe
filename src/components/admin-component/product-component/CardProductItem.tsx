@@ -8,7 +8,6 @@ type Props = {
 }
 export function CardProductItem(props: Props) {
   const data = props.product;
-  console.log(data.id);
   return (
     <div className="border text-neutral-600 border-neutral-400 rounded-lg h-96 flex flex-col p-2 hover:shadow-xl transition-shadow duration-300 ease-in-out overflow-hidden hover:bg-gray-100">
       <div className="h-40 overflow-hidden flex items-center justify-center py-2 mb-2">

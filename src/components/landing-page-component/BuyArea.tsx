@@ -22,6 +22,8 @@ export default function BuyArea(props: Props) {
   const [selectedVariant, setSelectedVariant] = useState([0, 0, 0]);
   const [changeStatus, setChangeStatus] = useState(0);
   const [currentImg, setCurrentImg] = useState(0);
+  const [currentQuan,setCurrentQuan] = useState<number>(1);
+
   let urlMainPhoto = "";
   let photos: any[] = [];
   let loop = false;
@@ -162,7 +164,7 @@ export default function BuyArea(props: Props) {
                 <span className=''>{item}</span>
                 <div className='flex flex-row flex-wrap'>
                   {variantsSelectList[index].map((childItem: string, childIndex) => (
-                    <button onClick={() => handleSelectedVariant(index, childIndex)} key={childIndex} className={`border rounded-lg py-2 px-4 mr-4 ${selectedVariant[index] === childIndex ? 'bg-neutral-800 text-white shadow-lg ' : ''}`}>
+                    <button onClick={() => handleSelectedVariant(index, childIndex)} key={childIndex} className={`border rounded-lg py-2 px-4 mr-4 mb-2 ${selectedVariant[index] === childIndex ? 'bg-neutral-800 text-white shadow-lg ' : ''}`}>
                       {childItem}
                     </button>
                   ))}
@@ -176,12 +178,12 @@ export default function BuyArea(props: Props) {
         </div>
         <div className='flex flex-row justify-between h-20 items-center'>
           <div className='flex flex-row w-36 border border-neutral-300 h-14 items-center'>
-            <button className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Minus /></button>
-            <span className='w-full text-center'>1</span>
+            <button onClick={()=>setCurrentQuan(currentQuan>1 ? currentQuan-1 : currentQuan)} className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Minus /></button>
+            <span className='w-full text-center'>{currentQuan}</span>
 
-            <button className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Plus /></button>
+            <button onClick={()=>setCurrentQuan(currentQuan+1)} className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Plus /></button>
           </div>
-          <button className='flex justify-center  items-center h-14 border border-black w-2/3 hover:scale-105 transition-transform transform'>
+          <button  className='flex justify-center  items-center h-14 border border-black w-2/3 hover:scale-105 transition-transform transform'>
             Add to cart
           </button>
         </div>
