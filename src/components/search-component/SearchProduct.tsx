@@ -302,7 +302,7 @@ const SearchProduct = () => {
                           Ethnicity
                         </span>
                       }
-                      key="3"
+                      key="4"
                     >
                       <div className="w-12/12 flex flex-wrap gap-2">
                         {[
@@ -348,7 +348,7 @@ const SearchProduct = () => {
                 {/* Style */}
                 <Panel
                   header={<span className="text-sm font-semibold">Style</span>}
-                  key="8"
+                  key="9"
                 >
                   <div className="w-12/12 flex flex-wrap gap-2">
                     {[
@@ -391,7 +391,7 @@ const SearchProduct = () => {
                       DropCreative's Choice
                     </span>
                   }
-                  key="6"
+                  key="9"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-gray-500">See our favourites</span>
@@ -404,159 +404,166 @@ const SearchProduct = () => {
         ) : (
           ""
         )}
-
-        <div
-          className={`relative flex ${
-            isOpenFilter ? "justify-center items-start w-5/6" : "justify-end"
-          } `}
-        >
-          {isOpenFilter ? (
-            ""
-          ) : (
-            <div className="h-full w-2/12 pt-4 flex justify-center">
-              <Button
-                className="h-10 font-semibold bg-gray-200 hover:bg-gray-200 flex items-center"
-                color="default"
-                variant="filled"
-                iconPosition="start"
-                icon={<SlidersHorizontal width={15} height={15} />}
-                onClick={() => setIsOpenFilter(!isOpenFilter)}
-              >
-                Filters
-              </Button>
-            </div>
-          )}
-
-          <ChevronLeft
-            width={40}
-            height={40}
-            onClick={() => scroll("left")}
-            className={`absolute p-2 cursor-pointer ${
-              hiddenBtn.left && "opacity-0 pointer-events-none"
-            } ${isOpenFilter ? "left-5 z-20 top-4" : "left-60 z-20 top-4"}`}
-          />
+        <div className={`${isOpenFilter ? "w-5/6" : ""}`}>
           <div
-            ref={scrollRef}
-            className={`${isOpenFilter} ?  w-11/12 flex gap-5 overflow-hidden mt-4 items-end`}
+            className={`relative flex ${
+              isOpenFilter ? "justify-center items-start w-full" : "justify-end"
+            } `}
           >
-            <Button
-              className="h-10 font-semibold"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<Image width={15} height={15} />}
+            {isOpenFilter ? (
+              ""
+            ) : (
+              <div className="h-full w-2/12 pt-4 flex justify-center">
+                <Button
+                  className="h-10 font-semibold bg-gray-200 hover:bg-gray-200 flex items-center"
+                  color="default"
+                  variant="filled"
+                  iconPosition="start"
+                  icon={<SlidersHorizontal width={15} height={15} />}
+                  onClick={() => setIsOpenFilter(!isOpenFilter)}
+                >
+                  Filters
+                </Button>
+              </div>
+            )}
+            <ChevronLeft
+              width={40}
+              height={40}
+              onClick={() => scroll("left")}
+              className={`absolute p-2 cursor-pointer ${
+                hiddenBtn.left && "opacity-0 pointer-events-none"
+              } ${isOpenFilter ? "left-5 z-20 top-4" : "left-60 z-20 top-4"}`}
+            />
+            <div
+              ref={scrollRef}
+              className={`${isOpenFilter} ?  w-11/12 flex gap-5 overflow-hidden mt-4 items-end`}
             >
-              Photos
-            </Button>
-            <Button
-              className="h-10 font-semibold"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<Scan width={15} height={15} />}
-            >
-              Vectors
-            </Button>
-            <Button
-              className="h-10 font-semibold"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<FileTerminal width={15} height={15} />}
-            >
-              PSD
-            </Button>
-            <Button
-              className="h-10"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<Search width={15} height={15} />}
-            >
-              Cream color
-            </Button>
-            <Button
-              className="h-10"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<Search width={15} height={15} />}
-            >
-              Background
-            </Button>
-            <Button
-              className="h-10"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<Search width={15} height={15} />}
-            >
-              White backgound
-            </Button>
-            <Button
-              className="h-10"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<Search width={15} height={15} />}
-            >
-              Black backgound
-            </Button>
-            <Button
-              className="h-10"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<Search width={15} height={15} />}
-            >
-              Zoom backgound
-            </Button>
-            <Button
-              className="h-10"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<Search width={15} height={15} />}
-            >
-              Blue backgound
-            </Button>
-            <Button
-              className="h-10"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<Search width={15} height={15} />}
-            >
-              Abstract backgound
-            </Button>
-            <Button
-              className="h-10"
-              color="default"
-              variant="outlined"
-              iconPosition="start"
-              icon={<Search width={15} height={15} />}
-            >
-              Modern backgound
-            </Button>
+              <Button
+                className="h-10 font-semibold"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<Image width={15} height={15} />}
+              >
+                Photos
+              </Button>
+              <Button
+                className="h-10 font-semibold"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<Scan width={15} height={15} />}
+              >
+                Vectors
+              </Button>
+              <Button
+                className="h-10 font-semibold"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<FileTerminal width={15} height={15} />}
+              >
+                PSD
+              </Button>
+              <Button
+                className="h-10"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<Search width={15} height={15} />}
+              >
+                Cream color
+              </Button>
+              <Button
+                className="h-10"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<Search width={15} height={15} />}
+              >
+                Background
+              </Button>
+              <Button
+                className="h-10"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<Search width={15} height={15} />}
+              >
+                White backgound
+              </Button>
+              <Button
+                className="h-10"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<Search width={15} height={15} />}
+              >
+                Black backgound
+              </Button>
+              <Button
+                className="h-10"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<Search width={15} height={15} />}
+              >
+                Zoom backgound
+              </Button>
+              <Button
+                className="h-10"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<Search width={15} height={15} />}
+              >
+                Blue backgound
+              </Button>
+              <Button
+                className="h-10"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<Search width={15} height={15} />}
+              >
+                Abstract backgound
+              </Button>
+              <Button
+                className="h-10"
+                color="default"
+                variant="outlined"
+                iconPosition="start"
+                icon={<Search width={15} height={15} />}
+              >
+                Modern backgound
+              </Button>
 
-            {/* <p className="text-center mt-10 font-semibold text-2xl">
+              {/* <p className="text-center mt-10 font-semibold text-2xl">
             Background Design Images
           </p> */}
+            </div>
+            <ChevronRight
+              width={40}
+              height={40}
+              onClick={() => scroll("right")}
+              className={`absolute z-20 p-2 cursor-pointer ${
+                hiddenBtn.right && "opacity-0 pointer-events-none"
+              } ${isOpenFilter ? "right-5 top-4" : "-right-10 top-4"}`}
+            />
           </div>
-          <ChevronRight
-            width={40}
-            height={40}
-            onClick={() => scroll("right")}
-            className={`absolute z-20 p-2 cursor-pointer ${
-              hiddenBtn.right && "opacity-0 pointer-events-none"
-            } ${isOpenFilter ? "right-5 top-4" : "-right-10 top-4"}`}
-          />
+          <div className="w-11/12 m-0 m-auto mt-2">
+            <SearchResult />
+          </div>
         </div>
       </div>
       <hr className="mt-2" />
-      <div className="w-11/12 m-0 m-auto pl-3 mt-2">
-        <SearchResult />
-      </div>
+      {isOpenFilter ? (
+        ""
+      ) : (
+        <div className="w-11/12 m-0 m-auto pl-3 mt-2">
+          <SearchResult />
+        </div>
+      )}
     </div>
   );
 };
