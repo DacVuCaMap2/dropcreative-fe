@@ -17,6 +17,7 @@ export default function ListProduct(props: Props) {
     const searchParams = useSearchParams();
     const [loading, setLoading] = useState(true);
     const [listData, setListData] = useState([]);
+    console.log(listData);
     let cat = searchParams.get("category");
     cat = cat ? cat : "";
     console.log(cat);
