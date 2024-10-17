@@ -17,26 +17,8 @@ const SearchResult = (props: DataSearch) => {
       <div>
         <Row gutter={[16, 16]}>
           {dataSearch &&
-            dataSearch?.map((item: any) => (
-              <Col span={6}>
-                {/* <Card
-                  hoverable
-                  style={{ width: 300 }}
-                  cover={
-                    <>
-                      <Image
-                        width={200}
-                        height={200}
-                        src={
-                          item.imageUrl
-                            ? `${process.env.NEXT_PUBLIC_API_URL}${item.imageUrl}`
-                            : "/image/nophotos.png"
-                        }
-                        alt="image 1"
-                      />
-                    </>
-                  }
-                /> */}
+            dataSearch?.map((item: any, index: number) => (
+              <Col span={6} key={index}>
                 <Card className="col-span-12 sm:col-span-4 h-[300px]">
                   <Image
                     width={200}
