@@ -14,6 +14,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Trash } from "lucide-react";
+import { ImageItem } from "./ImageItem";
 
 interface ImageItemProps {
     id: string;
@@ -24,52 +25,52 @@ type Props = {
     setPhotos: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
-const ImageItem: React.FC<ImageItemProps> = ({ id, photo }) => {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-        useSortable({ id });
+// const ImageItem: React.FC<ImageItemProps> = ({ id, photo }) => {
+//     const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+//         useSortable({ id });
 
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        zIndex: isDragging ? 50 : "auto",
-        opacity: isDragging ? 0.8 : 1
-    };
+//     const style = {
+//         transform: CSS.Transform.toString(transform),
+//         transition,
+//         zIndex: isDragging ? 50 : "auto",
+//         opacity: isDragging ? 0.8 : 1
+//     };
 
-    if (photo instanceof File) {
-        return (
-            <div
-                ref={setNodeRef}
-                style={style}
-                {...attributes}
-                {...listeners}
-                className="flex flex-col items-center rounded-lg border shadow-xl"
-            >
-                <img
-                    src={URL.createObjectURL(photo)}
-                    alt={photo.name}
-                    className="w-36 h-36 object-cover"
-                />
-            </div>
-        );
-    }
-    else{
-        return (
-            <div
-                ref={setNodeRef}
-                style={style}
-                {...attributes}
-                {...listeners}
-                className="flex flex-col items-center rounded-lg border shadow-xl"
-            >
-                <img
-                    src={process.env.NEXT_PUBLIC_API_URL+photo.url}
-                    alt="image"
-                    className="w-36 h-36 object-cover"
-                />
-            </div>
-        );
-    }
-};
+//     if (photo instanceof File) {
+//         return (
+//             <div
+//                 ref={setNodeRef}
+//                 style={style}
+//                 {...attributes}
+//                 {...listeners}
+//                 className="flex flex-col items-center rounded-lg border shadow-xl"
+//             >
+//                 <img
+//                     src={URL.createObjectURL(photo)}
+//                     alt={photo.name}
+//                     className="w-36 h-36 object-cover"
+//                 />
+//             </div>
+//         );
+//     }
+//     else{
+//         return (
+//             <div
+//                 ref={setNodeRef}
+//                 style={style}
+//                 {...attributes}
+//                 {...listeners}
+//                 className="flex flex-col items-center rounded-lg border shadow-xl"
+//             >
+//                 <img
+//                     src={process.env.NEXT_PUBLIC_API_URL+photo.url}
+//                     alt="image"
+//                     className="w-36 h-36 object-cover"
+//                 />
+//             </div>
+//         );
+//     }
+// };
 
 const cropToSquare = (file: File): Promise<File> => {
     return new Promise((resolve, reject) => {
@@ -147,7 +148,6 @@ const PhotoGalleryEdit: React.FC<Props> = (props: Props) => {
             if (tempList.length > 100) {
                 tempList = tempList.slice(-100);
             }
-
             setPhotos(tempList);
             props.setPhotos(tempList);
         }
@@ -227,9 +227,9 @@ const PhotoGalleryEdit: React.FC<Props> = (props: Props) => {
                                     )
                                 }
                                 else{
-                                    (
+                                    return (
                                         <div key={index} className="relative group">
-                                            <ImageItem id={item.fileName} photo={item} />
+                                            <ImageItem id={item.name} photo={item} />
                                             <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                                 <button onClick={() => handleDelPhoto(index)} className="p-2 bg-white">
                                                     <Trash size={16} />

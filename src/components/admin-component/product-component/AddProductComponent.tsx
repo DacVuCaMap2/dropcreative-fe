@@ -439,10 +439,10 @@ export default function AddProductComponent(props: Props) {
     }
     const formData = new FormData();
     formData.append("data", JSON.stringify(filterPostData));
-
     if (photos.length > 0) {
-      photos.forEach((photo, index) => {
-        formData.append(`images`, photo);
+      photos.forEach((photo: File, index) => {
+        const uploadPhoto = new File([photo], `${index}-${accountId}-image-${Date.now()}.jpg`, { type: photo.type });
+        formData.append(`images`, uploadPhoto);
       });
     }
     if (videos.length > 0) {

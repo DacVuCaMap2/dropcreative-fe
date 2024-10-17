@@ -12,8 +12,11 @@ const Layout = ({
     children: React.ReactNode;
 }>) => {
     const routeListData = routeData;
-    const pathname = usePathname();
-    const thisRoute = routeData.find((item: any) => item.path === pathname);
+    let pathname = usePathname();
+    if (pathname.includes("edit")) {
+        pathname="/admin/all-product/edit"
+    }
+    const thisRoute = routeListData.find((item: any) => pathname === item.path );
     const title = thisRoute?.title;
     return (
         <div className="flex flex-col px-10 py-4">

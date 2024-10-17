@@ -49,13 +49,18 @@ type Props = {
     accountId: string,
     productData: Product,
     videos: any[],
-    images: any[]
+    images: any[],
+    listVariant : productVariant[],
+    listVariantDetails : variantDetails[],
+    comboSaleList : ComboSale[],
+    boughtTogetherList: BoughtTogether[]
 }
 export default function EditProductComponent(props: Props) {
     const accountId = props.accountId;
+
     const [loading, setLoading] = useState(0);
     const [productData, setProductData] = useState<Product>(props.productData);
-    const [listVariant, setListVariant] = useState<productVariant[]>([]);
+    const [listVariant, setListVariant] = useState<productVariant[]>(props.listVariant);
     const [description, setDescription] = useState(`<p>${productData.description}</p>`);
     const [shippingDesc, setShippingDesc] = useState(`<p>${productData.shippingDescription}</p>`);
     const [WarrantyDesc, setWarrantyDesc] = useState(`<p>${productData.warrantyDescription}</p>`);
@@ -66,26 +71,12 @@ export default function EditProductComponent(props: Props) {
     const [isOpenSelectProduct, setIsOpenSelectProduct] = useState(false);
     const [indCurrent, setIndCurrent] = useState(0);
     const [listProductSelect, setListProductSelect] = useState<any[]>([]);
-    const [listComboSale, setListComboSale] = useState<ComboSale[]>([]);
+    const [listComboSale, setListComboSale] = useState<ComboSale[]>(props.comboSaleList);
     const [selectDesc, setSelectDesc] = useState(0);
-    const [thisBoughtTogether, setThisBoughtTogether] = useState<BoughtTogether>({ name: "", imgUrl: "", id: 0, value: 0 });
-    const [listBoughtTogerther, setListBoughtTogether] = useState<BoughtTogether[]>([{
-        name: "",
-        imgUrl: "",
-        id: -1,
-        value: 0,
-    }, {
-        name: "",
-        imgUrl: "",
-        id: -1,
-        value: 0,
-    },]);
+    const [thisBoughtTogether, setThisBoughtTogether] = useState<BoughtTogether>(props.boughtTogetherList[0]);
+    const tempBoughtTogetherList = props.boughtTogetherList.map((item:BoughtTogether,index)=>{})
+    const [listBoughtTogerther, setListBoughtTogether] = useState<BoughtTogether[]>([props.boughtTogetherList[1],props.boughtTogetherList[2]]);
     /// just save editor tiny
-
-
-
-
-
 
     ///get list Product select
     useEffect(() => {
@@ -94,7 +85,6 @@ export default function EditProductComponent(props: Props) {
             const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=30&page=1`;
             const fetchData = async () => {
                 const response = await GetApi(url);
-                console.log(response);
                 if (Array.isArray(response.data)) {
                     setListProductSelect(response.data);
                 }
@@ -111,7 +101,7 @@ export default function EditProductComponent(props: Props) {
         , premium: productData.serviceType === 2 || productData.serviceType === 3 ? true : false
     });
 
-    const [listVariantDetails, setListVariantDetails] = useState<variantDetails[]>([]);
+    const [listVariantDetails, setListVariantDetails] = useState<variantDetails[]>(props.listVariantDetails);
     const [listCat, setListCat] = useState<any[]>([]);
     const [listSea, setListSeasons] = useState<any[]>([]);
     const [listHol, setListHolidays] = useState<any[]>([]);
@@ -477,23 +467,23 @@ export default function EditProductComponent(props: Props) {
         // console.log(photos, videos);
         console.log(filterPostData);
 
-        const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
-        try {
-            setLoading(1);
-            setTimeout(() => {
-                setLoading(0)
-            }, 3000);
-            const response = await axios.post(url, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
-                },
-            });
-            console.log('Success:', response.data);
-            // router.push('/admin/all-product');
-            window.location.href = '/admin/all-product'
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        // const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
+        // try {
+        //     setLoading(1);
+        //     setTimeout(() => {
+        //         setLoading(0)
+        //     }, 3000);
+        //     const response = await axios.post(url, formData, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
+        //         },
+        //     });
+        //     console.log('Success:', response.data);
+        //     // router.push('/admin/all-product');
+        //     window.location.href = '/admin/all-product'
+        // } catch (error) {
+        //     console.error('Error:', error);
+        // }
     }
 
     const handleChangeCat = (value: any[]) => {
@@ -560,8 +550,8 @@ export default function EditProductComponent(props: Props) {
         closeModalProduct();
     }
     const handleDelBT = (index: any) => {
-        const tempList = [...listBoughtTogerther].map((item: BoughtTogether, index) => {
-            if (indCurrent === index) {
+        const tempList = [...listBoughtTogerther].map((item: BoughtTogether, ind) => {
+            if (ind === index) {
                 return {
                     ...item
                     , name: ""
@@ -601,7 +591,7 @@ export default function EditProductComponent(props: Props) {
                     on the market
                 </p>
             </div>
-            <button onClick={handleSubmit} className="sticky top-4 right-2  flex  items-center bg-blue-500 hover:bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
+            <button onClick={handleSubmit} className="sticky top-4 right-2 z-50 flex  items-center bg-blue-500 hover:bg-blue-600 text-xs font-bold text-white px-4 py-2 rounded">
                 <Save size={16} className="mr-2" />
                 Save
             </button>
@@ -1588,7 +1578,7 @@ export default function EditProductComponent(props: Props) {
                                     <div key={index}>
                                         {item.id != -1 ?
                                             <div className="flex flex-row justify-center items-center space-x-2 border-b pb-2 mb-4">
-                                                <div className="flex flex-row w-full overflow-hidden items-center space-x-2">
+                                                <div className="flex flex-row w-full overflow-hidden items-center space-x-2 min-h-[50px]">
                                                     <Image src={item.imgUrl} alt="image" width={50} height={50} className="rounded"></Image>
                                                     <p className="truncate">{item.name}</p>
                                                 </div>

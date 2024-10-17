@@ -120,6 +120,8 @@ export function validatePostData(postData: any) {
     return ""; // No errors
 }
 
+
+
 export const stringToVariant = (variantTitle: string, productVariant: string[]) : string[][] => {
     const listResult: string[][] = [[], [], []];
     const listVariantName: string[] = variantTitle.split("./");

@@ -262,7 +262,6 @@ export default function BuyArea(props: Props) {
               <div className='flex flex-row space-x-2 text-sm justify-between'>
                 <div className='flex flex-row'>
                   <input type="checkbox" className='rounded mr-2' name="" id="" />
-                  <span className='font-bold mr-2'>This Product:</span>
                   <span className='truncate max-w-64'>{productData.product.title}</span>
                 </div>
                 <span>${(boughtTogetherList.length > 0 && parseFloat(boughtTogetherList[0].key2) != 0) ? (100 - (currentVariant.price / parseFloat(boughtTogetherList[0].key2)) * 100).toFixed(2) : currentVariant.price}</span>

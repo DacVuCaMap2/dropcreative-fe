@@ -1,5 +1,6 @@
 import GetApi from '@/api/GetApi';
 import EditProductComponent from '@/components/admin-component/product-component/EditProductComponent'
+import { stringToVariant, tranObjectFromStrTwoKey } from '@/data/function';
 import ImageEdit from '@/model/ImageEdit';
 import Product, { getNewProduct } from '@/model/Product';
 import { cookies } from 'next/headers';
@@ -22,7 +23,16 @@ type variantDetails = {
     value: string;
     status: number;
 };
-
+type ComboSale = {
+    quantity: number,
+    value: number
+}
+type BoughtTogether = {
+    name: string,
+    imgUrl: string,
+    id: number,
+    value: number,
+}
 export default async function page({ params }: { params: { slug: string } }) {
     const cookieStore = cookies()
     let accId: string = "";  // Đặt kiểu là string
@@ -38,6 +48,8 @@ export default async function page({ params }: { params: { slug: string } }) {
     let images: ImageEdit[] = [];
     const listVariant: productVariant[] = [];
     let listVariantDetails: variantDetails[] = [];
+    let comboSaleList: ComboSale[] = [];
+    let boughtTogetherList: BoughtTogether[] = []
     if (response.product) {
         productData = {
             id: response.product.id,
@@ -47,8 +59,8 @@ export default async function page({ params }: { params: { slug: string } }) {
             warrantyDescription: response.productDetail.warrantyDescription ? response.productDetail.warrantyDescription : "",
             accountId: response.product.accountId,
             categoryIds: response.product.categoryIds,
-            seasonIds: response.productDetail.seasonIds,
-            holidayIds: response.productDetail.holidayIds,
+            season: response.productDetail.season,
+            holiday: response.productDetail.holiday,
             status: response.product.status,
             serviceType: response.product.serviceType,
             variant: response.product.variant,
@@ -77,8 +89,23 @@ export default async function page({ params }: { params: { slug: string } }) {
         images = response.images.map((item: any) => {
             return { id: item.id, productId: item.productId, url: item.url, name: item.fileName, isMain: item.isMain };
         })
+
+        /// get variant select
+        const arrVariantsDetails: string[] = response.productVariants.map((item: any) => {
+            return item.value;
+        })
+        const variantsSelectList = stringToVariant(response.product.variant, arrVariantsDetails);
+        const arrVarianTitle = response.product.variant.split("./");
+        for (let i = 0; i < arrVarianTitle.length; i++) {
+            listVariant.push({
+                optionName: arrVarianTitle.join('./'),
+                optionValue: variantsSelectList[i],
+                optionInput: ""
+            })
+        }
         listVariantDetails = response.productVariants.map(((item: any) => {
-            const image = images.find(img=>img.id===item.id);
+            let image = images.find(img => img.id === item.id);
+            image = image ? image : images[0];
             return {
                 name: item.value,
                 price: item.price,
@@ -87,18 +114,61 @@ export default async function page({ params }: { params: { slug: string } }) {
                 image: image,
                 sku: item.sku,
                 barcode: item.barcode,
-                fileName: image ? image.name : "" ,
+                fileName: image ? image.name : "",
                 value: item.value,
                 status: item.status,
             }
         }))
+
+        //combosale 
+        const tempComboSale = tranObjectFromStrTwoKey(response.productDetail.comboSale);
+        comboSaleList = tempComboSale.map((item: any) => {
+            return { quantity: item.key1, value: item.key2 }
+        })
+
+        //bought together
+        const tempBoughtTogether = tranObjectFromStrTwoKey(response.productDetail.boughtTogether);
+
+        /// search Product
+        const boughtTogetherPromises = tempBoughtTogether.map(async (item: any, index) => {
+            if (index === 0) {
+                return { name: response.product.title, imgUrl: "", id: response.product.id, value: parseFloat(item.key2) }
+            }
+            if (index > 0) {
+                const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + item.key1;
+                const productChild = await GetApi(url);
+                if (productChild.product) {
+                    return {
+                        name: productChild.product.title,
+                        imgUrl: productChild.images.length > 0 ? process.env.NEXT_PUBLIC_API_URL+productChild.images[0].url : "",
+                        id: productChild.product.id,
+                        value: parseFloat(item.key2)
+                    };
+                }
+                return null;
+            }
+            return null;
+        });
+        const boughtTogetherResults = await Promise.all(boughtTogetherPromises);
+        boughtTogetherList = boughtTogetherResults.filter(item => item !== null);
+        for (let i = 0; i < 3; i++) {
+            if (!boughtTogetherList[i]) {
+                boughtTogetherList[i]={
+                    name: "",
+                    imgUrl: "",
+                    id: -1,
+                    value: 0,
+                }
+            }
+        }
     }
     else {
         return notFound();
     }
 
-    console.log(response);
+    // console.log(response);
     return (
-        <EditProductComponent accountId={accId} productData={productData} videos={videos} images={images} />
+        <EditProductComponent accountId={accId} productData={productData} videos={videos}
+            images={images} listVariant={listVariant} listVariantDetails={listVariantDetails} comboSaleList={comboSaleList} boughtTogetherList={boughtTogetherList} />
     )
 }
