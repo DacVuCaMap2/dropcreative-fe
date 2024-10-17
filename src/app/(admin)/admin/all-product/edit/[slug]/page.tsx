@@ -12,6 +12,7 @@ type productVariant = {
     optionInput: string;
 };
 type variantDetails = {
+    id:any;
     name: string;
     price: number;
     comparePrice: number;
@@ -98,15 +99,16 @@ export default async function page({ params }: { params: { slug: string } }) {
         const arrVarianTitle = response.product.variant.split("./");
         for (let i = 0; i < arrVarianTitle.length; i++) {
             listVariant.push({
-                optionName: arrVarianTitle.join('./'),
+                optionName: arrVarianTitle[i],
                 optionValue: variantsSelectList[i],
                 optionInput: ""
             })
         }
         listVariantDetails = response.productVariants.map(((item: any) => {
-            let image = images.find(img => img.id === item.id);
+            let image = images.find(img => img.id === item.imageId);
             image = image ? image : images[0];
             return {
+                id:item.id,
                 name: item.value,
                 price: item.price,
                 comparePrice: item.comparePrice,
@@ -166,7 +168,7 @@ export default async function page({ params }: { params: { slug: string } }) {
         return notFound();
     }
 
-    // console.log(response);
+    console.log(response);
     return (
         <EditProductComponent accountId={accId} productData={productData} videos={videos}
             images={images} listVariant={listVariant} listVariantDetails={listVariantDetails} comboSaleList={comboSaleList} boughtTogetherList={boughtTogetherList} />

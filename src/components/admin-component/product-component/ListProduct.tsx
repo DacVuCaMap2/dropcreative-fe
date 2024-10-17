@@ -26,7 +26,9 @@ export default function ListProduct(props: Props) {
         const fetchData = async () => {
             setLoading(true);
             pathUrl += cat ? cat : "";
-            const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${props.accountId}&size=1000&page=1${pathUrl}`;
+            console.log(pathUrl);
+            const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${props.accountId}&size=1000&page=1${pathUrl ? "&category="+pathUrl : ""}`;
+            console.log(url);
             const response = await GetApi(url);
             if (response && response.data && Array.isArray(response.data)) {
                 setListData(response.data);
@@ -37,7 +39,7 @@ export default function ListProduct(props: Props) {
     }, [cat])
     return (
         <div className='flex flex-col w-full space-y-2'>
-            <div className='text-neutral-500 text-sm w-full mt-4 pb-2 pt-4 px-2 h-20'>
+            <div className='text-neutral-500 text-sm w-full mt-4 pb-2 px-2 h-20'>
                 <div className='w-full flex flex-col py-4 text-xs'>
                     <div className=' flex flex-row flex-wrap justify-center items-center space-x-4'>
                         <Link href={pathName} className={`py-2 px-4 border-black hover:border-b-2 ${cat === "" ? "border-b-2 " : ""}`}>

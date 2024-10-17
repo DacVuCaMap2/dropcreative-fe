@@ -388,7 +388,7 @@ export default function AddProductComponent(props: Props) {
     const productVariants = listVariantDetails.map((item: variantDetails, index) => {
       return {
         value: item.name, status: item.status, price: item.price, comparePrice: item.comparePrice, quantity: item.quantity,
-        sku: item.sku, barcode: item.barcode, fileName: item.image ? `${index}-${accountId}image${Date.now()}` : ''
+        sku: item.sku, barcode: item.barcode, fileName: item.image ? item.image.name : ''
       }
     })
     let comboSale = "";
@@ -441,18 +441,18 @@ export default function AddProductComponent(props: Props) {
     formData.append("data", JSON.stringify(filterPostData));
     if (photos.length > 0) {
       photos.forEach((photo: File, index) => {
-        const uploadPhoto = new File([photo], `${index}-${accountId}-image-${Date.now()}.jpg`, { type: photo.type });
-        formData.append(`images`, uploadPhoto);
+        // console.log(photo);
+        formData.append(`images`, photo);
       });
     }
     if (videos.length > 0) {
       videos.forEach((video, index) => {
+        const upLoadVideo = new File([video], `${index}-${accountId}video`, { type: video.type });
         formData.append(`videos`, video);
       });
     }
     // console.log(photos, videos);
     console.log(filterPostData);
-
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
     try {
       setLoading(1);
@@ -464,6 +464,7 @@ export default function AddProductComponent(props: Props) {
           'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
         },
       });
+      message.success("Upload success")
       console.log('Success:', response.data);
       // router.push('/admin/all-product');
       window.location.href = '/admin/all-product'
@@ -536,8 +537,8 @@ export default function AddProductComponent(props: Props) {
     closeModalProduct();
   }
   const handleDelBT = (index: any) => {
-    const tempList = [...listBoughtTogerther].map((item: BoughtTogether, index) => {
-      if (indCurrent === index) {
+    const tempList = [...listBoughtTogerther].map((item: BoughtTogether, ind) => {
+      if (index === ind) {
         return {
           ...item
           , name: ""

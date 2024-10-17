@@ -112,24 +112,55 @@ const cropToSquare = (file: File): Promise<File> => {
 const PhotoGallery: React.FC<Props> = (props: Props) => {
     const [photos, setPhotos] = useState<File[]>([]);
 
+    // const handleImgChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const files = event.target.files;
+    //     if (files) {
+    //         // const newPhotos = Array.from(files);
+    //         const newPhotos = await processFiles(files)
+    //         // Filter out files that already exist in photos by name
+    //         const existingNames = new Set(photos.map((photo) => photo.name));
+    //         const uniqueNewPhotos = newPhotos.filter(
+    //             (photo) => !existingNames.has(photo.name)
+    //         );
+
+    //         // Combine new unique photos with existing ones, limiting the number to 10
+    //         let tempList = [...photos, ...uniqueNewPhotos];
+    //         // If there are more than 10, keep the most recent 10
+    //         if (tempList.length > 100) {
+    //             tempList = tempList.slice(-100);
+    //         }
+
+    //         setPhotos(tempList);
+    //         props.setPhotos(tempList);
+    //     }
+    // };
+
     const handleImgChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
-            // const newPhotos = Array.from(files);
-            const newPhotos = await processFiles(files)
-            // Filter out files that already exist in photos by name
+            const newPhotos = await processFiles(files);
+    
+            // Tạo danh sách tên mới cho các tệp
+            const renamedPhotos = newPhotos.map((photo, index) => {
+                const now = new Date();
+                const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+                const formattedTime = `${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}-${now.getSeconds().toString().padStart(2, '0')}`;
+                const newName = `${formattedDate}-${formattedTime}-${index}-${photo.name}`;
+                return new File([photo], newName, { type: photo.type });
+            });
+    
+            // Lọc tệp mới theo tên
             const existingNames = new Set(photos.map((photo) => photo.name));
-            const uniqueNewPhotos = newPhotos.filter(
+            const uniqueNewPhotos = renamedPhotos.filter(
                 (photo) => !existingNames.has(photo.name)
             );
-
-            // Combine new unique photos with existing ones, limiting the number to 10
+    
+            // Kết hợp và giới hạn số lượng tệp
             let tempList = [...photos, ...uniqueNewPhotos];
-            // If there are more than 10, keep the most recent 10
             if (tempList.length > 100) {
                 tempList = tempList.slice(-100);
             }
-
+    
             setPhotos(tempList);
             props.setPhotos(tempList);
         }

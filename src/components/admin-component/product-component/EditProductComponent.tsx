@@ -18,12 +18,14 @@ import { generalCategoriesSelect, generalHolidayList, generalOptionHoliday, gene
 import GetApi from "@/api/GetApi";
 import { ScaleLoader } from "react-spinners";
 import PhotoGalleryEdit from "@/components/imgdrag/ImageDragEdit";
+import PutApi from "@/api/PutApi";
 type productVariant = {
     optionName: string;
     optionValue: string[];
     optionInput: string;
 };
 type variantDetails = {
+    id:any;
     name: string;
     price: number;
     comparePrice: number;
@@ -57,7 +59,7 @@ type Props = {
 }
 export default function EditProductComponent(props: Props) {
     const accountId = props.accountId;
-
+    // console.log(props.listVariant)
     const [loading, setLoading] = useState(0);
     const [productData, setProductData] = useState<Product>(props.productData);
     const [listVariant, setListVariant] = useState<productVariant[]>(props.listVariant);
@@ -102,9 +104,9 @@ export default function EditProductComponent(props: Props) {
     });
 
     const [listVariantDetails, setListVariantDetails] = useState<variantDetails[]>(props.listVariantDetails);
-    const [listCat, setListCat] = useState<any[]>([]);
-    const [listSea, setListSeasons] = useState<any[]>([]);
-    const [listHol, setListHolidays] = useState<any[]>([]);
+    const [listCat, setListCat] = useState<any[]>(productData.categoryIds);
+    const [listSea, setListSeasons] = useState<any[]>(productData.season ? productData.season : []);
+    const [listHol, setListHolidays] = useState<any[]>(productData.holiday ? productData.holiday : []);
     const optionsCategories = generalOptionsCat;
     const catList = generalCategoriesSelect;
     const getCatCurrentEdit = (): any[] => {
@@ -327,6 +329,7 @@ export default function EditProductComponent(props: Props) {
                     return oldDetail;
                 }
                 return {
+                    id:null,
                     name: str,
                     price: productData.price,
                     comparePrice: productData.comparePrice,
@@ -401,7 +404,7 @@ export default function EditProductComponent(props: Props) {
     const handleSubmit = async () => {
         const productVariants = listVariantDetails.map((item: variantDetails, index) => {
             return {
-                value: item.name, status: item.status, price: item.price, comparePrice: item.comparePrice, quantity: item.quantity,
+                id:item.id,value: item.name, status: item.status, price: item.price, comparePrice: item.comparePrice, quantity: item.quantity,
                 sku: item.sku, barcode: item.barcode, fileName: item.image ? `${index}-${accountId}image${Date.now()}` : ''
             }
         })
@@ -416,7 +419,7 @@ export default function EditProductComponent(props: Props) {
             comboSale = arrComboSaleQuant.join('./') + "|" + arrComboSaleVal.join('./');
         }
         // let boughtTogether = "0|" + thisBoughtTogether.value;
-        let boughtTogether = "0|" + thisBoughtTogether.value;
+        let boughtTogether = productData.id + "|" + thisBoughtTogether.value;
         const arrBTId: string[] = [];
         const arrBTval: string[] = [];
         listBoughtTogerther.forEach(item => {
@@ -426,9 +429,8 @@ export default function EditProductComponent(props: Props) {
             }
         })
         if (arrBTId.length > 0 && arrBTval.length > 0 && arrBTId.length === arrBTval.length) {
-            boughtTogether = "0./" + arrBTId.join("./") + "|" + thisBoughtTogether.value + "./" + arrBTval.join("./");
+            boughtTogether =productData.id + "./" + arrBTId.join("./") + "|" + thisBoughtTogether.value + "./" + arrBTval.join("./");
         }
-
         let serviceType = 4;
         serviceType = serviceT.free && serviceT.premium ? 3 : serviceType;
         serviceType = serviceT.free && !serviceT.premium ? 1 : serviceType;
@@ -436,7 +438,7 @@ export default function EditProductComponent(props: Props) {
         const variantValue = listVariant.map(item => item.optionName).join('./');
         const postData = {
             ...productData, status: 1, productVariants: productVariants, serviceType: serviceType
-            , accountId: accountId, variant: variantValue
+            , accountId: parseFloat(accountId), variant: variantValue
             , contentCalling: contentCalling, description: description
             , comboSale: comboSale, boughtTogether: boughtTogether, categoryIds: listCat
             , holiday: listHol
@@ -444,46 +446,63 @@ export default function EditProductComponent(props: Props) {
             , shippingDescription: shippingDesc
             , warrantyDescription: WarrantyDesc
         };
-        const { id, ...filterPostData } = postData;
+        let { id, ...filterPostData } = postData;
         let errMess = "";
-        errMess = validatePostData(filterPostData);
+
         if (errMess) {
             message.error(errMess);
             return;
         }
         const formData = new FormData();
-        formData.append("data", JSON.stringify(filterPostData));
 
+        const imagePost : any[] = [];
+        const videoPost : any[] = [];
         if (photos.length > 0) {
             photos.forEach((photo, index) => {
-                formData.append(`images`, photo);
+                if (photo instanceof File) {
+                    formData.append(`images`, photo);
+                }
+                else{
+                    imagePost.push({id:photo.id,isMain:photo.isMain});
+                }
             });
         }
+
         if (videos.length > 0) {
             videos.forEach((video, index) => {
-                formData.append(`videos`, video);
+                if (video instanceof File) {
+                    formData.append(`videos`, video);
+                }
+                else{
+                    videoPost.push(video.id);
+                }
             });
         }
+        const finalData : any = {...filterPostData,imageIds:imagePost,videoIds:videoPost};
+        console.log(finalData);
+        formData.append("data", JSON.stringify(finalData));
+        errMess = validatePostData(filterPostData);
         // console.log(photos, videos);
-        console.log(filterPostData);
 
-        // const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
-        // try {
-        //     setLoading(1);
-        //     setTimeout(() => {
-        //         setLoading(0)
-        //     }, 3000);
-        //     const response = await axios.post(url, formData, {
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
-        //         },
-        //     });
-        //     console.log('Success:', response.data);
-        //     // router.push('/admin/all-product');
-        //     window.location.href = '/admin/all-product'
-        // } catch (error) {
-        //     console.error('Error:', error);
-        // }
+
+        const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/"+productData.id
+        try {
+            setLoading(1);
+            setTimeout(() => {
+                setLoading(0)
+            }, 3000);
+            const response = await PutApi(url, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
+                },
+            });
+            console.log('Success:', response);
+            // router.push('/admin/all-product');
+            // window.location.href = '/admin/all-product'
+        } catch (error) {
+            console.error('Error:', error);
+            // window.location.href = '/admin/all-product'
+        }
     }
 
     const handleChangeCat = (value: any[]) => {
@@ -974,7 +993,7 @@ export default function EditProductComponent(props: Props) {
                                             value={item.optionName}
                                             onChange={(e) => handleChangeVariantName(index, e)}
                                             className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-                    focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                                                focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                                             placeholder="Type name"
                                             required
                                         />
@@ -993,7 +1012,7 @@ export default function EditProductComponent(props: Props) {
                                             onChange={(e) => handleChangeVariantValue(index, e)}
                                             onKeyDown={(e) => handleKeyDownVariant(e, index)}
                                             className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-                      focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                                                focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                                             placeholder="Separate options with comma "
                                             required
                                         />
