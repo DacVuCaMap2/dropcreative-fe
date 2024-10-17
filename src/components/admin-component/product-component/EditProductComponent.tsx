@@ -446,7 +446,7 @@ export default function EditProductComponent(props: Props) {
             , shippingDescription: shippingDesc
             , warrantyDescription: WarrantyDesc
         };
-        let { id, ...filterPostData } = postData;
+        const { id, ...filterPostData } = postData;
         let errMess = "";
 
         if (errMess) {
@@ -498,10 +498,10 @@ export default function EditProductComponent(props: Props) {
             });
             console.log('Success:', response);
             // router.push('/admin/all-product');
-            // window.location.href = '/admin/all-product'
+            window.location.href = '/admin/all-product'
         } catch (error) {
             console.error('Error:', error);
-            // window.location.href = '/admin/all-product'
+            window.location.href = '/admin/all-product'
         }
     }
 
