@@ -33,11 +33,24 @@ export default function BuyArea(props: Props) {
   let loop = false;
   if (props.productData.images) {
     photos = props.productData.images.map((item: any) => {
+
       if (item.isMain) {
         urlMainPhoto = item.url;
       }
       return { url: item.url, isMain: item.isMain }
     })
+    // const mainImg = props.productData.images.find((item: any) => item.isMain);
+    
+    // if (mainImg) {
+    //     photos.push({ url: mainImg.url, isMain: true });
+    // }
+
+    // // Lọc ra những phần tử không phải là ảnh chính
+    // const otherImages = props.productData.images.filter((item: any) => !item.isMain);
+    
+    // // Kết hợp ảnh chính với các ảnh khác
+    // photos = [{ url: mainImg.url, isMain: true }, ...otherImages.map((item: any) => ({ url: item.url, isMain: item.isMain }))];
+    console.log(photos);
     loop = photos.length > 5;
   }
 
