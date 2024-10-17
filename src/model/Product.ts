@@ -6,6 +6,8 @@ class Product {
     warrantyDescription:string;
     accountId: number|null; 
     categoryIds: number[]; 
+    seasonIds: number[]; 
+    holidayIds: number[]; 
     status: number;
     serviceType: number; 
     variant: string;
@@ -38,6 +40,8 @@ class Product {
         warrantyDescription:string;
         accountId: number|null;   
         categoryIds: number[];  
+        seasonIds: number[]; 
+        holidayIds: number[];
         status: number;
         serviceType: number;  
         variant: string;
@@ -68,7 +72,9 @@ class Product {
         this.shippingDescription = parameters.shippingDescription; 
         this.warrantyDescription = parameters.warrantyDescription; 
         this.accountId = parameters.accountId;   
-        this.categoryIds = parameters.categoryIds;  
+        this.categoryIds = parameters.categoryIds;
+        this.seasonIds = parameters.seasonIds;  
+        this.holidayIds = parameters.holidayIds;    
         this.status = parameters.status;
         this.serviceType = parameters.serviceType;  
         this.variant = parameters.variant;
@@ -107,6 +113,8 @@ export const getNewProduct = (): Product => {
         warrantyDescription:"",
         accountId: null, 
         categoryIds: [],
+        seasonIds: [],
+        holidayIds: [],
         status: 0,
         serviceType: 0,
         variant: "",

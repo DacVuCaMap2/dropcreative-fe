@@ -15,9 +15,9 @@ export function CardProductItem(props: Props) {
           <Image width={200} height={200} src={data.imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${data.imageUrl}` : '/image/nophotos.png'} alt="image 1" />
         </div>
       </div>
-      <p className="text-lg font-bold tracking-tight h-20 overflow-hidden">
+      <Link href={"/admin/all-product/edit/"+data.id} className="text-lg font-bold tracking-tight h-20 overflow-hidden">
         {data.title}
-      </p>
+      </Link>
       <div className="flex flex-row text-sm">
         <div className="flex flex-col w-full">
           {/* <span>Categories</span> */}
