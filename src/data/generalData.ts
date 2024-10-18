@@ -95,7 +95,20 @@ export const generalHolidayList = [
     }
 ] 
 
-
+export const gender = [
+    {
+        title:"All",
+        value:0
+    },
+    {
+        title:"Male",
+        value:1
+    },
+    {
+        title:"Female",
+        value:2
+    }
+]
 
 
 export const generalOptionHoliday = generalHolidayList.map(item=>{
