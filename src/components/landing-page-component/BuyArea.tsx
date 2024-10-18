@@ -37,7 +37,7 @@ export default function BuyArea(props: Props) {
       if (item.isMain) {
         urlMainPhoto = item.url;
       }
-      return { url: item.url, isMain: item.isMain }
+      return { id: item.id, url: item.url, isMain: item.isMain }
     })
     // const mainImg = props.productData.images.find((item: any) => item.isMain);
 
@@ -50,7 +50,7 @@ export default function BuyArea(props: Props) {
 
     // // Kết hợp ảnh chính với các ảnh khác
     // photos = [{ url: mainImg.url, isMain: true }, ...otherImages.map((item: any) => ({ url: item.url, isMain: item.isMain }))];
-    console.log(photos);
+    // console.log(photos);
     loop = photos.length > 5;
   }
 
@@ -71,7 +71,7 @@ export default function BuyArea(props: Props) {
       swiperRef.slideTo(index);
     }
   };
-
+  console.log(photos)
   useEffect(() => {
     const arrSearch: string[] = [];
     for (let i = 0; i < variantsSelectList.length; i++) {
@@ -81,33 +81,33 @@ export default function BuyArea(props: Props) {
     }
     const keySearch = arrSearch.join(",");
     const current = productData.productVariants.map((item: any, index: number) => {
+
       if (keySearch === item.value) {
-        setCurrentImg(index);
-        goToSlide(index);
+        const ind = photos.findIndex(photo => photo.id === item.imageId);
+        setCurrentImg(ind);
+        goToSlide(ind);
         setCurrentVariant(item);
       }
       return item;
     });
   }, [selectedVariant])
-
   //get productdetails
   useEffect(() => {
     if (boughtTogetherList.length > 1) {
       const fetchData = async () => {
         if (boughtTogetherShow.length < 3) {
-          const temp = [...boughtTogetherShow];
-          boughtTogetherList.forEach(async (item: any, index) => {
-            if (index > 0) {
-              const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + item.key1;
-              const response = await GetApi(url);
-              if (response.product) {
-                temp.push(response);
-              }
+          let temp: any[] = [...boughtTogetherShow];
+          const id1 = boughtTogetherList[1] ? boughtTogetherList[1].key1 : ""
+          const id2 = boughtTogetherList[2] ? "-" + boughtTogetherList[2].key1 : ""
+          const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/bought-together?ids=" + id1 + id2;
+          const response = await GetApi(url);
+          if (Array.isArray(response) && response.length > 0 && response[0].productResponse) {
+            temp = response.map(item => {
+              return { product: item.productResponse, images: item.images, productVariants: item.productVariantResponses }
+            });
 
-            }
-          })
+          }
           setBoughttTogetherShow(temp);
-          console.log(temp);
         }
       }
       fetchData();
@@ -278,7 +278,7 @@ export default function BuyArea(props: Props) {
                   <input type="checkbox" className='rounded mr-2' name="" id="" />
                   <span className='truncate max-w-64'>{productData.product.title}</span>
                 </div>
-                <span>${(boughtTogetherList.length > 0 && parseFloat(boughtTogetherList[0].key2) != 0) ? (( (100-parseFloat(boughtTogetherList[0].key2)) /100) * currentVariant.price).toFixed(2) : currentVariant.price}</span>
+                <span>${(boughtTogetherList.length > 0 && parseFloat(boughtTogetherList[0].key2) != 0) ? (((100 - parseFloat(boughtTogetherList[0].key2)) / 100) * currentVariant.price).toFixed(2) : currentVariant.price}</span>
               </div>
               <div>
                 <select name="" id="" className='border rounded w-96 h-8 text-xs text-neutral-500'>
@@ -296,7 +296,7 @@ export default function BuyArea(props: Props) {
                       <input type="checkbox" className='rounded mr-2' name="" id="" />
                       <span className='truncate max-w-96'>{item.product.title}</span>
                     </div>
-                    <span>${parseFloat(boughtTogetherList[index + 1].key2) != 0 ? (((100-parseFloat(boughtTogetherList[index + 1].key2)) / 100) * item.product.price).toFixed(2) : item.product.price}</span>
+                    <span>${parseFloat(boughtTogetherList[index + 1].key2) != 0 ? (((100 - parseFloat(boughtTogetherList[index + 1].key2)) / 100) * item.product.price).toFixed(2) : item.product.price}</span>
                   </div>
                 }
                 <div>

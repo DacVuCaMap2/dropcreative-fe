@@ -63,10 +63,10 @@ export default function EditProductComponent(props: Props) {
     const [loading, setLoading] = useState(0);
     const [productData, setProductData] = useState<Product>(props.productData);
     const [listVariant, setListVariant] = useState<productVariant[]>(props.listVariant);
-    const [description, setDescription] = useState(`<p>${productData.description}</p>`);
-    const [shippingDesc, setShippingDesc] = useState(`<p>${productData.shippingDescription}</p>`);
-    const [WarrantyDesc, setWarrantyDesc] = useState(`<p>${productData.warrantyDescription}</p>`);
-    const [contentCalling, setContentCalling] = useState(`<p>${productData.contentCalling}</p>`);
+    const [description, setDescription] = useState(productData.description);
+    const [shippingDesc, setShippingDesc] = useState(productData.shippingDescription);
+    const [WarrantyDesc, setWarrantyDesc] = useState(productData.warrantyDescription);
+    const [contentCalling, setContentCalling] = useState(productData.contentCalling);
     const [videos, setVideos] = useState<any[]>(props.videos);
     const [photos, setPhotos] = useState<any[]>(props.images);
     const [isOpenSelectPhoto, setIsOpenSelectPhoto] = useState(false);

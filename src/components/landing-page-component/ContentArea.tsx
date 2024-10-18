@@ -8,7 +8,7 @@ type Props = {
 export default function ContentArea(props: Props) {
   const productData = props.productData;
   const desc = productData.product.description;
-  console.log(productData);
+  // console.log(productData);
   const shippingDesc = productData.productDetail.shippingDescription;
   const warrantyDesc = productData.product.warranty;
   const accountId = productData.productDetail.warrantyDescription;
