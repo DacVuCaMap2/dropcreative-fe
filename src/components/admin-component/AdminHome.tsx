@@ -83,7 +83,7 @@ export default function AdminHome() {
                                 <div>
                                     <p className='font-bold text-black'>Set up essential tracking codes to track your marketing results</p>
                                     <p>
-                                        Track your store visitors' behaviours & run your advertising effectively with these data collected.
+                                        Track your store visitors behaviours & run your advertising effectively with these data collected.
                                     </p>
                                 </div>
                             </div>
