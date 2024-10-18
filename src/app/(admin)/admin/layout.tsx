@@ -17,6 +17,7 @@ const Layout = ({
             <main className=" w-full flex flex-col">
                 <HeadNavBar />
                 {children}
+                
             </main>
         </div>
     );
