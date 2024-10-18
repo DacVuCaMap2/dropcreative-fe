@@ -25,8 +25,8 @@ export default function AdminHome() {
                         {selectInd === 0 &&
                             <div className='flex flex-col w-full px-4 py-2'>
                                 <div className='flex flex-row border-b text-sm space-x-2'>
-                                    <div className='h-[180px] overflow-hidden '>
-                                        <Image src={"/image/admin/addproduct.png"} alt='image' width={340} height={340} ></Image>
+                                    <div className='h-[180px] overflow-hidden flex items-center justify-center'>
+                                        <Image src={"/image/admin/addproduct2.png"} alt='image' width={340} height={340} ></Image>
                                     </div>
                                     <div>
                                         <p className='font-bold text-black'>Add your first product</p>
@@ -41,8 +41,8 @@ export default function AdminHome() {
                         {selectInd === 1 &&
                             <div className='flex flex-col w-full px-4 py-2 '>
                                 <div className='flex flex-row border-b text-sm space-x-2'>
-                                    <div className='h-[180px] overflow-hidden '>
-                                        <Image src={"/image/admin/payment.png"} alt='image' width={340} height={340}></Image>
+                                    <div className='h-[180px] overflow-hidden flex items-center justify-center '>
+                                        <Image src={"/image/admin/card.png"} alt='image' width={340} height={340}></Image>
                                     </div>
                                     <div>
                                         <p className='font-bold text-black'>Choose the way your customers pay for their purchases</p>
@@ -59,8 +59,8 @@ export default function AdminHome() {
                         { selectInd === 2 && 
                             <div className='flex flex-col w-full px-4 py-2'>
                                 <div className='flex flex-row border-b text-sm space-x-2'>
-                                    <div className='h-[180px] overflow-hidden'>
-                                        <Image src={"/image/admin/domain.png"} alt='image' width={340} height={340}></Image>
+                                    <div className='h-[180px] overflow-hidden flex items-center justify-center'>
+                                        <Image src={"/image/admin/domain2.png"} alt='image' width={340} height={340}></Image>
                                     </div>
                                     <div>
                                         <p className='font-bold text-black'>Add custom domain to increase brand trust for your store</p>
@@ -77,8 +77,8 @@ export default function AdminHome() {
                         { selectInd===3 && 
                             <div className='flex flex-col w-full px-4 py-2'>
                             <div className='flex flex-row border-b text-sm space-x-2'>
-                                <div className='h-[180px] overflow-hidden'>
-                                    <Image src={"/image/admin/tracking.png"} alt='image' width={240} height={340}></Image>
+                                <div className='h-[180px] overflow-hidden flex items-center justify-center'>
+                                    <Image src={"/image/admin/tracking2.png"} alt='image' width={240} height={340}></Image>
                                 </div>
                                 <div>
                                     <p className='font-bold text-black'>Set up essential tracking codes to track your marketing results</p>
