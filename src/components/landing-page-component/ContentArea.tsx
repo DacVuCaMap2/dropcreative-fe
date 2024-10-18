@@ -10,8 +10,8 @@ export default function ContentArea(props: Props) {
   const desc = productData.product.description;
   // console.log(productData);
   const shippingDesc = productData.productDetail.shippingDescription;
-  const warrantyDesc = productData.product.warranty;
-  const accountId = productData.productDetail.warrantyDescription;
+  const warrantyDesc = productData.productDetail.warrantyDescription;
+  const accountId = productData.product.accountId;
   const [select,setSelect] = useState(0);
   return (
     <div className='py-10 flex flex-col justify-center items-center space-y-4 w-full'>

@@ -92,6 +92,7 @@ export default function BuyArea(props: Props) {
     });
   }, [selectedVariant])
   //get productdetails
+  
   useEffect(() => {
     if (boughtTogetherList.length > 1) {
       const fetchData = async () => {
