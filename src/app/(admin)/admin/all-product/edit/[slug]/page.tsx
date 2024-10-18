@@ -1,6 +1,7 @@
+"use server"
 import GetApi from '@/api/GetApi';
 import EditProductComponent from '@/components/admin-component/product-component/EditProductComponent'
-import { stringToVariant, tranObjectFromStrTwoKey } from '@/data/function';
+import { sortImageIsMainFirst, stringToVariant, tranObjectFromStrTwoKey } from '@/data/function';
 import ImageEdit from '@/model/ImageEdit';
 import Product, { getNewProduct } from '@/model/Product';
 import { cookies } from 'next/headers';
@@ -87,9 +88,10 @@ export default async function page({ params }: { params: { slug: string } }) {
             productVariants: []
         }
         videos = response.videos;
-        images = response.images.map((item: any) => {
+        images = [...response.images.map((item: any) => {
             return { id: item.id, productId: item.productId, url: item.url, name: item.fileName, isMain: item.isMain };
-        })
+        })]
+        // images = sortImageIsMainFirst(response.images);
 
         /// get variant select
         const arrVariantsDetails: string[] = response.productVariants.map((item: any) => {
@@ -168,9 +170,10 @@ export default async function page({ params }: { params: { slug: string } }) {
         return notFound();
     }
 
-    console.log(response);
+    // console.log(response);
     return (
         <EditProductComponent accountId={accId} productData={productData} videos={videos}
             images={images} listVariant={listVariant} listVariantDetails={listVariantDetails} comboSaleList={comboSaleList} boughtTogetherList={boughtTogetherList} />
     )
 }
+

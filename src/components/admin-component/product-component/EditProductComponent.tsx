@@ -95,6 +95,7 @@ export default function EditProductComponent(props: Props) {
         }
     }, [])
 
+    console.log(photos);
 
 
 
@@ -405,7 +406,7 @@ export default function EditProductComponent(props: Props) {
         const productVariants = listVariantDetails.map((item: variantDetails, index) => {
             return {
                 id:item.id,value: item.name, status: item.status, price: item.price, comparePrice: item.comparePrice, quantity: item.quantity,
-                sku: item.sku, barcode: item.barcode, fileName: item.image ? `${index}-${accountId}image${Date.now()}` : ''
+                sku: item.sku, barcode: item.barcode, fileName: item.image ? item.image.name : ''
             }
         })
         let comboSale = "";
@@ -463,7 +464,8 @@ export default function EditProductComponent(props: Props) {
                     formData.append(`images`, photo);
                 }
                 else{
-                    imagePost.push({id:photo.id,isMain:photo.isMain});
+                    const isMain = index===0;
+                    imagePost.push({id:photo.id,isMain:isMain});
                 }
             });
         }

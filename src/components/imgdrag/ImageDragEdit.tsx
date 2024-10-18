@@ -150,6 +150,31 @@ const PhotoGalleryEdit: React.FC<Props> = (props: Props) => {
             }
             setPhotos(tempList);
             props.setPhotos(tempList);
+            // const newPhotos = await processFiles(files);
+    
+            // // Tạo danh sách tên mới cho các tệp
+            // const renamedPhotos = newPhotos.map((photo, index) => {
+            //     const now = new Date();
+            //     const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+            //     const formattedTime = `${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}-${now.getSeconds().toString().padStart(2, '0')}`;
+            //     const newName = `${formattedDate}-${formattedTime}-${index}-${photo.name}`;
+            //     return new File([photo], newName, { type: photo.type });
+            // });
+    
+            // // Lọc tệp mới theo tên
+            // const existingNames = new Set(photos.map((photo) => photo.name));
+            // const uniqueNewPhotos = renamedPhotos.filter(
+            //     (photo) => !existingNames.has(photo.name)
+            // );
+    
+            // // Kết hợp và giới hạn số lượng tệp
+            // let tempList = [...photos, ...uniqueNewPhotos];
+            // if (tempList.length > 100) {
+            //     tempList = tempList.slice(-100);
+            // }
+    
+            // setPhotos(tempList);
+            // props.setPhotos(tempList);
         }
     };
 

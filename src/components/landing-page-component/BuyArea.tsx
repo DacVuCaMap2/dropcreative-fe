@@ -40,14 +40,14 @@ export default function BuyArea(props: Props) {
       return { url: item.url, isMain: item.isMain }
     })
     // const mainImg = props.productData.images.find((item: any) => item.isMain);
-    
+
     // if (mainImg) {
     //     photos.push({ url: mainImg.url, isMain: true });
     // }
 
     // // Lọc ra những phần tử không phải là ảnh chính
     // const otherImages = props.productData.images.filter((item: any) => !item.isMain);
-    
+
     // // Kết hợp ảnh chính với các ảnh khác
     // photos = [{ url: mainImg.url, isMain: true }, ...otherImages.map((item: any) => ({ url: item.url, isMain: item.isMain }))];
     console.log(photos);
@@ -103,7 +103,7 @@ export default function BuyArea(props: Props) {
               if (response.product) {
                 temp.push(response);
               }
-              
+
             }
           })
           setBoughttTogetherShow(temp);
@@ -200,6 +200,9 @@ export default function BuyArea(props: Props) {
             <span className='line-through text-neutral-400 text-lg'>${currentVariant.comparePrice}</span>
             <span className='bg-black text-white py-1 px-4 rounded text-xs'>{(100 - (currentVariant.price / currentVariant.comparePrice) * 100).toFixed(2)}%</span>
           </div>
+          <div className='mb-4'>
+            <CountDownComponent />
+          </div>
           <div className='space-y-4'>
             {productVariantTitle.map((item: any, index) => (
               <div key={index}>
@@ -215,9 +218,7 @@ export default function BuyArea(props: Props) {
             ))}
           </div>
         </div>
-        <div className=''>
-          <CountDownComponent />
-        </div>
+
         <div className='flex flex-row justify-between h-20 items-center'>
           <div className='flex flex-row w-36 border border-neutral-300 h-14 items-center'>
             <button onClick={() => setCurrentQuan(currentQuan > 1 ? currentQuan - 1 : currentQuan)} className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Minus /></button>
@@ -277,7 +278,7 @@ export default function BuyArea(props: Props) {
                   <input type="checkbox" className='rounded mr-2' name="" id="" />
                   <span className='truncate max-w-64'>{productData.product.title}</span>
                 </div>
-                <span>${(boughtTogetherList.length > 0 && parseFloat(boughtTogetherList[0].key2) != 0) ? (100 - (currentVariant.price / parseFloat(boughtTogetherList[0].key2)) * 100).toFixed(2) : currentVariant.price}</span>
+                <span>${(boughtTogetherList.length > 0 && parseFloat(boughtTogetherList[0].key2) != 0) ? (( (100-parseFloat(boughtTogetherList[0].key2)) /100) * currentVariant.price).toFixed(2) : currentVariant.price}</span>
               </div>
               <div>
                 <select name="" id="" className='border rounded w-96 h-8 text-xs text-neutral-500'>
@@ -295,7 +296,7 @@ export default function BuyArea(props: Props) {
                       <input type="checkbox" className='rounded mr-2' name="" id="" />
                       <span className='truncate max-w-96'>{item.product.title}</span>
                     </div>
-                    <span>${parseFloat(boughtTogetherList[index + 1].key2) != 0 ? (100 - (item.product.price / parseFloat(boughtTogetherList[index + 1].key2)) * 100).toFixed(2) : item.product.price}</span>
+                    <span>${parseFloat(boughtTogetherList[index + 1].key2) != 0 ? (((100-parseFloat(boughtTogetherList[index + 1].key2)) / 100) * item.product.price).toFixed(2) : item.product.price}</span>
                   </div>
                 }
                 <div>

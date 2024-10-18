@@ -363,7 +363,7 @@ export default function AddProductComponent(props: Props) {
     }
   };
   const handleAddMediaClick = () => {
-    if (fileImgtRef.current) {
+    if (fileImgtRef.current) { 
       fileImgtRef.current.click();
     }
   };

@@ -122,14 +122,14 @@ export function validatePostData(postData: any) {
 
 
 
-export const stringToVariant = (variantTitle: string, productVariant: string[]) : string[][] => {
+export const stringToVariant = (variantTitle: string, productVariant: string[]): string[][] => {
     const listResult: string[][] = [[], [], []];
     const listVariantName: string[] = variantTitle.split("./");
     productVariant.map(str => {
         const arrStr = str.split(',');
         for (let i = 0; i < listVariantName.length; i++) {
             let flag = true;
-            if (!listResult[i].find(item=>item===arrStr[i]) && flag) {
+            if (!listResult[i].find(item => item === arrStr[i]) && flag) {
                 listResult[i].push(arrStr[i]);
                 flag = false;
             }
@@ -149,22 +149,47 @@ export const stringToVariant = (variantTitle: string, productVariant: string[]) 
     //                 strResult+="./";
     //             }
     //         }
-            
+
     //     }
     // }
     return listResult;
 }
 
-export const tranObjectFromStrTwoKey = (value:string) : any[]=>{
+export const tranObjectFromStrTwoKey = (value: string): any[] => {
     if (!value) {
         return [];
     }
     const arr = value.split("|");
     const arr1 = arr[0].split("./");
     const arr2 = arr[1].split("./");
-    const result : any[] = [];
+    const result: any[] = [];
     for (let i = 0; i < arr1.length; i++) {
-        result.push({key1:arr1[i],key2:arr2[i]})
+        result.push({ key1: arr1[i], key2: arr2[i] })
     }
     return result;
+}
+
+
+export const sortImageIsMainFirst = (imageList:any[]) => {
+    if (!imageList || imageList.length===0) {
+        return [];
+    }
+    let images = [];
+    // Tìm phần tử có isMain = true
+    const mainImage = imageList.find((item: any) => item.isMain);
+
+    // Tạo mảng các hình ảnh khác mà không có isMain = true
+    const otherImages = imageList
+        .filter((item: any) => !item.isMain)
+        .map((item: any) => ({
+            id: item.id,
+            productId: item.productId,
+            url: item.url,
+            name: item.fileName,
+            isMain: item.isMain,
+        }));
+
+    // Kết hợp phần tử chính và các hình ảnh còn lại
+    images = mainImage ? [mainImage, ...otherImages] : otherImages;
+    return images;
 }
