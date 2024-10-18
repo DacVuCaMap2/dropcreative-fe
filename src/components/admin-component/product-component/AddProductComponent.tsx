@@ -11,7 +11,7 @@ import Modal from 'react-modal';
 import { div, form } from "framer-motion/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { message, Select, Space } from "antd";
+import { message, Rate, Select, Space } from "antd";
 import Message from "@/components/common-component/Message";
 import { validatePostData } from "@/data/function";
 import { generalCategoriesSelect, generalHolidayList, generalOptionHoliday, generalOptionsCat, generalOptionSeasons, generalSeasonList } from "@/data/generalData";
@@ -47,6 +47,15 @@ type BoughtTogether = {
 type Props = {
   accountId: string
 }
+type Comment = {
+  value: string,
+  reviewerName: string,
+  rate: number,
+  images: string[],
+  imagesFile: File[],
+  videos: string,
+  videoFile: File | null
+}
 export default function AddProductComponent(props: Props) {
   const accountId = props.accountId;
   const [loading, setLoading] = useState(0);
@@ -56,6 +65,7 @@ export default function AddProductComponent(props: Props) {
   const [shippingDesc, setShippingDesc] = useState(`<p>${productData.shippingDescription}</p>`);
   const [WarrantyDesc, setWarrantyDesc] = useState(`<p>${productData.warrantyDescription}</p>`);
   const [contentCalling, setContentCalling] = useState(`<p>${productData.contentCalling}</p>`);
+  const [listComment, setListComment] = useState<Comment[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
   const [photos, setPhotos] = useState<File[]>([]);
   const [isOpenSelectPhoto, setIsOpenSelectPhoto] = useState(false);
@@ -363,7 +373,7 @@ export default function AddProductComponent(props: Props) {
     }
   };
   const handleAddMediaClick = () => {
-    if (fileImgtRef.current) { 
+    if (fileImgtRef.current) {
       fileImgtRef.current.click();
     }
   };
@@ -564,6 +574,77 @@ export default function AddProductComponent(props: Props) {
       return item;
     })
     setListBoughtTogether(tempList);
+  }
+
+  /// handle review
+  const addComment = () => {
+    const temp: Comment[] = [...listComment];
+    temp.push({
+      value: "",
+      reviewerName: "",
+      rate: 5,
+      images: [],
+      imagesFile: [],
+      videos: "",
+      videoFile: null
+    });
+    setListComment(temp);
+  }
+  const handleChangeComment = (ind: number, e: any, key: string) => {
+    let value = "";
+    if (key === "file") {
+      const file = e.target.files[0];
+      if (file) {
+        const fileType = file.type.split('/')[0]; // Lấy loại tệp (image hoặc video)
+        let temp = [...listComment];
+        if (fileType === "image") {
+          temp = temp.map((item: Comment, index) => {
+            if (index === ind) {
+              const images = [...item.images];
+              const imagesFile = [...item.imagesFile];
+              images.push(file.name);
+              imagesFile.push(file);
+              return { ...item, images: images, imagesFile: imagesFile };
+            }
+            return item;
+          })
+
+        } else if (fileType === "video") {
+          temp = temp.map((item: Comment, index) => {
+            if (index === ind) {
+              const videos = file.name;
+              const videoFile = file;
+              return { ...item, videos: videos, videoFile: videoFile };
+            }
+            return item;
+          })
+        } else {
+          alert("Vui lòng chọn tệp ảnh hoặc video.");
+          return;
+        }
+        setListComment(temp);
+        return;
+      }
+    }
+    if (key === "rate") {
+      value = e;
+    }
+    else {
+      value = e.target.value;
+    }
+
+    console.log(value);
+    const temp = [...listComment].map((item: Comment, index) => {
+      if (index === ind) {
+        return { ...item, [key]: value };
+      }
+      return item;
+    })
+    setListComment(temp);
+  }
+  const handleDeleteComment = (ind:number) =>{
+    const temp = [...listComment].filter((item:any,index)=>index!=ind);
+    setListComment(temp);
   }
   return (
     <div className="relative  flex justify-between items-center w-full flex-wrap">
@@ -1175,6 +1256,86 @@ export default function AddProductComponent(props: Props) {
                 required
               />
             </div>
+          </div>
+
+          <div className="flex flex-col border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
+            <p className="font-bold">Review</p>
+            <div className="flex flex-col">
+              {listComment.map((item: Comment, index) => (
+                <div key={index} className="flex flex-row border border-neutral-300 py-4 px-4 space-x-4">
+                  <div>
+                    <label className="block text-sm font-bold mb-1">
+                      Reviewer name
+                    </label>
+                    <input
+                      type="text"
+                      value={item.reviewerName}
+                      onChange={e => handleChangeComment(index, e, "reviewerName")}
+                      className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                    focus:ring-blue-500 focus:border-blue-500 block p-3"
+                      placeholder="Type reviewer name"
+                      required
+                    />
+                    <span className="text-sm text-neutral-400">AUG 25, 2023</span>
+                  </div>
+                  <div className="w-full">
+                    <Rate value={item.rate} onChange={e => handleChangeComment(index, e, "rate")} />
+                    <div className="space-y-2">
+                      <textarea
+                        value={item.value}
+                        onChange={e => handleChangeComment(index, e, "value")}
+                        className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                      focus:ring-blue-500 focus:border-blue-500 block w-full p-3 h-32 max-h-24 min-h-24"
+                        placeholder="Type Comment"
+                        required
+                      />
+                      <div className="flex flex-row flex-wrap">
+                        <div className="relative inline-block">
+                          <input
+                            type="file"
+                            id="file-input"
+                            onChange={e => handleChangeComment(index, e, "file")}
+                            accept="image/*,video/*"
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          />
+                          <label
+                            htmlFor="file-input"
+                            className="inline-flex items-center px-4 py-2 text-white bg-black rounded cursor-pointer"
+                          >
+                            Chọn tệp
+                          </label>
+                        </div>
+                        {item.imagesFile.map((imgFile: File, childIndex) => (
+                          <div key={childIndex} className="mr-2">
+                            <Image src={URL.createObjectURL(imgFile)} alt="image" width={100} height={100}></Image>
+                          </div>
+                        ))}
+                      </div>
+                      <div>
+                        {item.videoFile &&
+                          <video
+                            className="w-60 h-32"
+                            controls
+                            src={URL.createObjectURL(item.videoFile)} // Tạo URL tạm thời cho video
+                          ></video>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => handleDeleteComment(index)}
+                      className="p-2 hover:bg-gray-200 rounded"
+                    >
+                      <Trash />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => addComment()} className="flex flex-row space-x-2 w-full border border-neutral-300 py-2 justify-center items-center hover:border-neutral-400 hover:bg-neutral-200">
+              <Plus size={20} /> <span>ADD REVIEW</span>
+            </button>
           </div>
         </div>
 

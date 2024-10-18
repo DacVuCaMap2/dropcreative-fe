@@ -79,7 +79,7 @@ export default function AdminHome() {
                                     </div>
                                 </div>
                                 <div className='flex flex-row py-2 justify-end'>
-                                    <Link href={"/admin/all-product/add"} className='py-2 px-4 text-sm bg-sky-100 font-bold text-sky-600 rounded-xl border-blue-500 border hover:bg-blue-200'>Add or buy a domain</Link>
+                                    <Link href={"/admin/all-product/add"} className='py-2 px-4 text-sm bg-sky-100 text-sky-600 rounded-xl border-blue-500 border hover:bg-blue-200'>Add or buy a domain</Link>
                                 </div>
                             </div>
                         }
@@ -97,14 +97,14 @@ export default function AdminHome() {
                                     </div>
                                 </div>
                                 <div className='flex flex-row py-2 justify-end'>
-                                    <Link href={"/admin/all-product/add"} className='py-2 px-4 text-sm bg-sky-100 font-bold text-sky-600 rounded-xl border-blue-500 border hover:bg-blue-200'>Install tracking</Link>
+                                    <Link href={"/admin/all-product/add"} className='py-2 px-4 text-sm bg-sky-100 text-sky-600 rounded-xl border-blue-500 border hover:bg-blue-200'>Install tracking</Link>
                                 </div>
                             </div>
                         }
                     </div>
                 </div>
             </div>
-            <div className='w-full h-64 absolute bottom-0'>
+            <div className='w-full h-60 absolute bottom-0'>
                 {/* <Image src={"/image/admin/footer2.png"} alt='image' width={2000} height={500}></Image> */}
                 <img src="/image/admin/footer2.png" alt="" className='w-full h-full' />
             </div>
