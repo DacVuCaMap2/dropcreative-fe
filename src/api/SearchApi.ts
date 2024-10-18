@@ -1,6 +1,7 @@
-import {  ParamsSearchProduct } from '@/types/common';
+import {  ParamsSearchProduct, TypeResponse } from '@/types/common';
 import axios from './axiosConfig';
 import qs from 'qs';
+import { AxiosResponse } from 'axios';
 
 
 const searchProduct = (params: ParamsSearchProduct) => {
@@ -15,6 +16,11 @@ const searchProduct = (params: ParamsSearchProduct) => {
     });
   };
 
+const getProductDetail = (id:number):Promise<AxiosResponse<TypeResponse>> => {
+    return axios.get(`/api/product/${id}`); 
+};
+
 export {
-    searchProduct
+    searchProduct,
+    getProductDetail
 };
