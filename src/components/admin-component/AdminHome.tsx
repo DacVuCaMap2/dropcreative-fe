@@ -13,7 +13,7 @@ export default function AdminHome() {
                 </div>
                 <div className='border rounded-2xl w-full shadow-lg'>
                     <div className='px-4 py-4 border-b'>
-                        <p className='font-bold text-sm'>Start selling after a day or two with 5 steps & Enjoy your first 50 orders won't be charged for the transaction fee</p>
+                        <p className='font-bold text-sm'>Start selling after a day or two with 5 steps &amp; Enjoy your first 50 orders won&apos;t be charged for the transaction feeStart selling after a day or two with 5 steps &amp; Enjoy your first 50 orders won&apos;t be charged for the transaction fee</p>
                     </div>
                     <div className='flex flex-row'>
                         <div className='flex flex-col w-1/3 bg-gray-100 text-sm'>
