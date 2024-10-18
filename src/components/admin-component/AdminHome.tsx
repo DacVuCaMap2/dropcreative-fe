@@ -6,10 +6,10 @@ import React, { useState } from 'react'
 export default function AdminHome() {
     const [selectInd, setSelectInd] = useState(0);
     return (
-        <div className='flex items-center justify-center text-neutral-500 '>
+        <div className='flex items-center  text-neutral-500 flex-col min-h-screen relative'>
             <div className='flex flex-col justify-center items-center w-[900px] space-y-4 pt-20 '>
                 <div className='w-full'>
-                    <p className='text-left font-bold text-2xl text-neutral-700'>  WELLCOME YOU, NAM</p>
+                    <p className='text-left font-bold text-2xl text-neutral-700'>  WELCOME YOU, NAM</p>
                 </div>
                 <div className='border rounded-2xl w-full shadow-lg'>
                     <div className='px-4 py-4 border-b'>
@@ -25,8 +25,8 @@ export default function AdminHome() {
                         {selectInd === 0 &&
                             <div className='flex flex-col w-full px-4 py-2'>
                                 <div className='flex flex-row border-b text-sm space-x-2'>
-                                    <div className='h-[180px] w-[300px] overflow-hidden'>
-                                        <Image src={"/image/admin/addproduct3.png"} alt='image' width={500} height={500} ></Image>
+                                    <div className='h-[250px] w-[500px] overflow-hidden'>
+                                        <Image src={"/image/admin/add4.png"} alt='image' width={500} height={500} ></Image>
                                     </div>
                                     <div>
                                         <p className='font-bold text-black'>Add your first product</p>
@@ -41,8 +41,8 @@ export default function AdminHome() {
                         {selectInd === 1 &&
                             <div className='flex flex-col w-full px-4 py-2 '>
                                 <div className='flex flex-row border-b text-sm space-x-2'>
-                                    <div className='h-[180px] w-[280px] overflow-hidden'>
-                                        <Image src={"/image/admin/payment3.png"} alt='image' width={500} height={500}></Image>
+                                    <div className='h-[250px] w-[500px] overflow-hidden'>
+                                        <Image src={"/image/admin/card4.png"} alt='image' width={500} height={500}></Image>
                                     </div>
                                     <div>
                                         <p className='font-bold text-black'>Choose the way your customers pay for their purchases</p>
@@ -59,8 +59,8 @@ export default function AdminHome() {
                         { selectInd === 2 && 
                             <div className='flex flex-col w-full px-4 py-2'>
                                 <div className='flex flex-row border-b text-sm space-x-2'>
-                                    <div className='h-[180px] w-[350px] overflow-hidden'>
-                                        <Image src={"/image/admin/domain3.png"} alt='image' width={500} height={500}></Image>
+                                    <div className='h-[250px] w-[500px] overflow-hidden'>
+                                        <Image src={"/image/admin/domain4.png"} alt='image' width={500} height={500}></Image>
                                     </div>
                                     <div>
                                         <p className='font-bold text-black'>Add custom domain to increase brand trust for your store</p>
@@ -77,8 +77,8 @@ export default function AdminHome() {
                         { selectInd===3 && 
                             <div className='flex flex-col w-full px-4 py-2'>
                             <div className='flex flex-row border-b text-sm space-x-2'>
-                                <div className='h-[180px] w-[200px] overflow-hidden'>
-                                    <Image src={"/image/admin/tracking3.png"} alt='image' width={500} height={500}></Image>
+                                <div className='h-[250px] w-[300px] overflow-hidden'>
+                                    <Image src={"/image/admin/tracking4.png"} alt='image' width={500} height={500}></Image>
                                 </div>
                                 <div>
                                     <p className='font-bold text-black'>Set up essential tracking codes to track your marketing results</p>
@@ -94,6 +94,10 @@ export default function AdminHome() {
                         }
                     </div>
                 </div>
+            </div>
+            <div className='w-full h-64 absolute bottom-0'>
+                {/* <Image src={"/image/admin/footer2.png"} alt='image' width={2000} height={500}></Image> */}
+                <img src="/image/admin/footer2.png" alt="" className='w-full h-full'/>
             </div>
         </div>
     )
