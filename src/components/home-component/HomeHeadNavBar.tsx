@@ -33,7 +33,7 @@ export default function HomeHeadNavBar() {
             />
           </Link>
           <div className="flex flex-row space-x-4 text-sm items-center">
-            <Link href={"/admin"} className="border py-2 px-4 rounded">
+            <Link href={"/admin/home"} className="border py-2 px-4 rounded">
               Manager
             </Link>
             <Link href={"/"}>Tools</Link>

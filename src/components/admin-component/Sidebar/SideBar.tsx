@@ -5,9 +5,12 @@ import { sideBarAdmin } from "@/data/admin-data/sidebar";
 import { ArrowLeftFromLine, ArrowRightFromLine } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 export default function SideBar() {
   const listSideBar = sideBarAdmin;
+  const pathName = usePathname();
+  console.log(pathName);
   const [showSideBar, setShowSideBar] = useState(true);
   const [hoveredItem, setHoveredItem] = useState<string>("");
   return (
@@ -44,7 +47,7 @@ export default function SideBar() {
               {item.listItems.map((childItem, childIndex: number) => (
                 <ul key={childIndex} className="space-y-2 font-medium">
                   <li className="relative" onMouseEnter={() => setHoveredItem(childItem.name)} onMouseLeave={() => setHoveredItem("")}>
-                    <Link href={childItem.href} className="flex px-4 childItems-center text-xs py-4 rounded text-gray-200 hover:bg-stone-600 group">
+                    <Link href={childItem.href} className={`flex px-4 childItems-center text-xs py-4 rounded text-gray-200 hover:bg-neutral-600 group ${pathName===childItem.href ? "bg-neutral-600" : ""}`}>
                       {childItem.icon && <childItem.icon size={16} className='font-bold' />}
                       {showSideBar && <span className="ms-3 font-bold">{childItem.name}</span>}
                       {(hoveredItem === childItem.name && !showSideBar) ?

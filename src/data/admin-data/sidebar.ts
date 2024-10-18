@@ -1,10 +1,17 @@
 
-import { ChartPie, CircleUserRound, Headset, Package, UsersRound } from "lucide-react";
+import { ChartPie, CircleUserRound, Headset, Home, Package, UsersRound } from "lucide-react";
 
 export const sideBarAdmin = [
     {
         title:"Main manager",
         listItems:[
+            {
+                name: "Home",
+                href:"/admin/home",
+                icon:Home,
+                select:"home",
+                role:[1,2,3]
+            },
             {
                 name: "Dashboard",
                 href:"/",
