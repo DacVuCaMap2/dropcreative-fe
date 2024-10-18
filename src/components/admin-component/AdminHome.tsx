@@ -1,15 +1,24 @@
 "use client"
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function AdminHome() {
     const [selectInd, setSelectInd] = useState(0);
+    useEffect(() => {
+        // Tắt cuộn
+        document.body.style.overflow = 'hidden';
+
+        // Khôi phục lại khi component bị unmounted
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, []);
     return (
         <div className='flex items-center  text-neutral-500 flex-col min-h-screen relative'>
             <div className='flex flex-col justify-center items-center w-[900px] space-y-4 pt-20 '>
                 <div className='w-full'>
-                    <p className='text-left font-bold text-2xl text-neutral-700'>  WELCOME YOU, NAM</p>
+                    <p className='text-left font-bold text-xl text-neutral-700'>  WELCOME YOU, NAM</p>
                 </div>
                 <div className='border rounded-2xl w-full shadow-lg'>
                     <div className='px-4 py-4 border-b'>
@@ -17,15 +26,15 @@ export default function AdminHome() {
                     </div>
                     <div className='flex flex-row'>
                         <div className='flex flex-col w-1/3 bg-gray-100 text-sm'>
-                            <button onClick={()=>setSelectInd(0)} className={`w-full text-left px-4 py-4  border-blue-500 ${selectInd===0 ? "bg-blue-100 text-blue-400 border-l-4" : ""}`}>Add product</button>
-                            <button onClick={()=>setSelectInd(1)} className={`w-full text-left px-4 py-4  border-blue-500 ${selectInd===1 ? "bg-blue-100 text-blue-400 border-l-4" : ""}`}>Active payment provider</button>
-                            <button onClick={()=>setSelectInd(2)} className={`w-full text-left px-4 py-4  border-blue-500 ${selectInd===2 ? "bg-blue-100 text-blue-400 border-l-4" : ""}`}>Add custom domain</button>
-                            <button onClick={()=>setSelectInd(3)} className={`w-full text-left px-4 py-4  border-blue-500 ${selectInd===3 ? "bg-blue-100 text-blue-400 border-l-4" : ""}`}>Install tracking</button>
+                            <button onClick={() => setSelectInd(0)} className={`w-full text-left px-4 py-4  border-blue-500 ${selectInd === 0 ? "bg-blue-100 text-blue-400 border-l-4" : ""}`}>Add product</button>
+                            <button onClick={() => setSelectInd(1)} className={`w-full text-left px-4 py-4  border-blue-500 ${selectInd === 1 ? "bg-blue-100 text-blue-400 border-l-4" : ""}`}>Active payment provider</button>
+                            <button onClick={() => setSelectInd(2)} className={`w-full text-left px-4 py-4  border-blue-500 ${selectInd === 2 ? "bg-blue-100 text-blue-400 border-l-4" : ""}`}>Add custom domain</button>
+                            <button onClick={() => setSelectInd(3)} className={`w-full text-left px-4 py-4  border-blue-500 ${selectInd === 3 ? "bg-blue-100 text-blue-400 border-l-4" : ""}`}>Install tracking</button>
                         </div>
                         {selectInd === 0 &&
                             <div className='flex flex-col w-full px-4 py-2'>
                                 <div className='flex flex-row border-b text-sm space-x-2'>
-                                    <div className='h-[250px] w-[500px] overflow-hidden'>
+                                    <div className='h-[200px] w-[350px] overflow-hidden'>
                                         <Image src={"/image/admin/add4.png"} alt='image' width={500} height={500} ></Image>
                                     </div>
                                     <div>
@@ -41,7 +50,7 @@ export default function AdminHome() {
                         {selectInd === 1 &&
                             <div className='flex flex-col w-full px-4 py-2 '>
                                 <div className='flex flex-row border-b text-sm space-x-2'>
-                                    <div className='h-[250px] w-[500px] overflow-hidden'>
+                                    <div className='h-[200px] w-[350px] overflow-hidden'>
                                         <Image src={"/image/admin/card4.png"} alt='image' width={500} height={500}></Image>
                                     </div>
                                     <div>
@@ -56,10 +65,10 @@ export default function AdminHome() {
                                 </div>
                             </div>
                         }
-                        { selectInd === 2 && 
+                        {selectInd === 2 &&
                             <div className='flex flex-col w-full px-4 py-2'>
                                 <div className='flex flex-row border-b text-sm space-x-2'>
-                                    <div className='h-[250px] w-[500px] overflow-hidden'>
+                                    <div className='h-[200px] w-[400px] overflow-hidden'>
                                         <Image src={"/image/admin/domain4.png"} alt='image' width={500} height={500}></Image>
                                     </div>
                                     <div>
@@ -74,30 +83,30 @@ export default function AdminHome() {
                                 </div>
                             </div>
                         }
-                        { selectInd===3 && 
+                        {selectInd === 3 &&
                             <div className='flex flex-col w-full px-4 py-2'>
-                            <div className='flex flex-row border-b text-sm space-x-2'>
-                                <div className='h-[250px] w-[300px] overflow-hidden'>
-                                    <Image src={"/image/admin/tracking4.png"} alt='image' width={500} height={500}></Image>
+                                <div className='flex flex-row border-b text-sm space-x-2'>
+                                    <div className='h-[200px] w-[250px] overflow-hidden'>
+                                        <Image src={"/image/admin/tracking4.png"} alt='image' width={500} height={500}></Image>
+                                    </div>
+                                    <div>
+                                        <p className='font-bold text-black'>Set up essential tracking codes to track your marketing results</p>
+                                        <p>
+                                            Track your store visitors behaviours & run your advertising effectively with these data collected.
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className='font-bold text-black'>Set up essential tracking codes to track your marketing results</p>
-                                    <p>
-                                        Track your store visitors behaviours & run your advertising effectively with these data collected.
-                                    </p>
+                                <div className='flex flex-row py-2 justify-end'>
+                                    <Link href={"/admin/all-product/add"} className='py-2 px-4 text-sm bg-sky-100 font-bold text-sky-600 rounded-xl border-blue-500 border hover:bg-blue-200'>Install tracking</Link>
                                 </div>
                             </div>
-                            <div className='flex flex-row py-2 justify-end'>
-                                <Link href={"/admin/all-product/add"} className='py-2 px-4 text-sm bg-sky-100 font-bold text-sky-600 rounded-xl border-blue-500 border hover:bg-blue-200'>Install tracking</Link>
-                            </div>
-                        </div>
                         }
                     </div>
                 </div>
             </div>
             <div className='w-full h-64 absolute bottom-0'>
                 {/* <Image src={"/image/admin/footer2.png"} alt='image' width={2000} height={500}></Image> */}
-                <img src="/image/admin/footer2.png" alt="" className='w-full h-full'/>
+                <img src="/image/admin/footer2.png" alt="" className='w-full h-full' />
             </div>
         </div>
     )
