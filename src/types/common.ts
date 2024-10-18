@@ -21,3 +21,20 @@ export type TypeRegister ={
 export type CookieOptions = {
     [key: string]: string | boolean;
 };
+export type SelectOption = {
+    title:string,
+    value:number
+}
+export type ParamsSearchProduct = {
+    page:number,
+    size:number,
+    search:string,
+    accountId:number,
+    holiday?:number[],
+    season?:number[],
+    category?:number[]
+}
+export type DataSearch = {
+    dataSearch:any
+    isOpenFilter:boolean
+}
