@@ -303,7 +303,7 @@ export default function AddProductComponent(props: Props) {
       const result = combineOptionValues(listVariant);
 
       // Kiểm tra độ dài trước khi tạo tempVariantDetails
-      const limitedResult = result.slice(0, 50); // Giới hạn độ dài mảng là 50
+      const limitedResult = result.slice(0, 200); // Giới hạn độ dài mảng là 50
       const oldListVariantDetails = [...listVariantDetails];
       const tempVariantDetails = limitedResult.map((str: string) => {
         const oldDetail = oldListVariantDetails.find(
