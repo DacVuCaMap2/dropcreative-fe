@@ -192,13 +192,25 @@ export const homeTheme = [
         img: "/hometheme/christmas.png"
     },
     {
-        title: "AI generator",
-        img: "/hometheme/ai-generator.png"
+        title: "Valentine’s Day",
+        img: "/hometheme/valentine.png"
     },
     {
-        title: "Fall theme",
-        img: "/hometheme/fall.png"
+        title: "Independence Day",
+        img: "/hometheme/independence.png"
     },
+    {
+        title: "New Year’s Eve",
+        img: "/hometheme/newyear.png"
+    },
+    {
+        title: "Mother’s Day / Father’s Day",
+        img: "/hometheme/parent.png"
+    },
+    {
+        title: "All Holiday",
+        img: "/hometheme/all.png"
+    }
 ]
 
 export const homeCountry = [
@@ -210,18 +222,18 @@ export const homeCountry = [
         img3: "/homecountry/USA3.png"
     },
     {
-        title: "Africa area",
-        count: 92,
-        img1: "/homecountry/africa1.png",
-        img2: "/homecountry/africa2.png",
-        img3: "/homecountry/africa3.png"
-    },
-    {
         title: "Euro area",
         count: 92,
         img1: "/homecountry/euro1.png",
         img2: "/homecountry/euro2.png",
         img3: "/homecountry/euro3.png"
+    },
+    {
+        title: "AU area",
+        count: 92,
+        img1: "/homecountry/au1.png",
+        img2: "/homecountry/au2.png",
+        img3: "/homecountry/au3.png"
     },
     {
         title: "Asia area",

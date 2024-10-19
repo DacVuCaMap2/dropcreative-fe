@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./HomePage.css";
 import HomeDropdown from "./HomeDropdown";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "./Footer";
@@ -12,15 +12,18 @@ import {
   homeTheme,
 } from "@/data/home-data/homeListData";
 import HomeCategories from "./HomeCategories";
+import SlideProduct from "./SlideProduct";
 export default function HomePage() {
   const listCategories = homeCategories;
   const listTheme = homeTheme;
   const listCountry = homeCountry;
+  const listSuggestSearch = ["Shirt", "Duck Night Light", "Mask"]
+  const [keySearch,setKeySearch] = useState("");
   return (
     <div className="">
       <div className="flex flex-col relative ">
-        <div className="h-80 main-menu"></div>
-        <div className="absolute top-32 w-full h-20 flex flex-col justify-center items-center space-y-2">
+        <div className="h-[400px] main-menu"></div>
+        <div className="absolute top-44 w-full h-20 flex flex-col justify-center items-center space-y-2">
           <span className="text-3xl font-bold text-white">
             Ready to start looking product?
           </span>
@@ -29,6 +32,8 @@ export default function HomePage() {
             <input
               placeholder="Search all assets"
               type="text"
+              value={keySearch}
+              onChange={e=>setKeySearch(e.target.value)}
               className="lg:w-1/3 w-3/4 py-2 outline-none border-none h-full"
             />
             <div className="h-full bg-white py-2 px-4 rounded-r">
@@ -37,6 +42,19 @@ export default function HomePage() {
                 <span>Search</span>
               </button>
             </div>
+          </div>
+          <div className="text-white w-1/2 pt-8 flex flex-row space-x-4 items-start justify-center">
+            {listSuggestSearch.map((str:string,index) => (
+              <div key={index} className="relative">
+                <div className="absolute inset-0 bg-neutral-400 backdrop-blur-md opacity-40 rounded-lg "></div>
+                <button onClick={()=>setKeySearch(str)} className="hover:bg-neutral-500 relative z-10 w-full py-2 px-4 flex flex-row space-x-2 items-center text-sm rounded-lg">
+                  <span className="text-white">{str}</span>
+                  <Search className="text-white" size={20} />
+                </button>
+              </div>
+            ))}
+
+
           </div>
         </div>
         <div className="flex flex-col justify-center items-center">
@@ -89,7 +107,7 @@ export default function HomePage() {
 
             <div className="flex flex-col space-y-4">
               <div className="space-y-2">
-                <p className="text-center font-bold text-3xl">Product Theme</p>
+                <p className="text-center font-bold text-3xl">Product Holiday</p>
                 <p className="text-center text-lg text-neutral-600">
                   Check to see which product theme is right for you
                 </p>
@@ -97,7 +115,7 @@ export default function HomePage() {
               <div className="flex flex-row flex-wrap justify-center">
                 {listTheme.map((item: any, index) => (
                   <Link key={index} href={"/"}>
-                    <div className="relative flex flex-col h-56 mb-4 ml-6 rounded-xl overflow-hidden group">
+                    <div className="relative flex flex-col h-[260px] mb-4 ml-2  rounded-xl overflow-hidden group">
                       <div className="absolute bottom-3 left-2 z-10 text-white font-bold">
                         {item.title}
                       </div>
@@ -180,12 +198,11 @@ export default function HomePage() {
                   Let’s make your ideas break through
                 </h2>
                 <p className="text-[15px] font-semibold text-center">
-                  Find the most up-to-date vocabulary of images, videos, signs,
-                  symbols, and fonts
+                  Just a few simple steps and you can bring your products to the dropshipping market !
                 </p>
               </div>
-              <div className="flex flex-row">
-                <div className="space-y-4">
+              <div className="flex flex-row space-x-2">
+                <div className="space-y-4 w-1/4">
                   <video
                     src="https://fps.cdnpk.net/home/benefits/benefit-quality.mp4"
                     width="70"
@@ -198,34 +215,13 @@ export default function HomePage() {
                     className="rounded _1286nb14ku _1286nb14m6 _1286nb14ni _1286nb14ou _1286nb196"
                   ></video>
                   <h3 className="text-2xl font-bold">
-                    Best quality or nothing
+                    Create an Account
                   </h3>
                   <p>
-                    Download scroll-stopping images of the highest quality to
-                    make professional designs.
+                    Register for an account on the DropCreative website to upload your products.
                   </p>
                 </div>
-                <div className="space-y-4">
-                  <video
-                    src="https://fps.cdnpk.net/home/benefits/benefit-ready.mp4"
-                    width="70"
-                    height="70"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    disableRemotePlayback
-                    className="rounded _1286nb14ku _1286nb14m6 _1286nb14ni _1286nb14ou _1286nb196"
-                  ></video>
-                  <h3 className="text-2xl font-bold">
-                    Ready-to-use everything
-                  </h3>
-                  <p>
-                    Download scroll-stopping images of the highest quality to
-                    make professional designs.
-                  </p>
-                </div>
-                <div className="space-y-4">
+                <div className="space-y-4 w-1/4">
                   <video
                     src="https://fps.cdnpk.net/home/benefits/benefit-content.mp4"
                     width="70"
@@ -238,14 +234,33 @@ export default function HomePage() {
                     className="rounded _1286nb14ku _1286nb14m6 _1286nb14ni _1286nb14ou _1286nb196"
                   ></video>
                   <h3 className="text-2xl font-bold">
-                    Fresh content every day
+                    Upload Products
                   </h3>
                   <p>
-                    Our library is updated on a daily basis so you can find the
-                    newest and trendiest photos and designs.
+                    Upload your products or add available sample products from DropCreative, adjust the selling price and landing page.
                   </p>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-4 w-1/4">
+
+                  <video
+                    src="https://fps.cdnpk.net/home/benefits/benefit-ready.mp4"
+                    width="70"
+                    height="70"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    disableRemotePlayback
+                    className="rounded _1286nb14ku _1286nb14m6 _1286nb14ni _1286nb14ou _1286nb196"
+                  ></video>
+                  <h3 className="text-2xl font-bold">
+                    Set the Selling Price:
+                  </h3>
+                  <p>
+                    Decide on the selling price for your products based on costs and desired profit. Also, add payment methods!
+                  </p>
+                </div>
+                <div className="space-y-4 w-1/4">
                   <video
                     src="https://fps.cdnpk.net/home/benefits/benefit-think.mp4"
                     width="70"
@@ -257,10 +272,9 @@ export default function HomePage() {
                     disableRemotePlayback
                     className="rounded _1286nb14ku _1286nb14m6 _1286nb14ni _1286nb14ou _1286nb196"
                   ></video>
-                  <h3 className="text-2xl font-bold">If you can think of it</h3>
+                  <h3 className="text-2xl font-bold">Promote the Products</h3>
                   <p>
-                    Guaranteed search results: there’s an image and style for
-                    every project you might think of.
+                    Use social media channels, email marketing, or other advertising campaigns to introduce your products to potential customers. Receive performance feedback data.
                   </p>
                 </div>
               </div>
@@ -291,6 +305,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+          <SlideProduct/>
         </div>
 
         <Footer />
