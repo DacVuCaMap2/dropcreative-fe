@@ -10,6 +10,8 @@ export type TypeResponse =  {
     id:number;
     expired?:number;
     role:string;
+    userName:string;
+    email:string;
 }
 export type TypeRegister ={
     email:string,

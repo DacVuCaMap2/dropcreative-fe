@@ -1,4 +1,4 @@
-import { BookMarked, CookingPot, Gamepad2, HousePlus, Package, Shirt, Wand } from "lucide-react";
+import { BookMarked, CookingPot, Gamepad2, HeartPulse, HousePlus, Image, Medal, Package, Shapes, Shirt, Video, Wand } from "lucide-react";
 
 export const homeDrop1 = [
     {
@@ -8,26 +8,47 @@ export const homeDrop1 = [
             {
                 name: "Fashion",
                 icon: Shirt,
+                value: 1
             },
             {
-                name: "Beauty",
-                icon: Wand
+                name: "Beauty & Personal Care",
+                icon: Wand,
+                value: 2
             },
             {
-                name: "Gamming",
-                icon: Gamepad2
+                name: "Toys & Games",
+                icon: Gamepad2,
+                value: 3
             },
             {
-                name: "Kitchen",
-                icon: CookingPot
+                name: "Home & Kitchen",
+                icon: CookingPot,
+                value: 4
             },
             {
-                name: "Home decor",
-                icon: HousePlus
+                name: "Electronics",
+                icon: HousePlus,
+                value: 5
             },
             {
-                name: "Office Supplies",
-                icon: BookMarked
+                name: "Books & Stationery",
+                icon: BookMarked,
+                value: 6
+            },
+            {
+                name: "Health & Wellness",
+                icon: HeartPulse,
+                value: 7
+            },
+            {
+                name: "Sports & Outdoors",
+                icon: Medal,
+                value: 8
+            },
+            {
+                name: "Educational toys",
+                icon: Shapes,
+                value: 9
             }
 
         ],
@@ -35,37 +56,122 @@ export const homeDrop1 = [
     }
 ]
 
+
+export const homeDropfirst = [
+    {
+        name: "Product",
+        icon: Package,
+        value: 0
+    },
+    {
+        name: "Image",
+        icon: Image,
+        value: 0
+    },
+    {
+        name: "Video",
+        icon: Video,
+        value: 0
+    },
+]
+
+export const homeDropSecond = [
+    {
+        name: "Fashion",
+        icon: Shirt,
+        value: 1
+    },
+    {
+        name: "Beauty & Personal Care",
+        icon: Wand,
+        value: 2
+    },
+    {
+        name: "Toys & Games",
+        icon: Gamepad2,
+        value: 3
+    },
+    {
+        name: "Home & Kitchen",
+        icon: CookingPot,
+        value: 4
+    },
+    {
+        name: "Electronics",
+        icon: HousePlus,
+        value: 5
+    },
+    {
+        name: "Books & Stationery",
+        icon: BookMarked,
+        value: 6
+    },
+    {
+        name: "Health & Wellness",
+        icon: HeartPulse,
+        value: 7
+    },
+    {
+        name: "Sports & Outdoors",
+        icon: Medal,
+        value: 8
+    },
+    {
+        name: "Educational toys",
+        icon: Shapes,
+        value: 9
+    }
+]
+export const homeDropThird =["Free", "Premium"];
+
+
 export const homeCategories = [
     {
         title: "Fashion",
         img: "/categories/fashion.png",
-        url: "/fashion" // Thay đổi đường dẫn URL nếu cần
+        url: "/"
     },
     {
-        title: "Beauty",
+        title: "Beauty & Personal Care",
         img: "/categories/beauty.png",
-        url: "/beauty" // Thay đổi đường dẫn URL nếu cần
+        url: "/"
     },
     {
-        title: "Gaming",
+        title: "Toys & Games",
         img: "/categories/gaming.png",
-        url: "/gaming" // Thay đổi đường dẫn URL nếu cần
+        url: "/"
     },
     {
-        title: "Kitchen",
+        title: "Home & Kitchen",
         img: "/categories/kitchen.png",
-        url: "/kitchen" // Thay đổi đường dẫn URL nếu cần
+        url: "/"
     },
     {
-        title: "Home Decor",
+        title: "Electronics",
         img: "/categories/home-decor.png",
-        url: "/home-decor" // Thay đổi đường dẫn URL nếu cần
+        url: "/"
     },
     {
-        title: "Office Supplies",
+        title: "Books & Stationery",
         img: "/categories/office-supplies.png",
-        url: "/office-supplies" // Thay đổi đường dẫn URL nếu cần
+        url: "/"
+    },
+    {
+        title: "Health & Wellness",
+        img: "/categories/health.png",
+        url: "/"
+    },
+    {
+        title: "Sports & Outdoors",
+        img: "/categories/sport.png",
+        url: "/"
+    },
+    {
+        title: "Educational toys",
+        img: "/categories/education.png",
+        url: "/"
     }
+    
 ];
 
 export const homeTheme = [
@@ -74,12 +180,12 @@ export const homeTheme = [
         img: "/hometheme/halloween.png"
     },
     {
-        title: "Pink theme",
-        img: "/hometheme/pink.png"
+        title: "Easter theme",
+        img: "/hometheme/easter.png"
     },
     {
-        title: "Christmas theme",
-        img: "/hometheme/christmas.png"
+        title: "Thanksgiving theme",
+        img: "/hometheme/thankgiving.png"
     },
     {
         title: "Christmas theme",
@@ -97,29 +203,29 @@ export const homeTheme = [
 
 export const homeCountry = [
     {
-        title: "USA area",
-        count:92,
+        title: "US area",
+        count: 92,
         img1: "/homecountry/USA1.png",
         img2: "/homecountry/USA2.png",
         img3: "/homecountry/USA3.png"
     },
     {
-        title: "Canada area",
-        count:92,
-        img1: "/homecountry/canada1.png",
-        img2: "/homecountry/canada2.png",
-        img3: "/homecountry/canada3.png"
+        title: "Africa area",
+        count: 92,
+        img1: "/homecountry/africa1.png",
+        img2: "/homecountry/africa2.png",
+        img3: "/homecountry/africa3.png"
     },
     {
         title: "Euro area",
-        count:92,
+        count: 92,
         img1: "/homecountry/euro1.png",
         img2: "/homecountry/euro2.png",
         img3: "/homecountry/euro3.png"
     },
     {
         title: "Asia area",
-        count:92,
+        count: 92,
         img1: "/homecountry/asia1.png",
         img2: "/homecountry/asia2.png",
         img3: "/homecountry/asia3.png"

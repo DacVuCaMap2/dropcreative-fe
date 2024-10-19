@@ -8,14 +8,14 @@ import React, { useRef, useState, useEffect } from 'react';
 export default function HomeCategories() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [hiddenBtn, setHiddenBtn] = useState({ left: false, right: true });
-    const [scrollLocation,setScrollLocation] = useState(-210);
+    const [scrollLocation,setScrollLocation] = useState(-1000);
     const scroll = (direction: 'left' | 'right') => {
         if (scrollRef.current) {
-            const scrollAmount = direction === 'left' ? -210 : 210; // Điều chỉnh giá trị này nếu cần
+            const scrollAmount = direction === 'left' ? -1000 : 1000; // Điều chỉnh giá trị này nếu cần
             setScrollLocation(scrollAmount);
             scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-            const hidLeft = scrollAmount===-210;
-            const hidRight = scrollAmount === 210;
+            const hidLeft = scrollAmount===-1000;
+            const hidRight = scrollAmount === 1000;
             setHiddenBtn({left:hidLeft,right:hidRight});
         }
     };
@@ -25,7 +25,7 @@ export default function HomeCategories() {
             if (scrollRef.current) {
                 const { scrollWidth, clientWidth } = scrollRef.current;
                 let hidLeft = scrollWidth <= clientWidth;
-                hidLeft = scrollLocation===-210 ? true : hidLeft;
+                hidLeft = scrollLocation===-1000 ? true : hidLeft;
 
                 setHiddenBtn({
                     left: hidLeft,

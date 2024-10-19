@@ -34,7 +34,7 @@ const Login = () => {
   const handleLogin = async (data: TypeLogin) => {
     try {
       const res: AxiosResponse<TypeResponse> = await authLogin(data);
-      const { status, message: resMessage, jwt, id, expired, role } = res.data;
+      const { status, message: resMessage, jwt, id, expired, role,userName,email } = res.data;
       if (status === 0) {
         message.error(resMessage);
         return;
@@ -59,6 +59,22 @@ const Login = () => {
       }
       if (role) {
         setCookie("role", role, {
+          path: "/",
+          secure: true,
+          "max-age": `${expired}`, // Cookie expires after 1 hour
+          sameSite: "Strict", // Cookie sent only with same-site requests
+        });
+      }
+      if (email) {
+        setCookie("email", email, {
+          path: "/",
+          secure: true,
+          "max-age": `${expired}`, // Cookie expires after 1 hour
+          sameSite: "Strict", // Cookie sent only with same-site requests
+        });
+      }
+      if (userName) {
+        setCookie("user_name", userName, {
           path: "/",
           secure: true,
           "max-age": `${expired}`, // Cookie expires after 1 hour
