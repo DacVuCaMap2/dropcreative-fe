@@ -193,3 +193,5 @@ export const sortImageIsMainFirst = (imageList:any[]) => {
     images = mainImage ? [mainImage, ...otherImages] : otherImages;
     return images;
 }
+
+

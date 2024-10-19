@@ -15,7 +15,7 @@ export default function SideBar() {
   const [hoveredItem, setHoveredItem] = useState<string>("");
   return (
     <div className={`h-10 ${showSideBar ? 'w-[220px]' : 'w-[70px]'}`}>
-      <div className={`fixed left-0 h-screen px-3 py-4 overflow-y-auto bg-neutral-950 text-stone-100 ${showSideBar ? 'w-[220px]' : 'w-[70px]'}`}>
+      <div className={`fixed z-50 left-0 h-screen px-3 py-4 overflow-y-auto bg-neutral-950 text-stone-100 ${showSideBar ? 'w-[220px]' : 'w-[70px]'}`}>
         <Link href="/" className="flex items-center ps-2.5 mb-5">
           {showSideBar ?
             <Image

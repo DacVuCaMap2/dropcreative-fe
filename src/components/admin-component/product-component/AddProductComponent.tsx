@@ -162,7 +162,7 @@ export default function AddProductComponent(props: Props) {
   };
   const handleServiceType = (e: any, key: string) => {
     const value = e.target.checked;
-    console.log(value);
+    // console.log(value);
     setServiceT({ ...serviceT, [key]: value })
   }
   const handleChange = (e: any, key: string) => {
@@ -170,7 +170,7 @@ export default function AddProductComponent(props: Props) {
     if (key === "isPersonal") {
       value = e.target.checked;
     }
-    console.log(value);
+    // console.log(value);
     /// cac gia tri price
     if (
       key === "price" ||
@@ -181,7 +181,6 @@ export default function AddProductComponent(props: Props) {
       value = value ? parseFloat(value) : 0;
     }
     const productTemp = { ...productData, [key]: value };
-    console.log(productTemp);
     setProductData(productTemp);
   };
 
@@ -424,6 +423,11 @@ export default function AddProductComponent(props: Props) {
     if (arrBTId.length > 0 && arrBTval.length > 0 && arrBTId.length === arrBTval.length) {
       boughtTogether = "0./" + arrBTId.join("./") + "|" + thisBoughtTogether.value + "./" + arrBTval.join("./");
     }
+    //post review
+    const reviews = listComment.map((item: Comment, index) => {
+      return { value: item.value, reviewerName: item.reviewerName, images: item.images, videos: [item.videos] }
+    })
+
 
     let serviceType = 4;
     serviceType = serviceT.free && serviceT.premium ? 3 : serviceType;
@@ -439,6 +443,7 @@ export default function AddProductComponent(props: Props) {
       , season: listSea
       , shippingDescription: shippingDesc
       , warrantyDescription: WarrantyDesc
+      ,reviews:reviews
     };
     const { id, ...filterPostData } = postData;
     let errMess = "";
@@ -447,6 +452,15 @@ export default function AddProductComponent(props: Props) {
       message.error(errMess);
       return;
     }
+    /// comment area
+    const videosComment: any[] = listComment.map((cmt: Comment, index) => { return cmt.videoFile });
+    const imagesComment: File[] = [];
+    listComment.forEach((cmt: Comment, index) => {
+      cmt.imagesFile.forEach((img: File, ind) => {
+        imagesComment.push(img);
+      })
+    })
+
     const formData = new FormData();
     formData.append("data", JSON.stringify(filterPostData));
     if (photos.length > 0) {
@@ -461,6 +475,19 @@ export default function AddProductComponent(props: Props) {
         formData.append(`videos`, video);
       });
     }
+    if (imagesComment.length > 0) {
+      imagesComment.forEach((img: File, index) => {
+        formData.append(`reviewImages`, img);
+      })
+    }
+    if (videosComment.length > 0) {
+      videosComment.forEach((video: any, index) => {
+        if (video && video instanceof File) {
+          formData.append(`reviewVideos`, video);
+        }
+      })
+    }
+
     // console.log(photos, videos);
     console.log(filterPostData);
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
@@ -642,8 +669,8 @@ export default function AddProductComponent(props: Props) {
     })
     setListComment(temp);
   }
-  const handleDeleteComment = (ind:number) =>{
-    const temp = [...listComment].filter((item:any,index)=>index!=ind);
+  const handleDeleteComment = (ind: number) => {
+    const temp = [...listComment].filter((item: any, index) => index != ind);
     setListComment(temp);
   }
   return (
@@ -1262,7 +1289,7 @@ export default function AddProductComponent(props: Props) {
             <p className="font-bold">Review</p>
             <div className="flex flex-col">
               {listComment.map((item: Comment, index) => (
-                <div key={index} className="flex flex-row border border-neutral-300 py-4 px-4 space-x-4">
+                <div key={index} className="flex flex-row border border-neutral-300 py-4 px-4 space-x-4 mb-4">
                   <div>
                     <label className="block text-sm font-bold mb-1">
                       Reviewer name
@@ -1290,7 +1317,7 @@ export default function AddProductComponent(props: Props) {
                         required
                       />
                       <div className="flex flex-row flex-wrap">
-                        <div className="relative inline-block">
+                        <div className="relative inline-block mr-2">
                           <input
                             type="file"
                             id="file-input"
@@ -1306,8 +1333,8 @@ export default function AddProductComponent(props: Props) {
                           </label>
                         </div>
                         {item.imagesFile.map((imgFile: File, childIndex) => (
-                          <div key={childIndex} className="mr-2">
-                            <Image src={URL.createObjectURL(imgFile)} alt="image" width={100} height={100}></Image>
+                          <div key={childIndex} className="mr-2 mb-2 h-20 w-20 overflow-hidden rounded-2xl bg-red-400">
+                            <Image src={URL.createObjectURL(imgFile)} alt="image" width={1000} height={1000} className="h-full w-full object-cover"></Image>
                           </div>
                         ))}
                       </div>

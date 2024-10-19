@@ -17,6 +17,7 @@ export default function ListProduct(props: Props) {
     const searchParams = useSearchParams();
     const [loading, setLoading] = useState(true);
     const [listData, setListData] = useState([]);
+    const [change,setChange] = useState(0);
     console.log(listData);
     let cat = searchParams.get("category");
     cat = cat ? cat : "";
@@ -27,9 +28,9 @@ export default function ListProduct(props: Props) {
         const fetchData = async () => {
             setLoading(true);
             pathUrl += cat ? cat : "";
-            console.log(pathUrl);
+            // console.log(pathUrl);
             const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${props.accountId}&size=1000&page=1${pathUrl ? "&category="+pathUrl : ""}`;
-            console.log(url);
+            // console.log(url);
             const response = await GetApi(url);
             if (response && response.data && Array.isArray(response.data)) {
                 setListData(response.data);
@@ -74,7 +75,7 @@ export default function ListProduct(props: Props) {
 
                     {listData.map((item: any, index) => (
                         <div key={index}>
-                            <CardProductItem product={item} />
+                            <CardProductItem setChange={setChange} product={item}  />
                         </div>
                     ))}
                 </div>
