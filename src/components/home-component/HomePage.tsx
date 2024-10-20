@@ -59,7 +59,7 @@ export default function HomePage() {
             </div>
             <div className="bg-amber-100 w-full py-8 flex justify-center items-center space-x-4">
               <span className="font-bold">Sign up for 10 daily free downloads and access to AI tools </span>
-              <button className="bg-black text-white p-2">Sign Up Now</button>
+              <Link href={"/login"} className="bg-black text-white p-2">Sign Up Now</Link>
             </div>
           </div>
           <div className="flex flex-col py-16 space-y-20 lg:w-[1340px] w-screen px-4">
@@ -89,13 +89,13 @@ export default function HomePage() {
                 <Link href={"/tools-page"}>
                   <div className="relative flex flex-col h-56 w-56 bg-red-400 rounded-xl overflow-hidden group">
                     <div className="absolute top-3 left-2 z-10 text-white font-bold">
-                      Design
+                      Facebook Ads Library
                     </div>
                     <span className="absolute top-10 left-2 z-10 text-white text-xs font-bold opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
                       Developing....
                     </span>
                     <Image
-                      src="/image/default/designerImg.jpg"
+                      src="/image/default/fbAdsLib.png"
                       alt="Image"
                       width={300}
                       height={300}
@@ -287,18 +287,18 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="flex flex-row bg-purple-600 items-center justify-center">
+            <div className="flex flex-row bg-blue-600 items-center justify-center">
               <div className="flex flex-col space-y-4 pl-40 text-white flex-grow h-full">
-                <p className="font-bold text-2xl">Freepik Designer</p>
+                <p className="font-bold text-2xl">FaceBook ads libary</p>
                 <p className="font-bold text-lg">
-                  Pick a template, customize it online, and make it yours
+                  Facebook's advertising library with thousands of trending top products
                 </p>
                 <div className="space-x-4">
-                  <button className="bg-white text-black font-bold text-xs px-4 py-2 rounded">
+                  {/* <button className="bg-white text-black font-bold text-xs px-4 py-2 rounded">
                     Start editing
-                  </button>
+                  </button> */}
                   <button className="text-white border border-white font-bold text-xs px-4 py-2 rounded">
-                    Start editing
+                    Explore now
                   </button>
                 </div>
               </div>
@@ -315,7 +315,7 @@ export default function HomePage() {
           <SlideProduct />
         </div>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );

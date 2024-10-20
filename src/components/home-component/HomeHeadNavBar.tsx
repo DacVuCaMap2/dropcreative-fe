@@ -30,11 +30,11 @@ export default function HomeHeadNavBar(props: Props) {
         <div className="flex flex-row items-center space-x-8">
           <Link href={"/"}>
             <Image
-              src={props.type===0 ? "/image/logowhite.png" : "/image/logo-font.png"}
+              src={props.type===0 ? "/image/logo-wh.png" : "/image/logo-font.png"}
               alt="Logo"
-              width={160} // Set an arbitrary width
-              height={0} // Set an arbitrary height
-              className="object-contain" // Use CSS to maintain aspect ratio
+              width={160} 
+              height={0} 
+              className="object-contain" 
             />
           </Link>
           <div className="flex flex-row space-x-6 text-xs font-bold items-center">
