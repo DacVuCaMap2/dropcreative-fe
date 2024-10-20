@@ -40,7 +40,6 @@ export default function HomeCategories() {
             window.removeEventListener('resize', checkOverflow);
         };
     }, []);
-    console.log(hiddenBtn);
     return (
         <div className='flex flex-col space-y-4'>
             <span className='font-bold text-xl'>Categories</span>
@@ -53,7 +52,7 @@ export default function HomeCategories() {
                 </button>
                 <div ref={scrollRef} className='flex flex-row w-full space-x-6 overflow-hidden text-sm'>
                     {homeCategories.map((item, index) => (
-                        <Link key={index} href={"/"}>
+                        <a key={index} href={item.url}>
                             <div className='relative flex flex-col h-32 w-56 bg-red-400 rounded-xl overflow-hidden group'>
                                 <div className='absolute top-1/2 left-1/2 z-10 text-white font-bold transform -translate-x-1/2 -translate-y-1/2'>{item.title}</div>
                                 <Image
@@ -65,7 +64,7 @@ export default function HomeCategories() {
                                 />
                                 <div className='absolute inset-0 bg-black opacity-50 transition-opacity duration-300 ease-in-out group-hover:opacity-40' />
                             </div>
-                        </Link>
+                        </a>
                     ))}
                 </div>
                 <button

@@ -14,12 +14,31 @@ import {
 import HomeCategories from "./HomeCategories";
 import SlideProduct from "./SlideProduct";
 import InputSearchComponent from "../general-component/InputSearchComponent";
+import SearchForm, { getNewSearchForm } from "@/model/SearchForm";
 export default function HomePage() {
   const listCategories = homeCategories;
   const listTheme = homeTheme;
   const listCountry = homeCountry;
   const listSuggestSearch = ["Shirt", "Duck Night Light", "Mask"]
   const [keySearch, setKeySearch] = useState("");
+  const [dataSearch,setDataSearch] = useState<SearchForm>(getNewSearchForm());
+  const handleClickSearch = () =>{
+    let category="&category=";
+    dataSearch.category.forEach(cat=>{
+      category+=cat.value+"-"
+    })
+    let holiday="&holiday=";
+    dataSearch.holiday.forEach(hol=>{
+      holiday+=hol.value+"-"
+    })
+    let season="&season=";
+    dataSearch.season.forEach(sea=>{
+      season+=sea.value+"-"
+    })
+    const type = "&type="+dataSearch.type.value;
+    const params = category+holiday+season+type+"&search="+keySearch;
+    window.location.href="/search?"+params
+  }
   return (
     <div className="">
       <div className="flex flex-col relative ">
@@ -29,7 +48,7 @@ export default function HomePage() {
             Ready to start looking product?
           </span>
           <span className="text-white text-sm pb-4">Find all products for any market, images, videos, and landing pages with just one click.</span>
-          <InputSearchComponent keySearch={keySearch} setKeySearch={setKeySearch} type={0} />
+          <InputSearchComponent setDataSearch={setDataSearch} dataSearch={dataSearch}  handleClickSearch={handleClickSearch} keySearch={keySearch} setKeySearch={setKeySearch} type={0} />
           <div className="text-white w-1/2 pt-8 flex flex-row space-x-4 items-start justify-center">
             {listSuggestSearch.map((str: string, index) => (
               <div key={index} className="relative">
@@ -131,7 +150,7 @@ export default function HomePage() {
 
               <div className="flex flex-row flex-wrap justify-center space-x-8">
                 {listCountry.map((item: any, index) => (
-                  <Link key={index} href={"/"}>
+                  <a key={index} href={item.url}>
                     <div className="relative">
                       <div className="absolute hover:opacity-15 opacity-0 top-0 left-0 h-full w-full bg-white"></div>
                       <div className="flex flex-col h-72 w-72 mb-2 rounded overflow-hidden">
@@ -164,7 +183,7 @@ export default function HomePage() {
                         {item.count} resources
                       </p>
                     </div>
-                  </Link>
+                  </a>
                 ))}
               </div>
             </div>
@@ -178,7 +197,7 @@ export default function HomePage() {
               </div>
               <div className="flex flex-row flex-wrap justify-center">
                 {listTheme.map((item: any, index) => (
-                  <Link key={index} href={"/"}>
+                  <a key={index} href={item.url}>
                     <div className="relative flex flex-col h-[260px] mb-4 ml-2  rounded-xl overflow-hidden group">
                       <div className="absolute bottom-3 left-2 z-10 text-white font-bold">
                         {item.title}
@@ -190,7 +209,7 @@ export default function HomePage() {
                       />
                       <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-50" />
                     </div>
-                  </Link>
+                  </a>
                 ))}
               </div>
             </div>

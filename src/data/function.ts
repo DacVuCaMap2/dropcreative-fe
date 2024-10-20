@@ -1,3 +1,5 @@
+import SearchForm from "@/model/SearchForm";
+
 export function validatePostData(postData: any) {
     // Function to check for empty strings
     const isEmptyString = (value: any) => typeof value === 'string' && value.trim() === '';
@@ -194,4 +196,17 @@ export const sortImageIsMainFirst = (imageList:any[]) => {
     return images;
 }
 
-
+export const getParamSearch = (dataSearch : SearchForm)=>{
+    let category="";
+    dataSearch.category.forEach(cat=>{
+      category+="&category="+cat.value
+    })
+    let holiday="";
+    dataSearch.holiday.forEach(hol=>{
+      holiday+="&holiday="+hol.value
+    })
+    let season="";
+    dataSearch.season.forEach(sea=>{
+      season+="&season="+sea.value
+    })
+}

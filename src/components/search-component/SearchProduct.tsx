@@ -18,27 +18,217 @@ import {
 import { SelectOption } from "@/types/common";
 import { searchProduct } from "@/api/SearchApi";
 import InputSearchComponent from "../general-component/InputSearchComponent";
-import SearchForm, { getNewSearchForm } from "@/model/SearchForm";
+import SearchForm, { getNewSearchForm, getSearchForm } from "@/model/SearchForm";
+import { homeDropfirst, homeDropThird } from "@/data/home-data/homeListData";
+import { useRouter, useSearchParams } from "next/navigation";
+import GetApi from "@/api/GetApi";
+import { title } from "process";
 // import SearchResult from "./SearchResult";
-
+type Filter = {
+  key: any,
+  title: any
+}
+type SearchKeys = 'type' | 'category' | 'service' | 'holiday' | 'season';
 const SearchProduct = () => {
-  const [keySearch, setKeySearch] = useState('');
+
+  const [isLoading, setLoading] = useState(0);
+  let firstLoadingFilter: Filter[] = [{ key: "service", title: "Free" }];
+  let firstLoadingKeySearch: string = "";
   const { Panel } = Collapse;
   const [isOpenFilter, setIsOpenFilter] = useState(true);
-  const [filters, setFilters] = useState<any>([]);
-  const [dataSearch,setDataSearch] = useState<SearchForm>(getNewSearchForm());
 
-  const handleClose = (removedFilter: any) => {
+
+  const [listData, setListData] = useState<any[]>([]);
+  const dropFirst = homeDropfirst;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+
+  const transParams = (searchParams: any): SearchForm => {
+    const filterTemp: Filter[] = []
+    const type = searchParams.get("type");
+    const categories: string[] = searchParams.get("category")?.split("-")
+    const holidays: string[] = searchParams.get("holiday")?.split("-")
+    const seasons: string[] = searchParams.get("season")?.split("-")
+    const search: string = searchParams.get("search");
+    const tempCat: any[] = [];
+    const tempHol: any[] = [];
+    const tempSea: any[] = [];
+    const tempType: number = type ? parseFloat(type) : 0;
+    if (categories) {
+      categories.forEach((item: string) => {
+        const temp = generalCategoriesSelect.find(cat => cat.value.toString() === item)
+        if (temp) {
+          tempCat.push(temp)
+        }
+      })
+    }
+    if (holidays) {
+      holidays.forEach((item: string) => {
+        const temp = generalHolidayList.find(hol => hol.value.toString() === item)
+        if (temp) {
+          tempHol.push(temp)
+        }
+      })
+    }
+    if (seasons) {
+      seasons.forEach((item: string) => {
+        const temp = generalSeasonList.find(sea => sea.value.toString() === item)
+        if (temp) {
+          tempSea.push(temp)
+        }
+      })
+    }
+    tempCat.forEach((item: any) => {
+      filterTemp.push({ key: "category", title: item.title });
+    })
+    tempHol.forEach((item: any) => {
+      filterTemp.push({ key: "holiday", title: item.title });
+    })
+    tempSea.forEach((item: any) => {
+      filterTemp.push({ key: "season", title: item.title });
+    })
+    filterTemp.push(firstLoadingFilter[0])
+    firstLoadingFilter = filterTemp;
+    firstLoadingKeySearch = search ? search : firstLoadingKeySearch;
+
+    return getSearchForm(tempCat, tempHol, tempSea, tempType);
+
+  }
+
+  ///data
+  const [dataSearch, setDataSearch] = useState<SearchForm>(transParams(searchParams));
+  const [filters, setFilters] = useState<Filter[]>(firstLoadingFilter);
+  const [keySearch, setKeySearch] = useState(firstLoadingKeySearch);
+  const [change, setChange] = useState(0);
+  const [typeImgOrVideo,setTypeImgOrVideo] = useState(0);
+  transParams(searchParams);
+  const handleAddFilter = (key: string, item: any) => {
+    let filtersTemp = [...filters];
+    if (['category', 'holiday', 'season'].includes(key)) {
+      let temp = [...dataSearch[key as SearchKeys]];
+      console.log(temp);
+      if (dataSearch[key as SearchKeys].length > 0 && dataSearch[key as SearchKeys].find((dat: any) => dat.value === item.value)) {
+        temp = temp.filter(dat => dat.value != item.value);
+        filtersTemp = filtersTemp.filter(filter => filter.title != item.title)
+      }
+      else {
+        temp.push(item);
+        filtersTemp.push({ key: key, title: item.title });
+      }
+      setDataSearch({ ...dataSearch, [key]: temp });
+    }
+    if (key === "Free") {
+      if (item === true) {
+        filtersTemp.push({ key: "service", title: "Free" })
+      }
+      else {
+        filtersTemp = filtersTemp.filter(filter => filter.title != "Free")
+      }
+      setDataSearch({ ...dataSearch, service: { ...dataSearch.service, Free: item } });
+    }
+    if (key === "Premium") {
+
+      if (item === true) {
+        filtersTemp.push({ key: "service", title: "Premium" })
+      }
+      else {
+        filtersTemp = filtersTemp.filter(filter => filter.title != "Premium")
+      }
+      setDataSearch({ ...dataSearch, service: { ...dataSearch.service, Premium: item } });
+    }
+    setFilters(filtersTemp);
+    checkAndRedirect();
+  }
+
+
+  const handleClose = (removedFilter: Filter) => {
+    setFilters(filters.filter(filter => filter != removedFilter))
+    if (['category', 'holiday', 'season'].includes(removedFilter.key)) {
+      let temp = [...dataSearch[removedFilter.key as SearchKeys]];
+      temp = temp.filter(fil => fil.title != removedFilter.title);
+      setDataSearch({ ...dataSearch, [removedFilter.key]: temp })
+    }
+    if (removedFilter.key === "type") {
+      setDataSearch({ ...dataSearch, type: dropFirst[0] });
+    }
+    if (removedFilter.key == "service") {
+
+      setDataSearch({ ...dataSearch, service: { ...dataSearch.service, [removedFilter.title]: false } });
+      checkAndRedirect();
+    }
 
   };
   const hanldeClearAll = () => {
     setFilters([]);
+    setDataSearch(getNewSearchForm());
   };
+
+  const checkAndRedirect = () => {
+
+    // router.push('/search?page=1&size=10')
+  }
+
+  const handleClickSearch = () => {
+    setChange(prev => prev + 1);
+  }
+  useEffect(() => {
+    //category
+    let category = "";
+    dataSearch.category.forEach(cat => {
+      category += "&category=" + cat.value
+    })
+    let holiday = "";
+    dataSearch.holiday.forEach(hol => {
+      holiday += "&holiday=" + hol.value
+    })
+    let season = "";
+    dataSearch.season.forEach(sea => {
+      season += "&season=" + sea.value
+    })
+    const type = dataSearch.type.value ? dataSearch.type.value : 0;
+    let typeGet = "";
+
+    switch (type) {
+      case 0:
+        typeGet = "getProducts"
+        setTypeImgOrVideo(0);
+        break;
+      case 1:
+        typeGet = "getImages"
+        setTypeImgOrVideo(0);
+        break;
+      case 2:
+        typeGet = "getVideos"
+        setTypeImgOrVideo(1);
+        break;
+
+      default:
+        typeGet = "getProducts"
+        setTypeImgOrVideo(0);
+        break;
+    }
+    const fetchData = async () => {
+      setLoading(1);
+      const params = category + holiday + season;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product/${typeGet}?page=1&size=1000&sort=desc&search=${keySearch}${params}`;
+      const response = await GetApi(url);
+      console.log(response,url)
+      if (response.data && Array.isArray(response.data)) {
+        setListData(response.data);
+       
+      }
+      setLoading(0);
+    }
+    fetchData();
+
+  }, [dataSearch, change])
+
   return (
     <div className="realative flex flex-col gap-2">
       <div className="h-14 main-menu"></div>
-      <div className="px-8 sticky top-10 z-40">
-        <InputSearchComponent keySearch={keySearch} setKeySearch={setKeySearch} type={1} />
+      <div className="px-8 py-2 sticky top-2 z-40 bg-white">
+        <InputSearchComponent setDataSearch={setDataSearch} dataSearch={dataSearch} handleClickSearch={handleClickSearch} keySearch={keySearch} setKeySearch={setKeySearch} type={1} />
       </div>
 
 
@@ -76,7 +266,7 @@ const SearchProduct = () => {
                   />
                 </div>
 
-                {filters.length ? (
+                {filters.length > 0 ? (
                   <div>
                     <div className="flex flex-col gap-2 text-sm font-semibold px-6 text-gray-600  border border-r border-l-0 border-t-0 pt-2 pb-2">
                       <div className="flex justify-between">
@@ -92,13 +282,13 @@ const SearchProduct = () => {
                         </div>
                       </div>
                       <div className="w-12/12 flex flex-wrap gap-2">
-                        {filters.map((item: any, index: number) => (
+                        {filters.map((item: Filter, index: number) => (
                           <Tag
                             key={index}
                             closable
                             color="#3F83F8"
                             onClose={() => handleClose(item)}
-                            className="text-white w-fit p-1 flex"
+                            className="text-white w-fit py-1 flex px-2 justify-center items-center"
                           >
                             {item.title}
                           </Tag>
@@ -123,14 +313,15 @@ const SearchProduct = () => {
                       key="1"
                     >
                       <div className="w-12/12 flex flex-wrap gap-2">
-                        {generalCategoriesSelect.map((item) => (
+                        {generalCategoriesSelect.map((item: any) => (
                           <Button
                             color="default"
-                            className={`${filters?.includes(item)
-                              ? "bg-blue-500 text-white "
+                            className={`${dataSearch.category?.includes(item)
+                              ? "bg-blue-500 text-white hover:bg-blue-500"
                               : "bg-gray-200 text-black"
                               }`}
                             key={item.value}
+                            onClick={() => handleAddFilter("category", item)}
                           >
                             {item.title}
                           </Button>
@@ -148,11 +339,12 @@ const SearchProduct = () => {
                         {generalSeasonList.map((item) => (
                           <Button
                             color="default"
-                            className={`${dataSearch.season?.includes(item.title)
-                              ? "bg-blue-500 text-white "
+                            className={`${dataSearch.season?.includes(item)
+                              ? "bg-blue-500 text-white hover:bg-blue-500 "
                               : "bg-gray-200 text-black"
                               }`}
                             key={item.value}
+                            onClick={() => handleAddFilter("season", item)}
                           >
                             {item.title}
                           </Button>
@@ -170,11 +362,12 @@ const SearchProduct = () => {
                         {generalHolidayList.map((item) => (
                           <Button
                             color="default"
-                            className={`${dataSearch.holiday?.includes(item.title)
-                              ? "bg-blue-500 text-white "
+                            className={`${dataSearch.holiday?.includes(item)
+                              ? "bg-blue-500 text-white hover:bg-blue-500"
                               : "bg-gray-200 text-black"
                               }`}
                             key={item.value}
+                            onClick={() => handleAddFilter("holiday", item)}
                           >
                             {item.title}
                           </Button>
@@ -189,16 +382,26 @@ const SearchProduct = () => {
                       key="4"
                     >
                       <div className="w-12/12 flex flex-wrap gap-2">
-                        {/* <Button
+                        <Button
                           color="default"
-                          className={`${dataSearch?.includes(item)
+                          className={`${dataSearch.service.Free
                             ? "bg-blue-500 text-white "
                             : "bg-gray-200 text-black"
                             }`}
-                          key={item.value}
+                          onClick={() => handleAddFilter("Free", !dataSearch.service.Free)}
                         >
-                          {item.title}
-                        </Button> */}
+                          Free
+                        </Button>
+                        <Button
+                          color="default"
+                          className={`${dataSearch.service.Premium
+                            ? "bg-blue-500 text-white "
+                            : "bg-gray-200 text-black"
+                            }`}
+                          onClick={() => handleAddFilter("Premium", !dataSearch.service.Premium)}
+                        >
+                          Premium
+                        </Button>
                       </div>
                     </Panel>
                   </Collapse>
@@ -209,7 +412,7 @@ const SearchProduct = () => {
             ""
           )}
           <div className={`${isOpenFilter ? "w-5/6" : ""}  mt-4`}>
-            {/* <SearchResult dataSearch={dataSearch} isOpenFilter={isOpenFilter} /> */}
+            <SearchResult type={typeImgOrVideo} listData={listData} isOpenFilter={isOpenFilter} isLoading={isLoading} />
           </div>
         </div>
       </div>
