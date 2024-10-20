@@ -8,7 +8,7 @@ export default async function page({params}:{params : {slug:string}}) {
     const cookie = cookies();
     const accountId = cookie.get('account_id')?.value;
     if (!accountId) {
-        notFound();
+        window.location.href="/login";
     }
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/"+params.slug; 
     const productData = await GetApi(url);
