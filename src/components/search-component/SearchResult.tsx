@@ -65,7 +65,7 @@ const SearchResult = (props: Props) => {
                               </Tooltip>
                               <Tooltip title="View Product" placement="leftTop">
                                 <div className="w-8 h-8 bg-white flex items-center justify-center rounded-md hover:bg-gray-300">
-                                  <Link target="_blank" href={`/landing-page/product/${item.id}`} className="h-full w-full">
+                                  <Link target="_blank" href={`/landing-page/product/${item.id}`} className="h-full w-full flex justify-center items-center">
                                     <Eye width={15} height={15} />
                                   </Link>
                                 </div>
