@@ -56,7 +56,7 @@ export default function HomeDropdown() {
     }
     return (
         <div className='h-full relative border-r' ref={dropdownRef}>
-            <button onClick={() => setOpen(!isOpen)} className='hover:bg-gray-200 flex items-center rounded-l-lg flex-row px-4 py-4 space-x-2 bg-white h-full w-48'>
+            <button onClick={() => setOpen(!isOpen)} className='hover:bg-gray-200 flex items-center rounded-l-sm flex-row px-4 py-4 space-x-2 bg-white h-full w-48'>
                 <div className='w-6'>
                     {selectItem.drop1.icon && <selectItem.drop1.icon size={16} />}
                 </div>

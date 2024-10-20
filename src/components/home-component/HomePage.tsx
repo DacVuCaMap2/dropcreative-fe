@@ -18,36 +18,37 @@ export default function HomePage() {
   const listTheme = homeTheme;
   const listCountry = homeCountry;
   const listSuggestSearch = ["Shirt", "Duck Night Light", "Mask"]
-  const [keySearch,setKeySearch] = useState("");
+  const [keySearch, setKeySearch] = useState("");
   return (
     <div className="">
       <div className="flex flex-col relative ">
         <div className="h-[400px] main-menu"></div>
         <div className="absolute top-44 w-full h-20 flex flex-col justify-center items-center space-y-2">
-          <span className="text-3xl font-bold text-white">
+          <span className="text-3xl font-bold text-white pb-2">
             Ready to start looking product?
           </span>
+          <span className="text-white text-sm pb-4">Find all products for any market, images, videos, and landing pages with just one click.</span>
           <div className="w-full flex justify-center items-center ">
             <HomeDropdown />
             <input
               placeholder="Search all assets"
               type="text"
               value={keySearch}
-              onChange={e=>setKeySearch(e.target.value)}
+              onChange={e => setKeySearch(e.target.value)}
               className="lg:w-1/3 w-3/4 py-2 outline-none border-none h-full"
             />
-            <div className="h-full bg-white py-2 px-4 rounded-r">
-              <button className="flex flex-row  space-x-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+            <div className="h-full bg-white py-2 px-4 rounded-r-sm">
+              <button className="flex flex-row  space-x-2 bg-blue-500 text-white px-4 py-2 rounded-sm hover:bg-blue-700">
                 <Search size={20} />
                 <span>Search</span>
               </button>
             </div>
           </div>
           <div className="text-white w-1/2 pt-8 flex flex-row space-x-4 items-start justify-center">
-            {listSuggestSearch.map((str:string,index) => (
+            {listSuggestSearch.map((str: string, index) => (
               <div key={index} className="relative">
                 <div className="absolute inset-0 bg-neutral-400 backdrop-blur-md opacity-40 rounded-lg "></div>
-                <button onClick={()=>setKeySearch(str)} className="hover:bg-neutral-500 relative z-10 w-full py-2 px-4 flex flex-row space-x-2 items-center text-sm rounded-lg">
+                <button onClick={() => setKeySearch(str)} className="hover:bg-neutral-500 relative z-10 w-full py-2 px-4 flex flex-row space-x-2 items-center text-sm rounded-lg">
                   <span className="text-white">{str}</span>
                   <Search className="text-white" size={20} />
                 </button>
@@ -305,7 +306,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <SlideProduct/>
+          <SlideProduct />
         </div>
 
         <Footer />
