@@ -18,7 +18,7 @@ export default function SearchNavBar() {
     router.push("/login");
   };
   return (
-    <header className="w-full fixed top-0 left-0 right-0">
+    <header className="w-full top-0 left-0 right-0">
       <nav className="border-gray-200 flex justify-between items-center px-4 py-2">
         <div className="flex flex-row items-center space-x-8 ">
           <Link href={"/"}>
@@ -31,14 +31,8 @@ export default function SearchNavBar() {
             />
           </Link>
           <div className="flex flex-row space-x-4 text-sm items-center text-gray-600 font-semibold">
-            <Link href={"/admin"}>Tools</Link>
+            <Link href={"/admin"}>Manager</Link>
             <Link href={"/"}>Images</Link>
-            <Link href={"/"}>Icons</Link>
-            <Link href={"/"}>Videos</Link>
-            <Link href={"/"}>Templates</Link>
-            <Link href={"/"}>PSD</Link>
-            <Link href={"/"}>Mockup</Link>
-            <Link href={"/"}>More</Link>
           </div>
         </div>
 

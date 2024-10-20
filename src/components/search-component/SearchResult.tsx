@@ -17,14 +17,14 @@ const SearchResult = (props: DataSearch) => {
       <div
         className={`${
           isOpenFilter ? "w-11/12" : "w-full"
-        } m-0 m-auto flex flex-col gap-4 pb-10`}
+        } m-auto flex flex-col gap-4 pb-10`}
       >
         <p className="text-2xl text-gray-500">Popular</p>
         <div>
           <Row gutter={[16, 16]}>
             {dataSearch &&
               dataSearch?.map((item: any, index: number) => (
-                <Col span={6} className="flex justify-center">
+                <Col key={index} span={6} className="flex justify-center">
                   <Card className="relative col-span-12 sm:col-span-4 w-full h-[200px] hover:cursor-pointer rounded-md overflow-hidden">
                     <Image
                       width={200}

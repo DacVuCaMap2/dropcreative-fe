@@ -9,6 +9,7 @@ import { Tooltip } from "react-tooltip";
 type Props = {
   email: string;
   role: string;
+  type:number;
 }
 export default function HomeHeadNavBar(props: Props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,12 +25,12 @@ export default function HomeHeadNavBar(props: Props) {
     router.push("/login");
   };
   return (
-    <header className="w-full absolute z-30 top-30 text-white">
+    <header className={`w-full absolute z-30 top-30 ${props.type===0 ? "text-white" : "text-black"}`}>
       <nav className="border-gray-200 flex justify-between items-center px-4 py-2">
-        <div className="flex flex-row items-center space-x-8 text-white">
+        <div className="flex flex-row items-center space-x-8">
           <Link href={"/"}>
             <Image
-              src="/image/logowhite.png"
+              src={props.type===0 ? "/image/logowhite.png" : "/image/logo-font.png"}
               alt="Logo"
               width={160} // Set an arbitrary width
               height={0} // Set an arbitrary height
@@ -50,17 +51,17 @@ export default function HomeHeadNavBar(props: Props) {
           {/* Ảnh đại diện với dropdown */}
           {(props.email && props.role) ?
             <div className="flex flex-row space-x-4">
-              <button className="flex items-center border text-xs font-bold text-white px-4 py-2 rounded">
+              <button className="flex items-center border text-xs font-bold px-4 py-2 rounded">
                 <Upload size={16} className="mr-2" />
                 Upload File
               </button>
-              <button className="text-white hover:text-blue-500 bell">
+              <button className="hover:text-blue-500 bell">
                 <Bell size={18} />
                 <Tooltip anchorSelect=".bell" place="bottom">
                   Notification
                 </Tooltip>
               </button>
-              <div className="relative text-white">
+              <div className="relative">
                 <button onClick={toggleDropdown} className="flex">
                   <div className="mr-2">
                     {" "}
@@ -114,7 +115,7 @@ export default function HomeHeadNavBar(props: Props) {
               </div>
             </div>
             :
-            <Link href={"/login"} className="flex items-center border text-sm font-bold text-white px-4 py-2 rounded">
+            <Link href={"/login"} className="flex items-center border text-sm font-bold px-4 py-2 rounded">
               Sign in
             </Link >
           }

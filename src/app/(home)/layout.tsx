@@ -20,7 +20,7 @@ const Layout = ({
     return (
         <div>
             <main className=" w-full relative">
-                <HomeHeadNavBar email={email} role={role} />
+                <HomeHeadNavBar email={email} role={role} type={0}/>
                 {children}
             </main>
         </div>

@@ -13,6 +13,7 @@ import {
 } from "@/data/home-data/homeListData";
 import HomeCategories from "./HomeCategories";
 import SlideProduct from "./SlideProduct";
+import InputSearchComponent from "../general-component/InputSearchComponent";
 export default function HomePage() {
   const listCategories = homeCategories;
   const listTheme = homeTheme;
@@ -28,22 +29,7 @@ export default function HomePage() {
             Ready to start looking product?
           </span>
           <span className="text-white text-sm pb-4">Find all products for any market, images, videos, and landing pages with just one click.</span>
-          <div className="w-full flex justify-center items-center ">
-            <HomeDropdown />
-            <input
-              placeholder="Search all assets"
-              type="text"
-              value={keySearch}
-              onChange={e => setKeySearch(e.target.value)}
-              className="lg:w-1/3 w-3/4 py-2 outline-none border-none h-full"
-            />
-            <div className="h-full bg-white py-2 px-4 rounded-r-sm">
-              <button className="flex flex-row  space-x-2 bg-blue-500 text-white px-4 py-2 rounded-sm hover:bg-blue-700">
-                <Search size={20} />
-                <span>Search</span>
-              </button>
-            </div>
-          </div>
+          <InputSearchComponent keySearch={keySearch} setKeySearch={setKeySearch} type={0}/>
           <div className="text-white w-1/2 pt-8 flex flex-row space-x-4 items-start justify-center">
             {listSuggestSearch.map((str: string, index) => (
               <div key={index} className="relative">
