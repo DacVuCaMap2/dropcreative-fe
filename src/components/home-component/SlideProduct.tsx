@@ -15,10 +15,10 @@ export default function SlideProduct() {
                     PRODUCTS
                 </h4>
                 <h2 className="text-3xl font-bold text-center">
-                    CHOOSE TO ADD YOUR PRODUCT
+                    Earn money from your creativity !
                 </h2>
                 <p className="text-[15px] text-neutral-500 text-center">
-                    Behind every stock image there is a creative mind. ¡Vamos!  Join DropCreative.io <br /> creator community and start selling your content
+                    "Behind every product, there is a creative mind. Join the DropCreative.io <br /> creator community and start selling your content today!"
                 </p>
                 <button className='bg-neutral-900 text-white px-4 py-2 hover:bg-neutral-700'>ADD PRODUCT</button>
             </div>
