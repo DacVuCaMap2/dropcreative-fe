@@ -33,8 +33,8 @@ export default function HomePage() {
           <div className="text-white w-1/2 pt-8 flex flex-row space-x-4 items-start justify-center">
             {listSuggestSearch.map((str: string, index) => (
               <div key={index} className="relative">
-                <div className="absolute inset-0 bg-neutral-400 backdrop-blur-md opacity-40 rounded-lg "></div>
-                <button onClick={() => setKeySearch(str)} className="hover:bg-neutral-500 relative z-10 w-full py-2 px-4 flex flex-row space-x-2 items-center text-sm rounded-lg">
+                <div className="absolute inset-0 bg-neutral-300 backdrop-blur-md opacity-40  "></div>
+                <button onClick={() => setKeySearch(str)} className="hover:bg-neutral-400 relative z-10 w-full py-2 px-4 flex flex-row space-x-2 items-center text-sm ">
                   <span className="text-white">{str}</span>
                   <Search className="text-white" size={20} />
                 </button>
@@ -291,7 +291,7 @@ export default function HomePage() {
               <div className="flex flex-col space-y-4 pl-40 text-white flex-grow h-full">
                 <p className="font-bold text-2xl">FaceBook ads libary</p>
                 <p className="font-bold text-lg">
-                  Facebook's advertising library with thousands of trending top products
+                  Facebook&apos;s advertising library with thousands of trending top products
                 </p>
                 <div className="space-x-4">
                   {/* <button className="bg-white text-black font-bold text-xs px-4 py-2 rounded">
