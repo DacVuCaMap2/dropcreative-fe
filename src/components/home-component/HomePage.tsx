@@ -58,6 +58,7 @@ export default function HomePage() {
 
           </div>
         </div>
+        <div></div>
         <div className="flex flex-col justify-center items-center">
           <div className="flex flex-col py-16 space-y-20 lg:w-[1340px] w-screen px-4">
             <div className="flex flex-col space-y-4">
