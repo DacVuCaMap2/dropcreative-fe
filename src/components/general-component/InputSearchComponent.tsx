@@ -13,7 +13,7 @@ type Props = {
 export default function InputSearchComponent(props: Props) {
     return (
         <div className={`w-full flex justify-center items-center`}>
-            <div className={`${props.type === 0 ? "bg-white w-3/5" : "bg-neutral-200 w-full"} flex justify-center items-center `}>
+            <div className={`${props.type === 0 ? "bg-white w-3/5 max-w-[900px]" : "bg-neutral-200 w-full"} flex justify-center items-center `}>
                 <HomeDropdown type={props.type} />
                 <input
                     placeholder="Search all assets"
