@@ -58,7 +58,7 @@ export default function HomePage() {
             <div className="h-20 w-20 bg-red-500 absolute bottom-[-30px] left-32">
             </div>
             <div className="bg-amber-100 w-full py-8 flex justify-center items-center space-x-4">
-              <span className="font-bold">Sign up for 10 daily free downloads and access to AI tools </span>
+              <span className="font-bold">Sign up now to search for free sale season products </span>
               <Link href={"/login"} className="bg-black text-white p-2">Sign Up Now</Link>
             </div>
           </div>
