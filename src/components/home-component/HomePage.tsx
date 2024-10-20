@@ -304,7 +304,7 @@ export default function HomePage() {
               </div>
               <div>
                 <Image
-                  src={"/home/bannerdesigner.png"}
+                  src={"/home/bannerFace.png"}
                   alt={"image"}
                   width={600}
                   height={0}
