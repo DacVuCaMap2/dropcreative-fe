@@ -1,0 +1,9 @@
+.input-search {
+    background: none;
+    outline: none; /* Bỏ viền mặc định */
+    border: none; /* Bỏ viền */
+}
+
+.input-search:focus {
+    box-shadow: none; /* Bỏ bóng viền khi focus */
+}

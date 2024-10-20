@@ -7,7 +7,10 @@ type DropItem = {
     drop2: any[],
     drop3: {Free:boolean,Premium:boolean}
 }
-export default function HomeDropdown() {
+type Props = {
+    type:number
+}
+export default function HomeDropdown(props:Props) {
     const [isOpen, setOpen] = useState(false);
     const listDropDown = homeDrop1;
     const dropFirst = homeDropfirst;
@@ -56,7 +59,7 @@ export default function HomeDropdown() {
     }
     return (
         <div className='h-full relative border-r' ref={dropdownRef}>
-            <button onClick={() => setOpen(!isOpen)} className='hover:bg-gray-200 flex items-center rounded-l-sm flex-row px-4 py-4 space-x-2 bg-white h-full w-48'>
+            <button onClick={() => setOpen(!isOpen)} className={` flex items-center rounded-l-sm flex-row px-4 py-4 space-x-2 h-full w-48 ${props.type === 0 ? "bg-white hover:bg-gray-200" : "bg-neutral-200 hover:bg-gray-100"}`}>
                 <div className='w-6'>
                     {selectItem.drop1.icon && <selectItem.drop1.icon size={16} />}
                 </div>

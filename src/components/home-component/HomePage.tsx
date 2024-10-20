@@ -29,7 +29,7 @@ export default function HomePage() {
             Ready to start looking product?
           </span>
           <span className="text-white text-sm pb-4">Find all products for any market, images, videos, and landing pages with just one click.</span>
-          <InputSearchComponent keySearch={keySearch} setKeySearch={setKeySearch} type={0}/>
+          <InputSearchComponent keySearch={keySearch} setKeySearch={setKeySearch} type={0} />
           <div className="text-white w-1/2 pt-8 flex flex-row space-x-4 items-start justify-center">
             {listSuggestSearch.map((str: string, index) => (
               <div key={index} className="relative">
@@ -44,8 +44,24 @@ export default function HomePage() {
 
           </div>
         </div>
-        <div></div>
+
         <div className="flex flex-col justify-center items-center">
+          <div className="flex justify-center items-center w-full overflow-hidden relative">
+            <div className="h-20 w-20 bg-green-400 absolute top-[-25px] left-8 rounded-full">
+            </div>
+            <div className="h-20 w-20 bg-red-300 absolute top-[-10px] right-8 rounded-full">
+            </div>
+            <div className="mx-auto h-0 w-0 border-r-[25px] border-b-[55px] 
+              border-l-[25px] border-solid border-r-transparent
+              border-l-transparent border-b-purple-400 absolute bottom-3 right-32">
+            </div>
+            <div className="h-20 w-20 bg-red-500 absolute bottom-[-30px] left-32">
+            </div>
+            <div className="bg-amber-100 w-full py-8 flex justify-center items-center space-x-4">
+              <span className="font-bold">Sign up for 10 daily free downloads and access to AI tools </span>
+              <button className="bg-black text-white p-2">Sign Up Now</button>
+            </div>
+          </div>
           <div className="flex flex-col py-16 space-y-20 lg:w-[1340px] w-screen px-4">
             <div className="flex flex-col space-y-4">
               <span className="font-bold text-xl">
@@ -93,31 +109,7 @@ export default function HomePage() {
 
             <HomeCategories />
 
-            <div className="flex flex-col space-y-4">
-              <div className="space-y-2">
-                <p className="text-center font-bold text-3xl">Product Holiday</p>
-                <p className="text-center text-lg text-neutral-600">
-                  Check to see which product theme is right for you
-                </p>
-              </div>
-              <div className="flex flex-row flex-wrap justify-center">
-                {listTheme.map((item: any, index) => (
-                  <Link key={index} href={"/"}>
-                    <div className="relative flex flex-col h-[260px] mb-4 ml-2  rounded-xl overflow-hidden group">
-                      <div className="absolute bottom-3 left-2 z-10 text-white font-bold">
-                        {item.title}
-                      </div>
-                      <img
-                        src={item.img}
-                        alt="img"
-                        className="h-full w-auto transition-transform duration-300 ease-in-out group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-50" />
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
+
 
             <div className="flex flex-col space-y-4">
               <div className="flex flex-row space-x-4 items-center justify-center">
@@ -176,6 +168,33 @@ export default function HomePage() {
                 ))}
               </div>
             </div>
+
+            <div className="flex flex-col space-y-4">
+              <div className="space-y-2">
+                <p className="text-center font-bold text-3xl">Product Holiday</p>
+                <p className="text-center text-lg text-neutral-600">
+                  Check to see which product theme is right for you
+                </p>
+              </div>
+              <div className="flex flex-row flex-wrap justify-center">
+                {listTheme.map((item: any, index) => (
+                  <Link key={index} href={"/"}>
+                    <div className="relative flex flex-col h-[260px] mb-4 ml-2  rounded-xl overflow-hidden group">
+                      <div className="absolute bottom-3 left-2 z-10 text-white font-bold">
+                        {item.title}
+                      </div>
+                      <img
+                        src={item.img}
+                        alt="img"
+                        className="h-full w-auto transition-transform duration-300 ease-in-out group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-50" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
 
             <div className="flex flex-col space-y-14">
               <div>
