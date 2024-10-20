@@ -1,12 +1,10 @@
 "use client";
 import { deleteAllCookies } from "@/ultils";
-import { Badge } from "antd";
-import { Bell, ChevronDown, Upload } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { Tooltip } from "react-tooltip";
 export default function SearchNavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -20,7 +18,7 @@ export default function SearchNavBar() {
     router.push("/login");
   };
   return (
-    <header className="w-full absolute z-30 top-30">
+    <header className="w-full fixed top-0 left-0 right-0">
       <nav className="border-gray-200 flex justify-between items-center px-4 py-2">
         <div className="flex flex-row items-center space-x-8 ">
           <Link href={"/"}>

@@ -4,15 +4,11 @@ import SearchDropDown from "./SearchDropDown";
 import {
   ArrowLeftFromLine,
   Check,
-  ChevronLeft,
-  ChevronRight,
-  FileTerminal,
-  Image,
-  Scan,
   Search,
   SlidersHorizontal,
+  X,
 } from "lucide-react";
-import { Button, Collapse, Input, message, Switch } from "antd";
+import { Button, Collapse, Input, message, Switch, Tag } from "antd";
 import SearchResult from "./SearchResult";
 import {
   generalCategoriesSelect,
@@ -25,7 +21,7 @@ import { searchProduct } from "@/api/SearchApi";
 
 const SearchProduct = () => {
   const { Panel } = Collapse;
-  const [isOpenFilter, setIsOpenFilter] = useState(false);
+  const [isOpenFilter, setIsOpenFilter] = useState(true);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<
     SelectOption[] | undefined
@@ -39,11 +35,12 @@ const SearchProduct = () => {
   const [valueInput, setValueInput] = useState<string>();
   const [dataSearch, setDataSearch] = useState<any>();
   const [scrollLocation, setScrollLocation] = useState(-210);
+  const [filters, setFilters] = useState<any>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [hiddenBtn, setHiddenBtn] = useState({ left: false, right: true });
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -500 : 500; // Điều chỉnh giá trị này nếu cần
+      const scrollAmount = direction === "left" ? -500 : 500;
       setScrollLocation(scrollAmount);
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
       const hidLeft = scrollAmount === -500;
@@ -87,7 +84,7 @@ const SearchProduct = () => {
         search,
         page: 1,
         accountId: 1,
-        size: 15,
+        size: 4,
         holiday: selectedHoliday?.map((item) => item.value),
         season: selectedSeason?.map((item) => item.value),
         category: selectedCategories?.map((item) => item.value),
@@ -100,8 +97,28 @@ const SearchProduct = () => {
   const handleSearch = () => {
     handleProductSearch(valueInput ?? "");
   };
+  const handleGetDataFilter = () => {
+    const result = (selectedCategories ?? []).concat(
+      selectedHoliday ?? [],
+      selectedSeason ?? []
+    );
+    setFilters(result);
+  };
+  const handleClose = (removedFilter: any) => {
+    console.log(filters);
+    setFilters((prevFilters: any[] | undefined) => {
+      if (!prevFilters) return [];
+      return prevFilters.filter(
+        (filter) => filter.value !== removedFilter.value
+      );
+    });
+  };
+  const hanldeClearAll = () => {
+    setFilters([]);
+  };
   useEffect(() => {
     handleProductSearch();
+    handleGetDataFilter();
   }, [selectedCategories, selectedHoliday, selectedSeason]);
   return (
     <div className="flex flex-col gap-2">
@@ -159,6 +176,40 @@ const SearchProduct = () => {
                     onClick={() => setIsOpenFilter(false)}
                   />
                 </div>
+
+                {filters.length ? (
+                  <div>
+                    <div className="flex flex-col gap-2 text-sm font-semibold px-6 text-gray-600  border border-r border-l-0 border-t-0 pt-2 pb-2">
+                      <div className="flex justify-between">
+                        <div className="flex items-start">
+                          <span>Apply filter</span>
+                        </div>
+                        <div
+                          className="flex gap-2 text-xs text-gray-400 cursor-pointer mt-1"
+                          onClick={hanldeClearAll}
+                        >
+                          <span>Clear all</span>
+                          <X width={12} height={12} className="mt-0.5 " />
+                        </div>
+                      </div>
+                      <div className="w-12/12 flex flex-wrap gap-2">
+                        {filters.map((item: any, index: number) => (
+                          <Tag
+                            key={index}
+                            closable
+                            color="#3F83F8"
+                            onClose={() => handleClose(item)}
+                            className="text-white w-fit p-1 flex"
+                          >
+                            {item.title}
+                          </Tag>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
                 <div>
                   <Collapse
                     defaultActiveKey={["1"]}
@@ -176,15 +227,16 @@ const SearchProduct = () => {
                           <Button
                             color="default"
                             className={`${
-                              selectedCategories?.includes(item)
+                              filters?.includes(item)
                                 ? "bg-blue-500 text-white "
-                                : ""
+                                : "bg-gray-200 text-black"
                             }`}
                             key={item.value}
                             onClick={() => {
                               setSelectedCategories((prevSelected = []) =>
                                 handleToggleItemInArray(prevSelected, item)
                               );
+                              handleGetDataFilter();
                             }}
                           >
                             {item.title}
@@ -206,7 +258,7 @@ const SearchProduct = () => {
                             className={`${
                               selectedSeason?.includes(item)
                                 ? "bg-blue-500 text-white "
-                                : ""
+                                : "bg-gray-200 text-black"
                             }`}
                             key={item.value}
                             onClick={() => {
@@ -234,7 +286,7 @@ const SearchProduct = () => {
                             className={`${
                               selectedHoliday?.includes(item)
                                 ? "bg-blue-500 text-white "
-                                : ""
+                                : "bg-gray-200 text-black"
                             }`}
                             key={item.value}
                             onClick={() => {
