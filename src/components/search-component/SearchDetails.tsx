@@ -1,6 +1,6 @@
 "use client"
 import GetApi from '@/api/GetApi';
-import { ArrowDownToLine, Copy, Download, Flag, Layers3, Plus, Share2 } from 'lucide-react';
+import { ArrowDownToLine, Copy, Download, Flag, Layers3, Plus, Share2, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { ScaleLoader } from 'react-spinners';
@@ -8,11 +8,14 @@ import SuggestedArea from '../landing-page-component/SuggestedArea';
 import SuggestedAreaSearch from './SuggestedAreaSearch';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Mousewheel, Navigation, Thumbs } from 'swiper/modules';
+import { generalCategoriesSelect } from '@/data/generalData';
+import Link from 'next/link';
 type Props = {
     setOpen: React.Dispatch<React.SetStateAction<number>>,
     id: any
 }
 export default function SearchDetails(props: Props) {
+    const listCategories = generalCategoriesSelect;
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
     const [isLoading, setLoading] = useState(true);
     const [productData, setProductData] = useState<any>(null);
@@ -28,7 +31,6 @@ export default function SearchDetails(props: Props) {
             setLoading(true);
             const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + props.id;
             const response = await GetApi(url);
-            console.log(response);
             if (response.product) {
                 setProductData(response);
                 if (response.images && Array.isArray(response.images)) {
@@ -47,21 +49,26 @@ export default function SearchDetails(props: Props) {
 
     return (
         <div onClick={handleClose} className='bg-slate-900 bg-opacity-90 w-screen h-screen fixed top-0 left-0 z-30 flex flex-col items-center'>
-            <div className='h-2 w-20 bg-black opacity-0'>
+
+            <div className='relative eh-2 w-20 bg-black opacity-0'>
                 ss
+
             </div>
             {!isLoading ?
-                <div onClick={(e) => e.stopPropagation()} className='bg-white flex-grow w-[1000px] overflow-auto rounded-lg flex flex-col text-neutral-700 py-8'>
+                <div onClick={(e) => e.stopPropagation()} className='relative bg-white flex-grow w-[1100px] overflow-y-auto rounded-lg flex flex-col text-neutral-700 py-8'>
+                    <button className='absolute text-white top-5 translate-x-[calc(100%+20px)] hover:bg-neutral-500 p-2'>
+                        <X size={30} />
+                    </button>
                     <div className='flex flex-row space-x-2'>
-                        <div className='flex flex-col w-28 items-center px-2'>
-                            <div className='border-3 rounded p-1 border-blue-500 mb-1'>
+                        <div className='flex flex-col w-36 items-center px-4'>
+                            {/* <div className='border-3 rounded p-1 border-blue-500 mb-1'>
 
                                 <Image src={mainPhotoUrl.url ? process.env.NEXT_PUBLIC_API_URL + mainPhotoUrl.url : "/image/nophotos.png"} alt="s" width={50} height={50} className='rounded'></Image>
-                            </div>
-                            <span className='text-xs text-blue-500 font-bold'>Original</span>
+                            </div> */}
+                            <span className='text-xs text-blue-500 font-bold'></span>
                             {/* Thumbnail */}
                             {(productData.images && Array.isArray(productData.images)) &&
-                                <div className='w-full border px-2 border-neutral-400 rounded py-2'>
+                                <div className='w-full border-r px-2 border-neutral-400 py-2'>
                                     <Swiper
                                         onSwiper={setThumbsSwiper}
                                         loop={false}
@@ -72,7 +79,7 @@ export default function SearchDetails(props: Props) {
                                         watchSlidesProgress={true}
                                         mousewheel={true}
                                         modules={[FreeMode, Navigation, Thumbs, Mousewheel]}
-                                        className='thumbs mt-3 w-full h-[350px] rounded-lg'
+                                        className='thumbs mt-3 w-full h-[450px] rounded-lg'
 
                                     >
                                         {productData.images.map((image: any, index: number) => (
@@ -115,13 +122,36 @@ export default function SearchDetails(props: Props) {
                                 <button className='hover:bg-neutral-100 px-4 py-2 border border-neutral-300 rounded '> <Copy size={16} /> </button>
                             </div>
                             <button className='hover:bg-neutral-100 flex flex-row justify-center items-center w-full py-2 rounded border border-neutral-300 space-x-4 '><Plus size={20} /> Add Product</button>
-                            <div className='bg-red-400 w-full h-64 text-xs'>
-
+                            <div className='w-full text-sm flex flex-row pt-10'>
+                                <div className='w-full font-bold space-y-2'>
+                                    <p>Price:</p>
+                                    <p>Compare Price:</p>
+                                    <p>Cost per Price:</p>
+                                    <p>Shipping Fee:</p>
+                                    <p>CR:</p>
+                                    <p>AOV:</p>
+                                    <p>Country Target:</p>
+                                    <p>Categories:</p>
+                                </div>
+                                <div className='w-full text-right space-y-2'>
+                                    <p>{productData.product.price}</p>
+                                    <p>{productData.product.comparePrice}</p>
+                                    <p>{productData.product.costPerPrice}</p>
+                                    <p>{productData.product.shippingFee}</p>
+                                    <p>{productData.productDetail.cr} %</p>
+                                    <p>{productData.productDetail.aov}</p>
+                                    <p>{productData.productDetail.countryTarget}</p>
+                                    <div className='flex flex-row justify-end'>
+                                        {productData.product.categoryIds.map((cat: any, index: number) => (
+                                            <div className='border rounded-lg bg-gray-100 border-gray-300 w-fit px-2 p-1'>{listCategories.find((item: any) => item.value === cat)?.title}</div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className='flex flex-row items-center justify-between py-2 px-6 w-[700px] text-xs '>
+                    <div className='flex flex-row items-center justify-between py-2 px-6 w-full text-xs my-2'>
                         <div className='flex flex-row space-x-2'>
                             <Image src={"/image/default/user-default.png"} alt='avatar' width={50} height={50}></Image>
                             <div className='flex flex-col '>
@@ -130,12 +160,15 @@ export default function SearchDetails(props: Props) {
                             </div>
                         </div>
                         <div className='flex flex-row space-x-2'>
-                            <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-4'><Layers3 size={20} /> <span>Add Product</span></button>
+                            <Link href={"/landing-page/product/" + props.id} className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-4'><Layers3 size={20} />
+                                <span>View landing page</span>
+
+                            </Link>
                             <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Share2 size={20} /></button>
                             <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Flag size={20} /></button>
                         </div>
                     </div>
-                    <div className='px-6 mb-10'>
+                    <div className='px-6 mb-10 flex-grow'>
                         <p className='font-bold text-sm'>{productData.product.title}</p>
                     </div>
                     <span className='px-6 font-bold'>You might also like</span>
