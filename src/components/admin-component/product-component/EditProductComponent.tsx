@@ -475,7 +475,8 @@ export default function EditProductComponent(props: Props) {
                     formData.append(`images`, photo);
                 }
                 else {
-                    const isMain = index === 0;
+                    const isMain = index === 0 ? true : false;
+
                     imagePost.push({ id: photo.id, isMain: isMain });
                 }
             });
@@ -495,10 +496,11 @@ export default function EditProductComponent(props: Props) {
         console.log(finalData);
         formData.append("data", JSON.stringify(finalData));
         errMess = validatePostData(filterPostData);
-        // console.log(photos, videos);
+        console.log(photos, videos);
 
 
-        const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + productData.id
+        // const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + productData.id
+        const url ="http://localhost:8080/api/product/" + productData.id
         try {
             setLoading(1);
             setTimeout(() => {
