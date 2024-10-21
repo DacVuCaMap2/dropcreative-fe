@@ -97,7 +97,7 @@ export default function AddProductComponent(props: Props) {
   useEffect(() => {
 
     if (listProductSelect.length == 0) {
-      const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=30&page=1`;
+      const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=100&page=1`;
       const fetchData = async () => {
         const response = await GetApi(url);
         console.log(response);
@@ -443,7 +443,7 @@ export default function AddProductComponent(props: Props) {
       , season: listSea
       , shippingDescription: shippingDesc
       , warrantyDescription: WarrantyDesc
-      ,reviews:reviews
+      , reviews: reviews
     };
     const { id, ...filterPostData } = postData;
     let errMess = "";
@@ -1252,38 +1252,6 @@ export default function AddProductComponent(props: Props) {
             </label>
           </div>
 
-          <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
-            <p className="font-bold">Tracking data</p>
-            <div>
-              <label className="block text-sm font-bold mb-1">
-                Facebook Pixel
-              </label>
-              <input
-                type="text"
-                value={productData.facebookPixel}
-                onChange={e => handleChange(e, "facebookPixel")}
-                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-              focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
-                placeholder="Type title"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-bold mb-1">
-                Google Analytics
-              </label>
-              <input
-                type="text"
-                value={productData.googleAnalytics}
-                onChange={e => handleChange(e, "googleAnalytics")}
-                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-              focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
-                placeholder="Type title"
-                required
-              />
-            </div>
-          </div>
 
           <div className="flex flex-col border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
             <p className="font-bold">Review</p>
@@ -1364,6 +1332,42 @@ export default function AddProductComponent(props: Props) {
               <Plus size={20} /> <span>ADD REVIEW</span>
             </button>
           </div>
+
+
+          <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
+            <p className="font-bold">Tracking data</p>
+            <div>
+              <label className="block text-sm font-bold mb-1">
+                Facebook Pixel
+              </label>
+              <input
+                type="text"
+                value={productData.facebookPixel}
+                onChange={e => handleChange(e, "facebookPixel")}
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+              focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                placeholder="Type title"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold mb-1">
+                Google Analytics
+              </label>
+              <input
+                type="text"
+                value={productData.googleAnalytics}
+                onChange={e => handleChange(e, "googleAnalytics")}
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+              focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                placeholder="Type title"
+                required
+              />
+            </div>
+          </div>
+
+
         </div>
 
         <div className="flex flex-col w-1/3 h-20 space-y-6">

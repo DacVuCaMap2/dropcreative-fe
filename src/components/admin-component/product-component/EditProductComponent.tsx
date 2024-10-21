@@ -11,7 +11,7 @@ import Modal from 'react-modal';
 import { div, form } from "framer-motion/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { message, Select, Space } from "antd";
+import { message, Rate, Select, Space } from "antd";
 import Message from "@/components/common-component/Message";
 import { validatePostData } from "@/data/function";
 import { generalCategoriesSelect, generalHolidayList, generalOptionHoliday, generalOptionsCat, generalOptionSeasons, generalSeasonList } from "@/data/generalData";
@@ -25,7 +25,7 @@ type productVariant = {
     optionInput: string;
 };
 type variantDetails = {
-    id:any;
+    id: any;
     name: string;
     price: number;
     comparePrice: number;
@@ -52,10 +52,19 @@ type Props = {
     productData: Product,
     videos: any[],
     images: any[],
-    listVariant : productVariant[],
-    listVariantDetails : variantDetails[],
-    comboSaleList : ComboSale[],
+    listVariant: productVariant[],
+    listVariantDetails: variantDetails[],
+    comboSaleList: ComboSale[],
     boughtTogetherList: BoughtTogether[]
+}
+type Comment = {
+    value: string,
+    reviewerName: string,
+    rate: number,
+    images: string[],
+    imagesFile: File[],
+    videos: string,
+    videoFile: File | null
 }
 export default function EditProductComponent(props: Props) {
     const accountId = props.accountId;
@@ -67,6 +76,7 @@ export default function EditProductComponent(props: Props) {
     const [shippingDesc, setShippingDesc] = useState(productData.shippingDescription);
     const [WarrantyDesc, setWarrantyDesc] = useState(productData.warrantyDescription);
     const [contentCalling, setContentCalling] = useState(productData.contentCalling);
+    const [listComment, setListComment] = useState<Comment[]>([]);
     const [videos, setVideos] = useState<any[]>(props.videos);
     const [photos, setPhotos] = useState<any[]>(props.images);
     const [isOpenSelectPhoto, setIsOpenSelectPhoto] = useState(false);
@@ -76,15 +86,15 @@ export default function EditProductComponent(props: Props) {
     const [listComboSale, setListComboSale] = useState<ComboSale[]>(props.comboSaleList);
     const [selectDesc, setSelectDesc] = useState(0);
     const [thisBoughtTogether, setThisBoughtTogether] = useState<BoughtTogether>(props.boughtTogetherList[0]);
-    const tempBoughtTogetherList = props.boughtTogetherList.map((item:BoughtTogether,index)=>{})
-    const [listBoughtTogerther, setListBoughtTogether] = useState<BoughtTogether[]>([props.boughtTogetherList[1],props.boughtTogetherList[2]]);
+    const tempBoughtTogetherList = props.boughtTogetherList.map((item: BoughtTogether, index) => { })
+    const [listBoughtTogerther, setListBoughtTogether] = useState<BoughtTogether[]>([props.boughtTogetherList[1], props.boughtTogetherList[2]]);
     /// just save editor tiny
 
     ///get list Product select
     useEffect(() => {
 
         if (listProductSelect.length == 0) {
-            const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=30&page=1`;
+            const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=100&page=1`;
             const fetchData = async () => {
                 const response = await GetApi(url);
                 if (Array.isArray(response.data)) {
@@ -330,7 +340,7 @@ export default function EditProductComponent(props: Props) {
                     return oldDetail;
                 }
                 return {
-                    id:null,
+                    id: null,
                     name: str,
                     price: productData.price,
                     comparePrice: productData.comparePrice,
@@ -405,7 +415,7 @@ export default function EditProductComponent(props: Props) {
     const handleSubmit = async () => {
         const productVariants = listVariantDetails.map((item: variantDetails, index) => {
             return {
-                id:item.id,value: item.name, status: item.status, price: item.price, comparePrice: item.comparePrice, quantity: item.quantity,
+                id: item.id, value: item.name, status: item.status, price: item.price, comparePrice: item.comparePrice, quantity: item.quantity,
                 sku: item.sku, barcode: item.barcode, fileName: item.image ? item.image.name : ''
             }
         })
@@ -430,7 +440,7 @@ export default function EditProductComponent(props: Props) {
             }
         })
         if (arrBTId.length > 0 && arrBTval.length > 0 && arrBTId.length === arrBTval.length) {
-            boughtTogether =productData.id + "./" + arrBTId.join("./") + "|" + thisBoughtTogether.value + "./" + arrBTval.join("./");
+            boughtTogether = productData.id + "./" + arrBTId.join("./") + "|" + thisBoughtTogether.value + "./" + arrBTval.join("./");
         }
         let serviceType = 4;
         serviceType = serviceT.free && serviceT.premium ? 3 : serviceType;
@@ -446,6 +456,7 @@ export default function EditProductComponent(props: Props) {
             , season: listSea
             , shippingDescription: shippingDesc
             , warrantyDescription: WarrantyDesc
+            ,reviews:[]
         };
         const { id, ...filterPostData } = postData;
         let errMess = "";
@@ -456,16 +467,16 @@ export default function EditProductComponent(props: Props) {
         }
         const formData = new FormData();
 
-        const imagePost : any[] = [];
-        const videoPost : any[] = [];
+        const imagePost: any[] = [];
+        const videoPost: any[] = [];
         if (photos.length > 0) {
             photos.forEach((photo, index) => {
                 if (photo instanceof File) {
                     formData.append(`images`, photo);
                 }
-                else{
-                    const isMain = index===0;
-                    imagePost.push({id:photo.id,isMain:isMain});
+                else {
+                    const isMain = index === 0;
+                    imagePost.push({ id: photo.id, isMain: isMain });
                 }
             });
         }
@@ -475,19 +486,19 @@ export default function EditProductComponent(props: Props) {
                 if (video instanceof File) {
                     formData.append(`videos`, video);
                 }
-                else{
+                else {
                     videoPost.push(video.id);
                 }
             });
         }
-        const finalData : any = {...filterPostData,imageIds:imagePost,videoIds:videoPost};
+        const finalData: any = { ...filterPostData, imageIds: imagePost, videoIds: videoPost };
         console.log(finalData);
         formData.append("data", JSON.stringify(finalData));
         errMess = validatePostData(filterPostData);
         // console.log(photos, videos);
 
 
-        const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/"+productData.id
+        const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + productData.id
         try {
             setLoading(1);
             setTimeout(() => {
@@ -598,6 +609,76 @@ export default function EditProductComponent(props: Props) {
             return item;
         })
         setListBoughtTogether(tempList);
+    }
+    //comment
+    const addComment = () => {
+        const temp: Comment[] = [...listComment];
+        temp.push({
+            value: "",
+            reviewerName: "",
+            rate: 5,
+            images: [],
+            imagesFile: [],
+            videos: "",
+            videoFile: null
+        });
+        setListComment(temp);
+    }
+    const handleChangeComment = (ind: number, e: any, key: string) => {
+        let value = "";
+        if (key === "file") {
+            const file = e.target.files[0];
+            if (file) {
+                const fileType = file.type.split('/')[0]; // Lấy loại tệp (image hoặc video)
+                let temp = [...listComment];
+                if (fileType === "image") {
+                    temp = temp.map((item: Comment, index) => {
+                        if (index === ind) {
+                            const images = [...item.images];
+                            const imagesFile = [...item.imagesFile];
+                            images.push(file.name);
+                            imagesFile.push(file);
+                            return { ...item, images: images, imagesFile: imagesFile };
+                        }
+                        return item;
+                    })
+
+                } else if (fileType === "video") {
+                    temp = temp.map((item: Comment, index) => {
+                        if (index === ind) {
+                            const videos = file.name;
+                            const videoFile = file;
+                            return { ...item, videos: videos, videoFile: videoFile };
+                        }
+                        return item;
+                    })
+                } else {
+                    alert("Vui lòng chọn tệp ảnh hoặc video.");
+                    return;
+                }
+                setListComment(temp);
+                return;
+            }
+        }
+        if (key === "rate") {
+            value = e;
+        }
+        else {
+            value = e.target.value;
+        }
+
+        console.log(value);
+        const temp = [...listComment].map((item: Comment, index) => {
+            if (index === ind) {
+                return { ...item, [key]: value };
+            }
+            return item;
+        })
+        setListComment(temp);
+    }
+    const handleDeleteComment = (ind: number) => {
+        const temp = [...listComment].filter((item: any, index) => index != ind);
+        setListComment(temp);
     }
     return (
         <div className="relative  flex justify-between items-center w-full flex-wrap">
@@ -1072,7 +1153,7 @@ export default function EditProductComponent(props: Props) {
                                                             <button onClick={() => { openModal(); setIndCurrent(childInd) }}>
                                                                 {variantItem.image ?
                                                                     <img
-                                                                        src={variantItem.image instanceof File ? URL.createObjectURL(variantItem.image) : process.env.NEXT_PUBLIC_API_URL+variantItem.image.url}
+                                                                        src={variantItem.image instanceof File ? URL.createObjectURL(variantItem.image) : process.env.NEXT_PUBLIC_API_URL + variantItem.image.url}
                                                                         alt={"image"}
                                                                         className="rounded cursor-pointer w-32 h-32 object-cover border shadow-lg"
                                                                     /> :
@@ -1096,7 +1177,7 @@ export default function EditProductComponent(props: Props) {
                                                                     {photos.length > 0 && (
                                                                         <div className="grid grid-cols-5 gap-4 pt-4 ">
                                                                             {photos.map((item: any, photoInd) => {
-                                                                                const urlImage = (item instanceof File) ?  URL.createObjectURL(item) : process.env.NEXT_PUBLIC_API_URL+item.url;
+                                                                                const urlImage = (item instanceof File) ? URL.createObjectURL(item) : process.env.NEXT_PUBLIC_API_URL + item.url;
                                                                                 return (
                                                                                     <div onClick={() => handleSelectVariantImg(item)} key={photoInd} className="flex flex-col items-center rounded-lg border shadow-xl overflow-hidden">
                                                                                         <Image
@@ -1199,6 +1280,88 @@ export default function EditProductComponent(props: Props) {
                             <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                         </label>
                     </div>
+
+                    <div className="flex flex-col border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
+                        <p className="font-bold">Review</p>
+                        <div className="flex flex-col">
+                            {listComment.map((item: Comment, index) => (
+                                <div key={index} className="flex flex-row border border-neutral-300 py-4 px-4 space-x-4 mb-4">
+                                    <div>
+                                        <label className="block text-sm font-bold mb-1">
+                                            Reviewer name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={item.reviewerName}
+                                            onChange={e => handleChangeComment(index, e, "reviewerName")}
+                                            className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                                        focus:ring-blue-500 focus:border-blue-500 block p-3"
+                                            placeholder="Type reviewer name"
+                                            required
+                                        />
+                                        <span className="text-sm text-neutral-400">AUG 25, 2023</span>
+                                    </div>
+                                    <div className="w-full">
+                                        <Rate value={item.rate} onChange={e => handleChangeComment(index, e, "rate")} />
+                                        <div className="space-y-2">
+                                            <textarea
+                                                value={item.value}
+                                                onChange={e => handleChangeComment(index, e, "value")}
+                                                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-3 h-32 max-h-24 min-h-24"
+                                                placeholder="Type Comment"
+                                                required
+                                            />
+                                            <div className="flex flex-row flex-wrap">
+                                                <div className="relative inline-block mr-2">
+                                                    <input
+                                                        type="file"
+                                                        id="file-input"
+                                                        onChange={e => handleChangeComment(index, e, "file")}
+                                                        accept="image/*,video/*"
+                                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                    />
+                                                    <label
+                                                        htmlFor="file-input"
+                                                        className="inline-flex items-center px-4 py-2 text-white bg-black rounded cursor-pointer"
+                                                    >
+                                                        Chọn tệp
+                                                    </label>
+                                                </div>
+                                                {item.imagesFile.map((imgFile: File, childIndex) => (
+                                                    <div key={childIndex} className="mr-2 mb-2 h-20 w-20 overflow-hidden rounded-2xl bg-red-400">
+                                                        <Image src={URL.createObjectURL(imgFile)} alt="image" width={1000} height={1000} className="h-full w-full object-cover"></Image>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div>
+                                                {item.videoFile &&
+                                                    <video
+                                                        className="w-60 h-32"
+                                                        controls
+                                                        src={URL.createObjectURL(item.videoFile)} // Tạo URL tạm thời cho video
+                                                    ></video>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button
+                                            onClick={() => handleDeleteComment(index)}
+                                            className="p-2 hover:bg-gray-200 rounded"
+                                        >
+                                            <Trash />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <button onClick={() => addComment()} className="flex flex-row space-x-2 w-full border border-neutral-300 py-2 justify-center items-center hover:border-neutral-400 hover:bg-neutral-200">
+                            <Plus size={20} /> <span>ADD REVIEW</span>
+                        </button>
+                    </div>
+
+
 
                     <div className="border px-4 text-neutral-600 space-y-4 shadow-lg py-8">
                         <p className="font-bold">Tracking data</p>
@@ -1427,11 +1590,11 @@ export default function EditProductComponent(props: Props) {
                                                     </div>
                                                 )
                                             }
-                                            else{
+                                            else {
                                                 return (
                                                     <div key={index} className="flex flex-col items-center rounded-lg border shadow-xl">
                                                         <img
-                                                            src={process.env.NEXT_PUBLIC_API_URL+item.url} // Tạo URL tạm thời cho ảnh
+                                                            src={process.env.NEXT_PUBLIC_API_URL + item.url} // Tạo URL tạm thời cho ảnh
                                                             alt={item.name}
                                                             className="w-16 h-16 object-cover" // Kích thước ảnh
                                                         />
@@ -1573,9 +1736,9 @@ export default function EditProductComponent(props: Props) {
                                 <div>
                                     <div className="flex flex-row justify-center items-center space-x-2 border-b pb-2 mb-4">
                                         <div className="flex flex-row w-full overflow-hidden items-center space-x-2">
-                                            {(photos.length > 0 && photos[0] instanceof File) && <Image src={ URL.createObjectURL(photos[0])} alt="image" width={50} height={50} className="rounded"></Image> }
-                                            {(photos.length > 0 && !(photos[0] instanceof File)) && <Image src={ process.env.NEXT_PUBLIC_API_URL+photos[0].url} alt="image" width={50} height={50} className="rounded"></Image> }
-                                            {(photos.length === 0 ) && <Image src={"/image/nophotos.png"} alt="image" width={50} height={50} className="rounded"></Image> }
+                                            {(photos.length > 0 && photos[0] instanceof File) && <Image src={URL.createObjectURL(photos[0])} alt="image" width={50} height={50} className="rounded"></Image>}
+                                            {(photos.length > 0 && !(photos[0] instanceof File)) && <Image src={process.env.NEXT_PUBLIC_API_URL + photos[0].url} alt="image" width={50} height={50} className="rounded"></Image>}
+                                            {(photos.length === 0) && <Image src={"/image/nophotos.png"} alt="image" width={50} height={50} className="rounded"></Image>}
                                             <p className="truncate">{productData.title ? productData.title : "This Product"}</p>
                                         </div>
                                         <div className="w-1/3">
