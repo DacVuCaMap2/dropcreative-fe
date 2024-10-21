@@ -17,7 +17,7 @@ type Props = {
 export default function SearchDetails(props: Props) {
     const listCategories = generalCategoriesSelect;
     const listServiceType = generalServiceType;
-    const [productId,setProductId] = useState<any>(null);
+    const [productId, setProductId] = useState<any>(null);
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
     const [isLoading, setLoading] = useState(true);
     const [productData, setProductData] = useState<any>(null);
@@ -29,11 +29,13 @@ export default function SearchDetails(props: Props) {
         setMainPhotoUrl({ index: index, url: url });
     }
     useEffect(() => {
-        const fetchData = async (id:any) => {
+        const fetchData = async (id: any) => {
             setLoading(true);
             const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + id;
             const response = await GetApi(url);
+
             if (response.product) {
+                console.log(response)
                 setProductData(response);
                 if (response.images && Array.isArray(response.images)) {
                     const temp = response.images.find((photo: any) => photo.isMain);
@@ -49,7 +51,7 @@ export default function SearchDetails(props: Props) {
         if (productId) {
             fetchData(productId);
         }
-        else{
+        else {
             fetchData(props.id);
         }
     }, [productId])
@@ -63,19 +65,15 @@ export default function SearchDetails(props: Props) {
             </div>
             {!isLoading ?
                 <div onClick={(e) => e.stopPropagation()} className='relative bg-white flex-grow w-[1100px] overflow-y-auto rounded-lg flex flex-col text-neutral-700 py-8'>
-                    <button className='absolute text-white top-5 translate-x-[calc(100%+20px)] hover:bg-neutral-500 p-2'>
-                        <X size={30} />
-                    </button>
                     <div className='flex flex-row space-x-2'>
-                        <div className='flex flex-col w-36 items-center px-4'>
+                        <div className='flex flex-col w-44 items-center'>
                             {/* <div className='border-3 rounded p-1 border-blue-500 mb-1'>
 
                                 <Image src={mainPhotoUrl.url ? process.env.NEXT_PUBLIC_API_URL + mainPhotoUrl.url : "/image/nophotos.png"} alt="s" width={50} height={50} className='rounded'></Image>
                             </div> */}
-                            <span className='text-xs text-blue-500 font-bold'></span>
                             {/* Thumbnail */}
                             {(productData.images && Array.isArray(productData.images)) &&
-                                <div className='w-full px-2 py-2'>
+                                <div className='w-full px-2'>
                                     <Swiper
                                         onSwiper={setThumbsSwiper}
                                         loop={false}
@@ -86,7 +84,7 @@ export default function SearchDetails(props: Props) {
                                         watchSlidesProgress={true}
                                         mousewheel={true}
                                         modules={[FreeMode, Navigation, Thumbs, Mousewheel]}
-                                        className='thumbs mt-3 w-full h-[450px] rounded-lg'
+                                        className='thumbs w-full h-[500px] rounded-lg'
 
                                     >
                                         {productData.images.map((image: any, index: number) => (
@@ -108,13 +106,13 @@ export default function SearchDetails(props: Props) {
                         </div>
 
 
-                        <div className='w-[600px] h-[500px] overflow-hidden flex justify-center items-center'>
+                        <div className='w-[500px] h-[500px] overflow-hidden flex justify-center items-center'>
                             <Image
                                 src={mainPhotoUrl.url ? process.env.NEXT_PUBLIC_API_URL + mainPhotoUrl.url : "/image/nophotos.png"}
                                 alt="img"
-                                className='h-[500px] w-auto object-contain'
+                                className='h-[600px] w-auto object-contain'
                                 width={600}
-                                height={500}
+                                height={600}
                                 priority
                             />
                         </div>
@@ -129,6 +127,14 @@ export default function SearchDetails(props: Props) {
                                 <button className='hover:bg-neutral-100 px-4 py-2 border border-neutral-300 rounded '> <Copy size={16} /> </button>
                             </div>
                             <button className='hover:bg-neutral-100 flex flex-row justify-center items-center w-full py-2 rounded border border-neutral-300 space-x-4 '><Plus size={20} /> Add Product</button>
+                            <div className='flex flex-row space-x-2'>
+                                <Link href={"/landing-page/product/" + props.id} className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-4'><Layers3 size={20} />
+                                    <span>View landing page</span>
+
+                                </Link>
+                                <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Share2 size={20} /></button>
+                                <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Flag size={20} /></button>
+                            </div>
                             <div className='w-full text-sm flex flex-row pt-10'>
                                 <div className='w-full font-bold space-y-2'>
                                     <p>License</p>
@@ -142,11 +148,11 @@ export default function SearchDetails(props: Props) {
                                     <p>Categories:</p>
                                 </div>
                                 <div className='text-right space-y-2 w-3/4'>
-                                    <p>{listServiceType.find(item=>item.value===productData.product.serviceType)?.title}</p>
-                                    <p>{productData.product.price}</p>
-                                    <p>{productData.product.comparePrice}</p>
-                                    <p>{productData.product.costPerPrice}</p>
-                                    <p>{productData.product.shippingFee}</p>
+                                    <p>{listServiceType.find(item => item.value === productData.product.serviceType)?.title}</p>
+                                    <p>${productData.product.price}</p>
+                                    <p>${productData.product.comparePrice}</p>
+                                    <p>${productData.product.costPerPrice}</p>
+                                    <p>${productData.product.shippingFee}</p>
                                     <p>{productData.productDetail.cr} %</p>
                                     <p>{productData.productDetail.aov}</p>
                                     <p>{productData.productDetail.countryTarget}</p>
@@ -160,7 +166,7 @@ export default function SearchDetails(props: Props) {
                         </div>
                     </div>
 
-                    <div className='flex flex-row items-center justify-between py-2 px-6 w-full text-xs my-2'>
+                    <div className='flex flex-row items-center justify-between py-2 px-6 w-full text-xs mt-6'>
                         <div className='flex flex-row space-x-2'>
                             <Image src={"/image/default/user-default.png"} alt='avatar' width={50} height={50}></Image>
                             <div className='flex flex-col '>
@@ -168,17 +174,11 @@ export default function SearchDetails(props: Props) {
                                 <span className='hover:underline cursor-pointer'>Follow</span>
                             </div>
                         </div>
-                        <div className='flex flex-row space-x-2'>
-                            <Link href={"/landing-page/product/" + props.id} className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-4'><Layers3 size={20} />
-                                <span>View landing page</span>
 
-                            </Link>
-                            <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Share2 size={20} /></button>
-                            <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Flag size={20} /></button>
-                        </div>
                     </div>
-                    <div className='px-6 mb-10 flex-grow'>
-                        <p className='font-bold text-sm'>{productData.product.title}</p>
+                    <div className='px-6 mb-10 space-y-2'>
+                        <p className='font-bold'>{productData.product.title}</p>
+                        <p className='text-sm'>{productData.productDetail.content}</p>
                     </div>
                     <span className='px-6 font-bold'>You might also like</span>
                     <div className='px-6'>
