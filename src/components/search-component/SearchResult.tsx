@@ -37,8 +37,8 @@ const SearchResult = (props: Props) => {
                       <Col key={index} span={6} className="flex justify-center">
                         <Card className={`${isOpenFilter ? "h-[300px]" : "h-[400px]"} relative col-span-12 sm:col-span-4 w-full rounded-sm hover:cursor-pointer overflow-hidden shadow-none`}>
                           <Image
-                            width={200}
-                            height={200}
+                            width={1000}
+                            height={1000}
                             alt="image 1"
                             className="z-0 w-full h-full object-cover"
                             src={
