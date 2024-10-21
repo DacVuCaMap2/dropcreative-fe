@@ -39,6 +39,13 @@ export default function BuyArea(props: Props) {
       }
       return { id: item.id, url: item.url, isMain: item.isMain }
     })
+    // Find the main photo
+    const mainPhoto = photos.find(photo => photo.isMain);
+
+    // Filter out the main photo from the array
+    const otherPhotos = photos.filter(photo => !photo.isMain);
+
+    photos = [mainPhoto,...otherPhotos];
     // const mainImg = props.productData.images.find((item: any) => item.isMain);
 
     // if (mainImg) {
@@ -92,7 +99,7 @@ export default function BuyArea(props: Props) {
     });
   }, [selectedVariant])
   //get productdetails
-  
+
   useEffect(() => {
     if (boughtTogetherList.length > 1) {
       const fetchData = async () => {
