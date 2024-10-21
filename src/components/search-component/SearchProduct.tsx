@@ -12,6 +12,7 @@ import { Button, Collapse, Input, message, Switch, Tag } from "antd";
 import SearchResult from "./SearchResult";
 import {
   generalCategoriesSelect,
+  generalCountryTarget,
   generalHolidayList,
   generalSeasonList,
 } from "@/data/generalData";
@@ -30,7 +31,8 @@ type Filter = {
 }
 type SearchKeys = 'type' | 'category' | 'service' | 'holiday' | 'season';
 const SearchProduct = () => {
-
+  const listCountry = generalCountryTarget;
+  const listTypeGet = homeDropfirst;
   const [isLoading, setLoading] = useState(0);
   let firstLoadingFilter: Filter[] = [{ key: "service", title: "Free" }];
   let firstLoadingKeySearch: string = "";
@@ -51,9 +53,11 @@ const SearchProduct = () => {
     const holidays: string[] = searchParams.get("holiday")?.split("-")
     const seasons: string[] = searchParams.get("season")?.split("-")
     const search: string = searchParams.get("search");
+    const country: string[] = searchParams.get("countryTarget")?.split("=")
     const tempCat: any[] = [];
     const tempHol: any[] = [];
     const tempSea: any[] = [];
+    const tempCountry:string[] = [];
     const tempType: number = type ? parseFloat(type) : 0;
     if (categories) {
       categories.forEach((item: string) => {
@@ -79,6 +83,14 @@ const SearchProduct = () => {
         }
       })
     }
+    if (country) {
+      country.forEach((item: string) => {
+        const temp = listCountry.find(ctr => ctr === item)
+        if (temp) {
+          tempCountry.push(temp)
+        }
+      })
+    }
     tempCat.forEach((item: any) => {
       filterTemp.push({ key: "category", title: item.title });
     })
@@ -88,11 +100,14 @@ const SearchProduct = () => {
     tempSea.forEach((item: any) => {
       filterTemp.push({ key: "season", title: item.title });
     })
+    tempCountry.forEach((item:string)=>{
+      filterTemp.push({key:"countryTarget",title:item});
+    })
     filterTemp.push(firstLoadingFilter[0])
     firstLoadingFilter = filterTemp;
     firstLoadingKeySearch = search ? search : firstLoadingKeySearch;
 
-    return getSearchForm(tempCat, tempHol, tempSea, tempType);
+    return getSearchForm(tempCat, tempHol, tempSea, tempType,tempCountry);
 
   }
 
@@ -101,7 +116,7 @@ const SearchProduct = () => {
   const [filters, setFilters] = useState<Filter[]>(firstLoadingFilter);
   const [keySearch, setKeySearch] = useState(firstLoadingKeySearch);
   const [change, setChange] = useState(0);
-  const [typeImgOrVideo,setTypeImgOrVideo] = useState(0);
+  const [typeImgOrVideo, setTypeImgOrVideo] = useState(0);
   transParams(searchParams);
   const handleAddFilter = (key: string, item: any) => {
     let filtersTemp = [...filters];
@@ -137,6 +152,23 @@ const SearchProduct = () => {
       }
       setDataSearch({ ...dataSearch, service: { ...dataSearch.service, Premium: item } });
     }
+    if (key === "type") {
+      filtersTemp = filtersTemp.filter(item => item.key != "type");
+      filtersTemp.push({ key: "type", title: item.title })
+      setDataSearch({ ...dataSearch, type: item })
+    }
+    if (key === "countryTarget") {
+      let temp = [...dataSearch.countryTarget]
+      if (temp.find(tmp => tmp === item)) {
+        temp = temp.filter(tmp => tmp != item);
+        filtersTemp = filtersTemp.filter(filter => filter.title != item);
+      } else {
+        filtersTemp.push({ key: "countryTarget", title: item });
+        temp.push(item);
+
+      }
+      setDataSearch({ ...dataSearch, countryTarget: temp });
+    }
     setFilters(filtersTemp);
     checkAndRedirect();
   }
@@ -156,6 +188,11 @@ const SearchProduct = () => {
 
       setDataSearch({ ...dataSearch, service: { ...dataSearch.service, [removedFilter.title]: false } });
       checkAndRedirect();
+    }
+    if (removedFilter.key === "countryTarget") {
+      let temp = [...dataSearch.countryTarget];
+      temp = temp.filter(fill => fill != removedFilter.title);
+      setDataSearch({ ...dataSearch, countryTarget: temp });
     }
 
   };
@@ -186,6 +223,7 @@ const SearchProduct = () => {
     dataSearch.season.forEach(sea => {
       season += "&season=" + sea.value
     })
+    const countryTarget = dataSearch.countryTarget ? "&countryTarget=" + dataSearch.countryTarget : "";
     const type = dataSearch.type.value ? dataSearch.type.value : 0;
     let typeGet = "";
 
@@ -210,13 +248,13 @@ const SearchProduct = () => {
     }
     const fetchData = async () => {
       setLoading(1);
-      const params = category + holiday + season;
+      const params = category + holiday + season + countryTarget;
       const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product/${typeGet}?page=1&size=1000&sort=desc&search=${keySearch}${params}`;
       const response = await GetApi(url);
-      console.log(response,url)
+      console.log(response, url)
       if (response.data && Array.isArray(response.data)) {
         setListData(response.data);
-       
+
       }
       setLoading(0);
     }
@@ -239,7 +277,7 @@ const SearchProduct = () => {
             ""
           ) : (
             <Button
-              className="h-10 font-semibold bg-gray-200 hover:bg-gray-200 flex items-center"
+              className="h-10 font-semibold bg-white hover:bg-gray-200 flex items-center"
               color="default"
               variant="filled"
               iconPosition="start"
@@ -308,6 +346,28 @@ const SearchProduct = () => {
 
                     <Panel
                       header={
+                        <span className="text-sm font-semibold">Type</span>
+                      }
+                      key="999"
+                    >
+                      <div className="w-12/12 flex flex-wrap gap-2">
+                        {listTypeGet.map((item: any) => (
+                          <Button
+                            className={` ${dataSearch.type === item
+                              ? "bg-blue-500 text-white hover:bg-blue-500"
+                              : "bg-white text-black"
+                              }`}
+                            key={item.value}
+                            onClick={() => handleAddFilter("type", item)}
+                          >
+                            {item.title}
+                          </Button>
+                        ))}
+                      </div>
+                    </Panel>
+
+                    <Panel
+                      header={
                         <span className="text-sm font-semibold">Category</span>
                       }
                       key="1"
@@ -318,7 +378,7 @@ const SearchProduct = () => {
                             color="default"
                             className={`${dataSearch.category?.includes(item)
                               ? "bg-blue-500 text-white hover:bg-blue-500"
-                              : "bg-gray-200 text-black"
+                              : "bg-white text-black"
                               }`}
                             key={item.value}
                             onClick={() => handleAddFilter("category", item)}
@@ -341,7 +401,7 @@ const SearchProduct = () => {
                             color="default"
                             className={`${dataSearch.season?.includes(item)
                               ? "bg-blue-500 text-white hover:bg-blue-500 "
-                              : "bg-gray-200 text-black"
+                              : "bg-white text-black"
                               }`}
                             key={item.value}
                             onClick={() => handleAddFilter("season", item)}
@@ -364,7 +424,7 @@ const SearchProduct = () => {
                             color="default"
                             className={`${dataSearch.holiday?.includes(item)
                               ? "bg-blue-500 text-white hover:bg-blue-500"
-                              : "bg-gray-200 text-black"
+                              : "bg-white text-black"
                               }`}
                             key={item.value}
                             onClick={() => handleAddFilter("holiday", item)}
@@ -386,7 +446,7 @@ const SearchProduct = () => {
                           color="default"
                           className={`${dataSearch.service.Free
                             ? "bg-blue-500 text-white "
-                            : "bg-gray-200 text-black"
+                            : "bg-white text-black"
                             }`}
                           onClick={() => handleAddFilter("Free", !dataSearch.service.Free)}
                         >
@@ -396,12 +456,35 @@ const SearchProduct = () => {
                           color="default"
                           className={`${dataSearch.service.Premium
                             ? "bg-blue-500 text-white "
-                            : "bg-gray-200 text-black"
+                            : "bg-white text-black"
                             }`}
                           onClick={() => handleAddFilter("Premium", !dataSearch.service.Premium)}
                         >
                           Premium
                         </Button>
+                      </div>
+                    </Panel>
+
+                    <Panel
+                      header={
+                        <span className="text-sm font-semibold">Country Target</span>
+                      }
+                      key="5"
+                    >
+                      <div className="w-12/12 flex flex-wrap gap-2">
+                        {listCountry.map((item: string) => (
+                          <Button
+                            color="default"
+                            className={`${dataSearch.countryTarget?.includes(item)
+                              ? "bg-blue-500 text-white hover:bg-blue-500"
+                              : "bg-white text-black"
+                              }`}
+                            key={item}
+                            onClick={() => handleAddFilter("countryTarget", item)}
+                          >
+                            {item}
+                          </Button>
+                        ))}
                       </div>
                     </Panel>
                   </Collapse>

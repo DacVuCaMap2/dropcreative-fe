@@ -180,7 +180,7 @@ export default function HomePage() {
                       </div>
                       <p className="font-bold text-lg">{item.title}</p>
                       <p className="text-neutral-500 text-sm">
-                        {item.count} resources
+                        All product in {item.title}
                       </p>
                     </div>
                   </a>

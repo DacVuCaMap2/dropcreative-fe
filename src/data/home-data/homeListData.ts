@@ -231,7 +231,7 @@ export const homeCountry = [
         img1: "/homecountry/USA1.png",
         img2: "/homecountry/USA2.png",
         img3: "/homecountry/USA3.png",
-        url: "/search"
+        url: "/search?countryTarget=US"
     },
     {
         title: "Euro area",
@@ -239,7 +239,7 @@ export const homeCountry = [
         img1: "/homecountry/euro1.png",
         img2: "/homecountry/euro2.png",
         img3: "/homecountry/euro3.png",
-        url: "/search"
+        url: "/search?countryTarget=EU"
     },
     {
         title: "AU area",
@@ -247,7 +247,7 @@ export const homeCountry = [
         img1: "/homecountry/au1.png",
         img2: "/homecountry/au2.png",
         img3: "/homecountry/au3.png",
-        url: "/search"
+        url: "/search?countryTarget=AU"
     },
     {
         title: "Asia area",
@@ -255,6 +255,6 @@ export const homeCountry = [
         img1: "/homecountry/asia1.png",
         img2: "/homecountry/asia2.png",
         img3: "/homecountry/asia3.png",
-        url: "/search"
+        url: "/search?countryTarget=ASIAN"
     },
 ]

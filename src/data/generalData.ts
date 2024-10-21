@@ -144,3 +144,4 @@ export const generalServiceType = [
         value:4
     }
 ]
+export const generalCountryTarget = ["US","EU","ASIAN","AFRICA","AU"];
