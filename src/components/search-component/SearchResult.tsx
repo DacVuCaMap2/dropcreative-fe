@@ -35,7 +35,7 @@ const SearchResult = (props: Props) => {
                   {listData &&
                     listData?.map((item: any, index: number) => (
                       <Col key={index} span={6} className="flex justify-center">
-                        <Card className={`${isOpenFilter ? "h-[300px]" : "h-[400px]"} relative col-span-12 sm:col-span-4 w-full rounded-sm hover:cursor-pointer overflow-hidden shadow-none`}>
+                        <Card className={` relative col-span-12 sm:col-span-4 w-full rounded-sm hover:cursor-pointer overflow-hidden shadow-none`}>
                           <Image
                             width={1000}
                             height={1000}
