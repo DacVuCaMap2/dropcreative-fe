@@ -138,8 +138,9 @@ const PhotoGallery: React.FC<Props> = (props: Props) => {
     const handleImgChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
-            const newPhotos = await processFiles(files);
-    
+            //cat vuong
+            // const newPhotos = await processFiles(files);
+            const newPhotos = Array.from(files);
             // Tạo danh sách tên mới cho các tệp
             const renamedPhotos = newPhotos.map((photo, index) => {
                 const now = new Date();

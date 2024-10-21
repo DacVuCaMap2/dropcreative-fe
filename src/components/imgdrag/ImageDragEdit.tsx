@@ -134,8 +134,10 @@ const PhotoGalleryEdit: React.FC<Props> = (props: Props) => {
     const handleImgChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
-            // const newPhotos = Array.from(files);
-            const newPhotos = await processFiles(files)
+            //cat vuong
+            // const newPhotos = await processFiles(files)
+
+            const newPhotos = Array.from(files);
             // Filter out files that already exist in photos by name
             const existingNames = new Set(photos.map((photo) => photo.name));
             const uniqueNewPhotos = newPhotos.filter(
