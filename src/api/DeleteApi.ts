@@ -7,7 +7,7 @@ export default async function DeleteApi(url: string,config?: any) {
         const finalConfig = { ...defaultConfig, ...config };
         const response = await axios.delete(url, finalConfig);
         // console.log(response.data.data);
-        return response;
+        return response.data;
     } catch (error) {
         const axiosError = error as AxiosError;
         console.log("error " + axiosError);

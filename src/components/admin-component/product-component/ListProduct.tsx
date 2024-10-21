@@ -21,8 +21,6 @@ export default function ListProduct(props: Props) {
     console.log(listData);
     let cat = searchParams.get("category");
     cat = cat ? cat : "";
-    console.log(cat);
-    let pathUrl = "";
     const listCategories = generalCategoriesSelect;
     const fetchData = useCallback(async () => {
         try {
