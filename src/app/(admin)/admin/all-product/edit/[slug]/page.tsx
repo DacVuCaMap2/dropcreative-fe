@@ -56,7 +56,7 @@ export default async function page({ params }: { params: { slug: string } }) {
         productData = {
             id: response.product.id,
             title: response.product.title,
-            description: response.product.description,
+            description: response.productDetail.description,
             shippingDescription: response.productDetail.shippingDescription ? response.productDetail.shippingDescription : "",
             warrantyDescription: response.productDetail.warrantyDescription ? response.productDetail.warrantyDescription : "",
             accountId: response.product.accountId,
@@ -170,7 +170,7 @@ export default async function page({ params }: { params: { slug: string } }) {
         return notFound();
     }
 
-    // console.log(response);
+    console.log(response);
     return (
         <EditProductComponent accountId={accId} productData={productData} videos={videos}
             images={images} listVariant={listVariant} listVariantDetails={listVariantDetails} comboSaleList={comboSaleList} boughtTogetherList={boughtTogetherList} />
