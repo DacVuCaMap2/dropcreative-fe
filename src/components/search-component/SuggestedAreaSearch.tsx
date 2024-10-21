@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import "./SuggestedArea.css"
 import Link from 'next/link';
 type Props = {
+    setProductId:React.Dispatch<React.SetStateAction<any>>,
     accountId: any
 }
 export default function SuggestedAreaSearch(props: Props) {
@@ -44,13 +45,13 @@ export default function SuggestedAreaSearch(props: Props) {
             >
                 {sugProduct.map((item: any, index: number) => (
                     <SwiperSlide key={index}>
-                        <Link href={`/landing-page/product/${item.id}`} className='bg-white space-y-2 pb-4 h-[150px]'>
+                        <button onClick={()=>props.setProductId(item.id)} className='bg-white space-y-2 pb-4 h-[150px]'>
                             <div className='h-[150px] overflow-hidden flex  justify-center items-center rounded-lg'>
                                 <img src={item.imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${item.imageUrl}` : '/image/nophotos.png'} alt="img"
                                     className='w-full object-cover'
                                 />
                             </div>
-                        </Link>
+                        </button>
                     </SwiperSlide>
                 ))}
             </Swiper>

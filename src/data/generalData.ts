@@ -111,6 +111,7 @@ export const gender = [
 ]
 
 
+
 export const generalOptionHoliday = generalHolidayList.map(item=>{
     return{label:item.title,value:item.title,emoji:'',desc:item.title}
 });
@@ -124,3 +125,22 @@ export const generalOptionSeasons = generalSeasonList.map(item=>{
 });
 
 export const generalRoles = ['user_role','admin_role'];
+
+export const generalServiceType = [
+    {
+        title:"Free",
+        value:1
+    },
+    {
+        title:"Premium",
+        value:2
+    },
+    {
+        title:"All",
+        value:3
+    },
+    {
+        title:"None",
+        value:4
+    }
+]

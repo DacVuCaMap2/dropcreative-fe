@@ -8,7 +8,7 @@ import SuggestedArea from '../landing-page-component/SuggestedArea';
 import SuggestedAreaSearch from './SuggestedAreaSearch';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Mousewheel, Navigation, Thumbs } from 'swiper/modules';
-import { generalCategoriesSelect } from '@/data/generalData';
+import { generalCategoriesSelect, generalServiceType } from '@/data/generalData';
 import Link from 'next/link';
 type Props = {
     setOpen: React.Dispatch<React.SetStateAction<number>>,
@@ -16,6 +16,8 @@ type Props = {
 }
 export default function SearchDetails(props: Props) {
     const listCategories = generalCategoriesSelect;
+    const listServiceType = generalServiceType;
+    const [productId,setProductId] = useState<any>(null);
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
     const [isLoading, setLoading] = useState(true);
     const [productData, setProductData] = useState<any>(null);
@@ -27,9 +29,9 @@ export default function SearchDetails(props: Props) {
         setMainPhotoUrl({ index: index, url: url });
     }
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchData = async (id:any) => {
             setLoading(true);
-            const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + props.id;
+            const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + id;
             const response = await GetApi(url);
             if (response.product) {
                 setProductData(response);
@@ -44,8 +46,13 @@ export default function SearchDetails(props: Props) {
             }
             setLoading(false);
         }
-        fetchData();
-    }, [])
+        if (productId) {
+            fetchData(productId);
+        }
+        else{
+            fetchData(props.id);
+        }
+    }, [productId])
 
     return (
         <div onClick={handleClose} className='bg-slate-900 bg-opacity-90 w-screen h-screen fixed top-0 left-0 z-30 flex flex-col items-center'>
@@ -68,7 +75,7 @@ export default function SearchDetails(props: Props) {
                             <span className='text-xs text-blue-500 font-bold'></span>
                             {/* Thumbnail */}
                             {(productData.images && Array.isArray(productData.images)) &&
-                                <div className='w-full border-r px-2 border-neutral-400 py-2'>
+                                <div className='w-full px-2 py-2'>
                                     <Swiper
                                         onSwiper={setThumbsSwiper}
                                         loop={false}
@@ -124,6 +131,7 @@ export default function SearchDetails(props: Props) {
                             <button className='hover:bg-neutral-100 flex flex-row justify-center items-center w-full py-2 rounded border border-neutral-300 space-x-4 '><Plus size={20} /> Add Product</button>
                             <div className='w-full text-sm flex flex-row pt-10'>
                                 <div className='w-full font-bold space-y-2'>
+                                    <p>License</p>
                                     <p>Price:</p>
                                     <p>Compare Price:</p>
                                     <p>Cost per Price:</p>
@@ -133,7 +141,8 @@ export default function SearchDetails(props: Props) {
                                     <p>Country Target:</p>
                                     <p>Categories:</p>
                                 </div>
-                                <div className='w-full text-right space-y-2'>
+                                <div className='text-right space-y-2 w-3/4'>
+                                    <p>{listServiceType.find(item=>item.value===productData.product.serviceType)?.title}</p>
                                     <p>{productData.product.price}</p>
                                     <p>{productData.product.comparePrice}</p>
                                     <p>{productData.product.costPerPrice}</p>
@@ -141,9 +150,9 @@ export default function SearchDetails(props: Props) {
                                     <p>{productData.productDetail.cr} %</p>
                                     <p>{productData.productDetail.aov}</p>
                                     <p>{productData.productDetail.countryTarget}</p>
-                                    <div className='flex flex-row justify-end'>
+                                    <div className='flex flex-row flex-wrap w-full justify-end space-x-2 text-xs'>
                                         {productData.product.categoryIds.map((cat: any, index: number) => (
-                                            <div className='border rounded-lg bg-gray-100 border-gray-300 w-fit px-2 p-1'>{listCategories.find((item: any) => item.value === cat)?.title}</div>
+                                            <div key={index} className='border rounded mb-2 border-gray-300 w-fit px-2 p-1'>{listCategories.find((item: any) => item.value === cat)?.title}</div>
                                         ))}
                                     </div>
                                 </div>
@@ -173,11 +182,11 @@ export default function SearchDetails(props: Props) {
                     </div>
                     <span className='px-6 font-bold'>You might also like</span>
                     <div className='px-6'>
-                        <SuggestedAreaSearch accountId={productData.account.id} />
+                        <SuggestedAreaSearch setProductId={setProductId} accountId={productData.account.id} />
                     </div>
                 </div>
                 :
-                <div className='bg-white flex-grow w-[1000px] justify-center items-center overflow-auto rounded-lg flex flex-col'>
+                <div className='bg-white flex-grow w-[1100px] justify-center items-center overflow-auto rounded-lg flex flex-col'>
                     <ScaleLoader height={100} width={10} color='gray' />
                 </div>
             }
