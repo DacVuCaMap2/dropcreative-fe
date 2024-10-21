@@ -1,6 +1,6 @@
 "use client"
 import { Search } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ProductCategories from './ProductCategories'
 import { CardProductItem } from './CardProductItem'
 import Link from 'next/link'
@@ -24,21 +24,28 @@ export default function ListProduct(props: Props) {
     console.log(cat);
     let pathUrl = "";
     const listCategories = generalCategoriesSelect;
-    useEffect(() => {
-        const fetchData = async () => {
+    const fetchData = useCallback(async () => {
+        try {
             setLoading(true);
-            pathUrl += cat ? cat : "";
-            // console.log(pathUrl);
-            const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${props.accountId}&size=1000&page=1${pathUrl ? "&category="+pathUrl : ""}`;
-            // console.log(url);
+            const pathUrl = cat ? `&category=${cat}` : "";
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product?accountId=${props.accountId}&size=1000&page=1${pathUrl}`;
+            
             const response = await GetApi(url);
             if (response && response.data && Array.isArray(response.data)) {
                 setListData(response.data);
-                setLoading(false);
             }
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        } finally {
+            setLoading(false);
         }
+    }, [cat]);
+
+
+    useEffect(() => {
         fetchData();
-    }, [cat])
+    }, [fetchData]);
+
     return (
         <div className='flex flex-col w-full space-y-2'>
             <div className='text-neutral-500 text-sm w-full mt-4 pb-2 px-2 h-20'>

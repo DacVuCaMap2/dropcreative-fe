@@ -8,14 +8,18 @@ import { useEffect } from "react";
 
 type Props = {
   product: any,
-  setChange:  React.Dispatch<React.SetStateAction<number>>,
+  setChange: React.Dispatch<React.SetStateAction<number>>,
 }
 export function CardProductItem(props: Props) {
   const data = props.product;
-  const delProduct = async ()=>{
-    const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/"+data.id;
-    const response = await DeleteApi(url);
-    props.setChange(prev => prev + 1); 
+
+  const delProduct = async () => {
+    const confirmation = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
+    if (confirmation) {
+      const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + data.id;
+      const response = await DeleteApi(url);
+      window.location.reload();
+    }
   }
   return (
     <div className="shadow-lg transition-transform trasistion border border-neutral-300 text-neutral-600 h-[500px] flex flex-col hover:shadow-2xl duration-300 ease-in-out overflow-hidden hover:bg-gray-100">
@@ -45,7 +49,7 @@ export function CardProductItem(props: Props) {
             >
               <Pen />
             </Link>
-            <button onClick={()=>delProduct()} className="hover:bg-red-600 h-full w-1/5 flex justify-center items-center">
+            <button onClick={() => delProduct()} className="hover:bg-red-600 h-full w-1/5 flex justify-center items-center">
               <Trash />
             </button>
           </div>
