@@ -1,0 +1,25 @@
+.swiper-button-next,
+.swiper-button-prev {
+    width: 40px; /* Đặt chiều rộng cho nút */
+    height: 40px; /* Đặt chiều cao cho nút */
+    background-color: rgba(255, 255, 255, 0.7); /* Nền trắng với độ trong suốt */
+    border-radius: 50%; /* Bo tròn góc */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+    cursor: pointer; /* Con trỏ chuột thành dạng tay */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    background-color: rgba(255, 255, 255, 1); /* Màu nền sáng hơn khi hover */
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 20px; /* Kích thước icon */
+    color: #333; /* Màu icon */
+}
+

@@ -5,10 +5,11 @@ import React, { useEffect, useState } from 'react'
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import "./SuggestedArea.css"
+import Link from 'next/link';
 type Props = {
-    accountId : any
+    accountId: any
 }
-export default function SuggestedArea(props:Props) {
+export default function SuggestedAreaSearch(props: Props) {
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
     const [sugProduct, setSugProduct] = useState<any[]>([]);
     const accountId = props.accountId;
@@ -26,12 +27,12 @@ export default function SuggestedArea(props:Props) {
 
     }, [accountId])
     return (
-        <div className='relative'>
+        <div className='relative h-full w-full'>
             <Swiper
                 onSwiper={setThumbsSwiper}
                 loop={false}
-                spaceBetween={12}
-                slidesPerView={4}
+                spaceBetween={15}
+                slidesPerView={6}
                 freeMode={true}
                 watchSlidesProgress={true}
                 modules={[FreeMode, Navigation, Thumbs]}
@@ -39,24 +40,17 @@ export default function SuggestedArea(props:Props) {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
                 }}
-                className='thumbs mt-3 w-full rounded-lg'
+                className='thumbs mt-3 w-full h-full rounded-lg'
             >
                 {sugProduct.map((item: any, index: number) => (
                     <SwiperSlide key={index}>
-                        <div className='bg-white space-y-2 pb-4 h-[350px]'>
-                            <div className='h-[250px] overflow-hidden'>
-                                <Image width={500} height={500} src={item.imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${item.imageUrl}` : '/image/nophotos.png'} alt="image 1" />
+                        <Link href={`/landing-page/product/${item.id}`} className='bg-white space-y-2 pb-4 h-[150px]'>
+                            <div className='h-[150px] overflow-hidden flex  justify-center items-center rounded-lg'>
+                                <img src={item.imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${item.imageUrl}` : '/image/nophotos.png'} alt="img"
+                                    className='w-full object-cover'
+                                />
                             </div>
-                            <div className='px-2'>
-                            <div className='max-h-12 overflow-hidden mb-2'>
-                                <span className=''>{item.title}</span>
-                            </div>
-                            <div className='space-x-2'>
-                                <span className='font-bold'>${item.price}</span>
-                                <span className='line-through text-neutral-400 text-xs'>${item.comparePrice}</span>
-                            </div>
-                            </div>
-                        </div>
+                        </Link>
                     </SwiperSlide>
                 ))}
             </Swiper>
