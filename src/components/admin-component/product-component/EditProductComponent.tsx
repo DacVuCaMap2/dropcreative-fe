@@ -499,8 +499,8 @@ export default function EditProductComponent(props: Props) {
         console.log(photos, videos);
 
 
-        // const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + productData.id
-        const url ="http://localhost:8080/api/product/" + productData.id
+        const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + productData.id
+        // const url ="http://localhost:8080/api/product/" + productData.id
         try {
             setLoading(1);
             setTimeout(() => {
