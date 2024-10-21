@@ -227,7 +227,7 @@ const SearchProduct = () => {
   return (
     <div className="realative flex flex-col gap-2">
       <div className="h-14 main-menu"></div>
-      <div className="px-8 py-2 sticky top-2 z-40 bg-white">
+      <div className="px-8 py-2 sticky top-2 z-20 bg-white">
         <InputSearchComponent setDataSearch={setDataSearch} dataSearch={dataSearch} handleClickSearch={handleClickSearch} keySearch={keySearch} setKeySearch={setKeySearch} type={1} />
       </div>
 
