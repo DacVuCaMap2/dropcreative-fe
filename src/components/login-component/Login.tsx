@@ -7,21 +7,16 @@ import { FieldType } from "./types";
 import { authLogin } from "@/api/api";
 import { AxiosResponse } from "axios";
 import { TypeLogin, TypeResponse } from "@/types/common";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { setCookie } from "@/ultils";
 import Link from "next/link";
 
 const Login = () => {
   const [form] = Form.useForm();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const registerOn = searchParams.get("register");
-  let flag =true;
-  flag = (registerOn && registerOn === "1") ? false : true;
-  const [isRegister, setIsRegister] = useState(!flag);
-  const [isLogin, setIsLogin] = useState(flag);
+  const [isRegister, setIsRegister] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [backgroundImage, setBackgroundImage] = useState("");
-
   useEffect(() => {
     const backgrounds = [
       "bg1.png",
@@ -39,7 +34,7 @@ const Login = () => {
   const handleLogin = async (data: TypeLogin) => {
     try {
       const res: AxiosResponse<TypeResponse> = await authLogin(data);
-      const { status, message: resMessage, jwt, id, expired, role, userName, email } = res.data;
+      const { status, message: resMessage, jwt, id, expired, role,userName,email } = res.data;
       if (status === 0) {
         message.error(resMessage);
         return;
