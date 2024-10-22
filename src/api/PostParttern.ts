@@ -1,9 +1,19 @@
 "use server"
 import axios, { AxiosError } from 'axios';
+import { cookies } from 'next/headers';
 
 export default async function PostApi(url: string, data: any, config?: any) {
+    const cookie = cookies();
+    const jwt = cookie.get("auth_token")?.value;
+    const defaultConfig = {
+        headers: {
+            Authorization: 'Bearer '+jwt
+        }
+    };
+    const finalConfig = { ...defaultConfig, ...config }
     try {
-        const response = await axios.post(url, data, config); 
+        
+        const response = await axios.post(url, data, finalConfig); 
         // console.log(response.data.data);
         return response.data.data;
     } catch (error) {

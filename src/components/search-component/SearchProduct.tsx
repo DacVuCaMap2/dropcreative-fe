@@ -112,7 +112,7 @@ const SearchProduct = () => {
   }
 
   ///data
-  const [pageNumber,setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(1);
   const [dataSearch, setDataSearch] = useState<SearchForm>(transParams(searchParams));
   const [filters, setFilters] = useState<Filter[]>(firstLoadingFilter);
   const [keySearch, setKeySearch] = useState(firstLoadingKeySearch);
@@ -250,18 +250,22 @@ const SearchProduct = () => {
     const fetchData = async () => {
       setLoading(1);
       const params = category + holiday + season + countryTarget;
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product/${typeGet}?page=${pageNumber}&size=30&sort=desc&search=${keySearch}${params}`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product/${typeGet}?page=${pageNumber}&size=32&sort=desc&search=${keySearch}${params}`;
       const response = await GetApi(url);
-      console.log(response, url)
-      if (response.data && Array.isArray(response.data)) {
-        setListData(response.data);
+      console.log(response,url)
+      if (response.respones && response.response.data && Array.isArray(response.response.data)) {
+        setListData(response.response.data);
 
+      }
+      if (response.error) {
+        message.error("Authentication Error Or Login session expired|revoked");
+        window.location.href="/login";
       }
       setLoading(0);
     }
     fetchData();
 
-  }, [dataSearch, change,pageNumber])
+  }, [dataSearch, change, pageNumber])
 
   return (
     <div className="realative flex flex-col gap-2">
@@ -290,10 +294,10 @@ const SearchProduct = () => {
 
           {isOpenFilter ? (
             <>
-              <div className="w-1/6 sticky top-28 overflow-auto" style={{ height: 'calc(100vh - 120px)' }}>
+              <div className="w-1/6 sticky top-[120px] overflow-auto" style={{ height: 'calc(100vh - 120px)' }}>
 
                 <div className="h-16 text-sm font-semibold px-6 text-gray-600 flex items-center border border-r border-l-0 border-t-0 justify-between">
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 h-[64px] items-center">
                     <SlidersHorizontal width={15} height={15} />
                     <span>Filter</span>
                   </div>
@@ -340,7 +344,7 @@ const SearchProduct = () => {
                 )}
                 <div>
                   <Collapse
-                    defaultActiveKey={["1","3","999","4","5"]}
+                    defaultActiveKey={["1", "3", "999", "4", "5"]}
                     ghost
                     expandIconPosition="end"
                   >
@@ -495,8 +499,13 @@ const SearchProduct = () => {
           ) : (
             ""
           )}
-          <div className={`${isOpenFilter ? "w-5/6" : ""}  mt-4`}>
-            <SearchResult pageNumber={pageNumber} setPageNumber={setPageNumber} type={typeImgOrVideo} listData={listData} isOpenFilter={isOpenFilter} isLoading={isLoading} />
+          <div className="flex flex-col w-full">
+            <div className="sticky top-[120px] z-20 bg-white h-[64px] px-4 border-b flex flex-row items-center">
+              <button className="flex flex-row space-x-2 text-neutral-500 px-4 py-2 border"><Search /> <span>Cat</span></button>
+            </div>
+            <div className={`${isOpenFilter ? "w-full" : ""}  mt-4 px-4`}>
+              <SearchResult pageNumber={pageNumber} setPageNumber={setPageNumber} type={typeImgOrVideo} listData={listData} isOpenFilter={isOpenFilter} isLoading={isLoading} />
+            </div>
           </div>
         </div>
       </div>

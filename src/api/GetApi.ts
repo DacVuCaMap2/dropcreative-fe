@@ -1,11 +1,20 @@
 "use server"
 import axios, { AxiosError } from 'axios';
+import { cookies } from 'next/headers';
 
 export default async function GetApi(url: string, config?: any) {
+    const cookie = cookies();
+    const jwt = cookie.get("auth_token")?.value;
     try {
-        const defaultConfig = {};
+        const defaultConfig = {
+            headers: {
+                Authorization: 'Bearer '+jwt
+            }
+        };
+        
         const finalConfig = { ...defaultConfig, ...config };
-        const response = await axios.get(url, config);
+        console.log(finalConfig);
+        const response = await axios.get(url, finalConfig);
         // console.log(response.data.data);
         return response.data;
     } catch (error) {

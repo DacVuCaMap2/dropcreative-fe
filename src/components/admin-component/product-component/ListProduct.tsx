@@ -9,6 +9,7 @@ import { generalCategoriesSelect } from '@/data/generalData'
 import { usePathname, useSearchParams } from 'next/navigation'
 import GetApi from '@/api/GetApi'
 import { ClipLoader } from 'react-spinners'
+import { message } from 'antd'
 type Props = {
     accountId: any
 }
@@ -17,7 +18,7 @@ export default function ListProduct(props: Props) {
     const searchParams = useSearchParams();
     const [loading, setLoading] = useState(true);
     const [listData, setListData] = useState([]);
-    const [change,setChange] = useState(0);
+    const [change, setChange] = useState(0);
     console.log(listData);
     let cat = searchParams.get("category");
     cat = cat ? cat : "";
@@ -27,10 +28,15 @@ export default function ListProduct(props: Props) {
             setLoading(true);
             const pathUrl = cat ? `&category=${cat}` : "";
             const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product?accountId=${props.accountId}&size=1000&page=1${pathUrl}`;
-            
+            console.log(url);
             const response = await GetApi(url);
+            console.log(response);
             if (response && response.data && Array.isArray(response.data)) {
                 setListData(response.data);
+            }
+            if (response.error) {
+                message.error("Authentication Error Or Login session expired|revoked");
+                window.location.href = "/login";
             }
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -80,7 +86,7 @@ export default function ListProduct(props: Props) {
 
                     {listData.map((item: any, index) => (
                         <div key={index}>
-                            <CardProductItem setChange={setChange} product={item}  />
+                            <CardProductItem setChange={setChange} product={item} />
                         </div>
                     ))}
                 </div>

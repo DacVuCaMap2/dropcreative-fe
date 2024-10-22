@@ -1,11 +1,19 @@
 "use server"
 import axios, { AxiosError } from 'axios';
+import { cookies } from 'next/headers';
 
-export default async function PutApi(url: string,data:any, config?: any) {
+export default async function PutApi(url: string, data: any, config?: any) {
+    const cookie = cookies();
+    const jwt = cookie.get("auth_token")?.value;
+
     try {
-        const defaultConfig = {};
+        const defaultConfig = {
+            headers: {
+                Authorization: 'Bearer ' + jwt
+            }
+        };
         const finalConfig = { ...defaultConfig, ...config };
-        const response = await axios.put(url,data, finalConfig);
+        const response = await axios.put(url, data, finalConfig);
         // console.log(response.data.data);
         return response.data;
     } catch (error) {
