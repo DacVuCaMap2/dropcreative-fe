@@ -8,13 +8,18 @@ type Props = {
     keySearch: string,
     setKeySearch: React.Dispatch<React.SetStateAction<string>>,
     type: number,
-    handleClickSearch : ()=>void,
-    dataSearch:SearchForm,
-    setDataSearch:React.Dispatch<React.SetStateAction<SearchForm>>,
+    handleClickSearch: () => void,
+    dataSearch: SearchForm,
+    setDataSearch: React.Dispatch<React.SetStateAction<SearchForm>>,
 }
 
 
 export default function InputSearchComponent(props: Props) {
+    const handleKeyDown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+          props.handleClickSearch();
+        }
+      };
     return (
         <div className={`w-full flex justify-center items-center`}>
             <div className={`${props.type === 0 ? "bg-white w-3/5 max-w-[900px]" : "bg-neutral-200 w-full"} flex justify-center items-center `}>
@@ -23,6 +28,7 @@ export default function InputSearchComponent(props: Props) {
                     placeholder="Search all assets"
                     type="text"
                     value={props.keySearch}
+                    onKeyDown={handleKeyDown}
                     onChange={e => props.setKeySearch(e.target.value)}
                     className={`w-full bg-none py-2 outline-none border-none h-full input-search`}
                 />

@@ -1,6 +1,6 @@
 "use client"
 import GetApi from '@/api/GetApi';
-import { ArrowDownToLine, Copy, Download, Flag, Layers3, Plus, Share2, X } from 'lucide-react';
+import { ArrowDownToLine, Copy, Download, Eye, Flag, Layers3, Plus, Share2, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { ScaleLoader } from 'react-spinners';
@@ -135,6 +135,9 @@ export default function SearchDetails(props: Props) {
                                 </Link>
                                 <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Share2 size={20} /></button>
                                 <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Flag size={20} /></button>
+                            </div>
+                            <div className='text-neutral-400 text-sm flex flex-row items-center space-x-1'>
+                                <Eye size={20}/> <span>{productData.viewCount + 1} view</span> 
                             </div>
                             <div className='w-full text-sm flex flex-row pt-10'>
                                 <div className='w-full font-bold space-y-2'>

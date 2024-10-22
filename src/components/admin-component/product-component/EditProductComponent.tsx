@@ -506,17 +506,15 @@ export default function EditProductComponent(props: Props) {
             setTimeout(() => {
                 setLoading(0)
             }, 3000);
-            const response = await PutApi(url, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
-                },
-            });
+            const response = await PutApi(url, formData, { 'Content-Type': 'multipart/form-data'});
             console.log('Success:', response);
+            if (response.error) {
+                window.location.href="/login";
+            }
             // router.push('/admin/all-product');
-            window.location.href = '/admin/all-product'
+            // window.location.href = '/admin/all-product'
         } catch (error) {
             console.error('Error:', error);
-            window.location.href = '/admin/all-product'
         }
     }
 

@@ -9,10 +9,11 @@ export default async function PutApi(url: string, data: any, config?: any) {
     try {
         const defaultConfig = {
             headers: {
-                Authorization: 'Bearer ' + jwt
+                Authorization: 'Bearer ' + jwt,...config
             }
         };
         const finalConfig = { ...defaultConfig, ...config };
+        console.log(finalConfig);
         const response = await axios.put(url, data, finalConfig);
         // console.log(response.data.data);
         return response.data;

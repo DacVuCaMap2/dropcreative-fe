@@ -128,6 +128,7 @@ import { ArrowDownToLine, ChevronLeft, ChevronRight, Download, Eye, Pen, Plus, T
 import Link from "next/link";
 import { ScaleLoader } from "react-spinners";
 import SearchDetails from "./SearchDetails";
+import PostApi from "@/api/PostParttern";
 
 type Props = {
   listData: any[],
@@ -141,8 +142,11 @@ const SearchResult = (props: Props) => {
   const { listData, isOpenFilter, isLoading } = props;
   console.log(listData);
   const [openDetails, setOpenDetails] = useState<number>(-1);
-  const handleOpenDetails = (id: any) => {
+  const handleOpenDetails = async(id: any) => {
     setOpenDetails(id);
+    const url = process.env.NEXT_PUBLIC_API_URL + `/api/product/${id}/view`
+    const response = await PostApi(url,{});
+    console.log(response);
   }
   return (
     <div className="pb-10">

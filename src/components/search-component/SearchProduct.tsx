@@ -117,6 +117,7 @@ const SearchProduct = () => {
   const [filters, setFilters] = useState<Filter[]>(firstLoadingFilter);
   const [keySearch, setKeySearch] = useState(firstLoadingKeySearch);
   const [change, setChange] = useState(0);
+  const [listHistory, setListHistory] = useState<string[]>([]);
   const [typeImgOrVideo, setTypeImgOrVideo] = useState(0);
   transParams(searchParams);
   const handleAddFilter = (key: string, item: any) => {
@@ -206,10 +207,13 @@ const SearchProduct = () => {
 
     // router.push('/search?page=1&size=10')
   }
-
+  const selectHistory = (str: string) => {
+    setKeySearch(str);
+  }
   const handleClickSearch = () => {
     setChange(prev => prev + 1);
   }
+
   useEffect(() => {
     //category
     let category = "";
@@ -252,15 +256,15 @@ const SearchProduct = () => {
       const params = category + holiday + season + countryTarget;
       const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product/${typeGet}?page=${pageNumber}&size=32&sort=desc&search=${keySearch}${params}`;
       const response = await GetApi(url);
-      console.log(response,url)
+      console.log(response, url)
       if (response.response && response.response.data && Array.isArray(response.response.data)) {
         console.log(response.response.data)
         setListData(response.response.data);
-
+        setListHistory(response.searchs);
       }
       if (response.error) {
         message.error("Authentication Error Or Login session expired|revoked");
-        window.location.href="/login";
+        window.location.href = "/login";
       }
       setLoading(0);
     }
@@ -501,8 +505,10 @@ const SearchProduct = () => {
             ""
           )}
           <div className="flex flex-col w-full">
-            <div className="sticky top-[120px] z-20 bg-white h-[64px] px-4 border-b flex flex-row items-center">
-              <button className="flex flex-row space-x-2 text-neutral-500 px-4 py-2 border"><Search /> <span>Cat</span></button>
+            <div className="sticky top-[120px] z-20 bg-white h-[64px] px-4 border-b flex flex-row items-center space-x-4">
+              {listHistory.map((str: string, index) => (
+                <button onClick={() => selectHistory(str)} className="flex flex-row space-x-2 text-neutral-500 hover:bg-neutral-100 px-4 py-2 border"><Search /> <span>{str}</span></button>
+              ))}
             </div>
             <div className={`${isOpenFilter ? "w-full" : ""}  mt-4 px-4`}>
               <SearchResult pageNumber={pageNumber} setPageNumber={setPageNumber} type={typeImgOrVideo} listData={listData} isOpenFilter={isOpenFilter} isLoading={isLoading} />
