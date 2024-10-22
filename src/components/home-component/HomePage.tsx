@@ -78,7 +78,7 @@ export default function HomePage() {
             </div>
             <div className="bg-amber-100 w-full py-8 flex justify-center items-center space-x-4">
               <span className="font-bold">Sign up now to search for free sale season products </span>
-              <Link href={"/login"} className="bg-black text-white p-2">Sign Up Now</Link>
+              <Link href={"/login?register=1"} className="bg-black text-white p-2">Sign Up Now</Link>
             </div>
           </div>
           <div className="flex flex-col py-16 space-y-20 lg:w-[1340px] w-screen px-4">
