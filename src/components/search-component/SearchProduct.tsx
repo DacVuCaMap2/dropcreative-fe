@@ -253,7 +253,8 @@ const SearchProduct = () => {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product/${typeGet}?page=${pageNumber}&size=32&sort=desc&search=${keySearch}${params}`;
       const response = await GetApi(url);
       console.log(response,url)
-      if (response.respones && response.response.data && Array.isArray(response.response.data)) {
+      if (response.response && response.response.data && Array.isArray(response.response.data)) {
+        console.log(response.response.data)
         setListData(response.response.data);
 
       }

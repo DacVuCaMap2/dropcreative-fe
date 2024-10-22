@@ -13,13 +13,13 @@ export default async function GetApi(url: string, config?: any) {
         };
         
         const finalConfig = { ...defaultConfig, ...config };
-        console.log(finalConfig);
         const response = await axios.get(url, finalConfig);
+        console.log(response.data);
         // console.log(response.data.data);
         return response.data;
     } catch (error) {
         const axiosError = error as AxiosError;
         console.log("error " + axiosError);
-        return { error: axiosError.response?.data || '0' };
+        return { error: axiosError.response?.data || "error" };
     }
 }

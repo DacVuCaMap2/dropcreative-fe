@@ -33,10 +33,11 @@ export default function SearchDetails(props: Props) {
             setLoading(true);
             const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + id;
             const response = await GetApi(url);
-
+            console.log(response,url);
             if (response.product) {
                 console.log(response)
                 setProductData(response);
+                
                 if (response.images && Array.isArray(response.images)) {
                     const temp = response.images.find((photo: any) => photo.isMain);
                     response.images.forEach((photo: any, index: number) => {
@@ -63,7 +64,7 @@ export default function SearchDetails(props: Props) {
                 ss
 
             </div>
-            {!isLoading ?
+            {(!isLoading && productData) ?
                 <div onClick={(e) => e.stopPropagation()} className='relative bg-white flex-grow w-[1000px] overflow-y-auto rounded-lg flex flex-col text-neutral-700 py-8'>
                     <div className='flex flex-row space-x-2'>
                         <div className='flex flex-col w-44 items-center'>
