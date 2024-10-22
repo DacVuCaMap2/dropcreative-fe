@@ -14,7 +14,11 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        backgroundLandingPage:'#f7fcfd'
+        backgroundLandingPage:'#f7fcfd',
+        pricing:"#0E0A1F",
+      },
+      backgroundColor:{
+        backgroundSale:'#2B2060'
       },
       keyframes: {
         fadeIn: {
