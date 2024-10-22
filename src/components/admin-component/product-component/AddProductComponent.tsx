@@ -17,6 +17,7 @@ import { validatePostData } from "@/data/function";
 import { generalCategoriesSelect, generalHolidayList, generalOptionHoliday, generalOptionsCat, generalOptionSeasons, generalSeasonList } from "@/data/generalData";
 import GetApi from "@/api/GetApi";
 import { ScaleLoader } from "react-spinners";
+import PostApi from "@/api/PostParttern";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -496,11 +497,12 @@ export default function AddProductComponent(props: Props) {
       setTimeout(() => {
         setLoading(0)
       }, 3000);
-      const response = await axios.post(url, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
-        },
-      });
+      // const response = await axios.post(url, formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
+      //   },
+      // });
+      const response = await PostApi(url,formData,{'Content-Type': 'multipart/form-data'})
       message.success("Upload success")
       console.log('Success:', response.data);
       // router.push('/admin/all-product');

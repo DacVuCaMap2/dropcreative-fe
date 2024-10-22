@@ -13,5 +13,5 @@ export function middleware(request: NextRequest) {
 
 // Cấu hình matcher để áp dụng middleware cho các trang admin
 export const config = {
-    matcher: ['/admin/:path*','/tools-page/:path*'],
+    matcher: ['/admin/:path*','/tools-page/:path*','/search/:path*'],
 };

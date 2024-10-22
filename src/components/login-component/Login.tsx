@@ -82,7 +82,8 @@ const Login = () => {
         });
       }
       // router.push("/");
-      window.location.href = "/";
+      router.back();  
+      // window.location.href = "/";
     } catch (error: any) {
       message.error("error", error?.data?.message);
     }

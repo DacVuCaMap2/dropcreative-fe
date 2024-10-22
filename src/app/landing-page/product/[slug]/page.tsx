@@ -12,6 +12,7 @@ export default async function page({params}:{params : {slug:string}}) {
     }
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/"+params.slug; 
     const productData = await GetApi(url);
+    console.log(productData);
     if (!productData.product) {
       notFound();
     }

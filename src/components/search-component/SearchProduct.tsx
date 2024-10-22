@@ -33,6 +33,41 @@ type SearchKeys = 'type' | 'category' | 'service' | 'holiday' | 'season';
 const SearchProduct = () => {
   const listCountry = generalCountryTarget;
   const listTypeGet = homeDropfirst;
+  const listCategories = generalCategoriesSelect;
+  const listSeason = generalSeasonList;
+  const listHoliday = generalHolidayList;
+
+  let listAllFilterSring: string[] = [];
+  let listAllFilterItem: any[] = [];
+  const getListAllFilter = () => {
+    const temp: string[] = [];
+    const tempItem: any[] = [];
+    listCountry.forEach(val => {
+      temp.push(val)
+      tempItem.push({ key: "countryTarget", value: val })
+    })
+    listTypeGet.forEach(val => {
+      temp.push(val.title)
+      tempItem.push({ key: "type", value: val })
+    })
+    listCategories.forEach(val => {
+      temp.push(val.title)
+      tempItem.push({ key: "category", value: val })
+    })
+    listSeason.forEach(val => {
+      temp.push(val.title)
+      tempItem.push({ key: "season", value: val })
+    })
+    listHoliday.forEach(val => {
+      temp.push(val.title)
+      tempItem.push({ key: "holiday", value: val })
+    })
+    listAllFilterSring = temp;
+    listAllFilterItem = tempItem;
+  }
+  getListAllFilter();
+
+
   const [isLoading, setLoading] = useState(0);
   let firstLoadingFilter: Filter[] = [{ key: "service", title: "Free" }];
   let firstLoadingKeySearch: string = "";
@@ -61,7 +96,7 @@ const SearchProduct = () => {
     const tempType: number = type ? parseFloat(type) : 0;
     if (categories) {
       categories.forEach((item: string) => {
-        const temp = generalCategoriesSelect.find(cat => cat.value.toString() === item)
+        const temp = listCategories.find(cat => cat.value.toString() === item)
         if (temp) {
           tempCat.push(temp)
         }
@@ -69,7 +104,7 @@ const SearchProduct = () => {
     }
     if (holidays) {
       holidays.forEach((item: string) => {
-        const temp = generalHolidayList.find(hol => hol.value.toString() === item)
+        const temp = listHoliday.find(hol => hol.value.toString() === item)
         if (temp) {
           tempHol.push(temp)
         }
@@ -77,7 +112,7 @@ const SearchProduct = () => {
     }
     if (seasons) {
       seasons.forEach((item: string) => {
-        const temp = generalSeasonList.find(sea => sea.value.toString() === item)
+        const temp = listSeason.find(sea => sea.value.toString() === item)
         if (temp) {
           tempSea.push(temp)
         }
@@ -209,6 +244,7 @@ const SearchProduct = () => {
   }
   const selectHistory = (str: string) => {
     setKeySearch(str);
+    handleClickSearch();
   }
   const handleClickSearch = () => {
     setChange(prev => prev + 1);
@@ -251,10 +287,12 @@ const SearchProduct = () => {
         setTypeImgOrVideo(0);
         break;
     }
+    const finalKeySearch = filterKeySearch(keySearch);
+    console.log("final key search :",finalKeySearch);
     const fetchData = async () => {
       setLoading(1);
       const params = category + holiday + season + countryTarget;
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product/${typeGet}?page=${pageNumber}&size=32&sort=desc&search=${keySearch}${params}`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product/${typeGet}?page=${pageNumber}&size=32&sort=desc&search=${finalKeySearch}${params}`;
       const response = await GetApi(url);
       console.log(response, url)
       if (response.response && response.response.data && Array.isArray(response.response.data)) {
@@ -271,6 +309,27 @@ const SearchProduct = () => {
     fetchData();
 
   }, [dataSearch, change, pageNumber])
+  const filterKeySearch = (str: string) => {
+    let finalStr : string[] = str.split(" ");
+    const arrStr: string[] = keySearch.split(" ");
+    const listIndex: number[] = arrStr
+      .map(item => listAllFilterSring.findIndex(str => str.toLowerCase() === item.toLowerCase()))
+      .filter(index => index !== -1);
+    listIndex.forEach((num,index)=>{
+      finalStr = finalStr.filter(str=>str.toLowerCase()!=listAllFilterSring[num].toLocaleLowerCase());
+      console.log(finalStr,listAllFilterSring[num]);
+    })
+    return finalStr.join(" ");
+  }
+  useEffect(() => {
+    const arrStr: string[] = keySearch.split(" ");
+    const listIndex: number[] = arrStr
+      .map(item => listAllFilterSring.findIndex(str => str.toLowerCase() === item.toLowerCase()))
+      .filter(index => index !== -1);
+    listIndex.forEach(ind => {
+      handleAddFilter(listAllFilterItem[ind].key, listAllFilterItem[ind].value);
+    })
+  }, [keySearch])
 
   return (
     <div className="realative flex flex-col gap-2">
@@ -411,7 +470,7 @@ const SearchProduct = () => {
                       key="1"
                     >
                       <div className="w-12/12 flex flex-wrap gap-2">
-                        {generalCategoriesSelect.map((item: any) => (
+                        {listCategories.map((item: any) => (
                           <Button
                             color="default"
                             className={`${dataSearch.category?.includes(item)
@@ -434,7 +493,7 @@ const SearchProduct = () => {
                       key="2"
                     >
                       <div className="w-12/12 flex flex-wrap gap-2">
-                        {generalSeasonList.map((item) => (
+                        {listSeason.map((item) => (
                           <Button
                             color="default"
                             className={`${dataSearch.season?.includes(item)
@@ -457,7 +516,7 @@ const SearchProduct = () => {
                       key="3"
                     >
                       <div className="w-12/12 flex flex-wrap gap-2">
-                        {generalHolidayList.map((item) => (
+                        {listHoliday.map((item) => (
                           <Button
                             color="default"
                             className={`${dataSearch.holiday?.includes(item)

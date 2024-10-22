@@ -141,7 +141,7 @@ export default function BuyArea(props: Props) {
               <SwiperSlide key={index}>
                 <div className='flex h-full w-full items-center justify-center'>
                   <Image
-                    src={process.env.NEXT_PUBLIC_API_URL + image.url}
+                    src={image ? process.env.NEXT_PUBLIC_API_URL + image.url : "/images/nophotos.png"}
                     alt={"image"}
                     className='block h-full w-full object-cover'
                     width={900}
@@ -167,7 +167,7 @@ export default function BuyArea(props: Props) {
               <SwiperSlide key={index}>
                 <button onClick={() => setCurrentImg(index)} className={`flex h-full w-full items-center justify-center border-neutral-500 overflow-hidden ${currentImg === index ? "border-4" : ''}`}>
                   <Image
-                    src={process.env.NEXT_PUBLIC_API_URL + image.url}
+                    src={image ? process.env.NEXT_PUBLIC_API_URL + image.url : "/image/nophotos.png"}
                     alt={"image"}
                     className='block h-full w-full object-cover'
                     width={500}
@@ -184,7 +184,7 @@ export default function BuyArea(props: Props) {
               return (<div key={index} className='rounded-xl overflow-hidden hover:scale-105 cursor-pointer transition-transform transform shadow'>
                 <button onClick={() => { setCurrentImg(index); goToSlide(index) }}>
                   <Image
-                    src={process.env.NEXT_PUBLIC_API_URL + image.url}
+                    src={image ? process.env.NEXT_PUBLIC_API_URL + image.url : "/images/nophotos.png"}
                     alt={"image"}
                     className='block h-full w-full object-cover'
                     width={400}
@@ -204,9 +204,9 @@ export default function BuyArea(props: Props) {
         <div>
           <p className='font-bold text-xl'>{productData.product.title}</p>
           <div className='space-x-2  my-4 flex flex-row items-center'>
-            <span className='text-2xl'>${currentVariant.price}</span>
-            <span className='line-through text-neutral-400 text-lg'>${currentVariant.comparePrice}</span>
-            <span className='bg-black text-white py-1 px-4 rounded text-xs'>{(100 - (currentVariant.price / currentVariant.comparePrice) * 100).toFixed(2)}%</span>
+            <span className='text-2xl'>${currentVariant ? currentVariant.price : 0}</span>
+            <span className='line-through text-neutral-400 text-lg'>${currentVariant ? currentVariant.comparePrice : 0}</span>
+            <span className='bg-black text-white py-1 px-4 rounded text-xs'>{currentVariant ? (100 - (currentVariant.price / currentVariant.comparePrice) * 100).toFixed(2) : 0}%</span>
           </div>
           <div className='mb-4'>
             <CountDownComponent />
