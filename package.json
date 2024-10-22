@@ -18,9 +18,11 @@
     "@types/react-transition-group": "^4.4.11",
     "antd": "^5.21.3",
     "axios": "^1.7.7",
+    "file-saver": "^2.0.5",
     "flowbite-react": "^0.10.1",
     "framer-motion": "^11.11.9",
     "js-cookie": "^3.0.5",
+    "jszip": "^3.10.1",
     "lucide-react": "^0.446.0",
     "next": "14.2.13",
     "qs": "^6.13.0",
@@ -37,6 +39,7 @@
     "swiper": "^11.1.14"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/qs": "^6.9.16",
     "@types/react": "^18",

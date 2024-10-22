@@ -8,8 +8,10 @@ import SuggestedArea from '../landing-page-component/SuggestedArea';
 import SuggestedAreaSearch from './SuggestedAreaSearch';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Mousewheel, Navigation, Thumbs } from 'swiper/modules';
-import { generalCategoriesSelect, generalServiceType } from '@/data/generalData';
+import { gender, generalCategoriesSelect, generalServiceType } from '@/data/generalData';
 import Link from 'next/link';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 type Props = {
     setOpen: React.Dispatch<React.SetStateAction<number>>,
     id: any
@@ -17,6 +19,8 @@ type Props = {
 export default function SearchDetails(props: Props) {
     const listCategories = generalCategoriesSelect;
     const listServiceType = generalServiceType;
+    const listGender = gender;
+    const [isLoadingDownLoad, setLoadingDownLoad] = useState(false);
     const [productId, setProductId] = useState<any>(null);
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
     const [isLoading, setLoading] = useState(true);
@@ -28,16 +32,48 @@ export default function SearchDetails(props: Props) {
     const handleSelectPhoto = (url: any, index: number) => {
         setMainPhotoUrl({ index: index, url: url });
     }
+
+    const handleDownload = async () => {
+        const zip = new JSZip();
+        const jsonData = productData;
+        const jsonString = JSON.stringify(jsonData, null, 2);
+        const txt = `title: ${productData.product.title}\nLicense: ${listServiceType.find(item => item.value === productData.product.serviceType)?.title}\nprice: $${productData.product.price}\nCompare price: $${productData.product.comparePrice}\nCost per Price: $${productData.product.costPerPrice}\nShipping fee: $${productData.product.shippingFee}\nCr: ${productData.productDetail.cr}%\nAOV: ${productData.productDetail.aov}\nCountry target:${productData.productDetail.countryTarget}\nGender: ${listGender.find(gen => gen.value === productData.productDetail.genderTarget)?.title}\nAge:${productData.productDetail.startAge}-${productData.productDetail.endAge} `
+        const fetchImagePromises = productData.images.map(async (img: any) => {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + img.url);
+            const blob = await response.blob();
+            const fileName = img.url.split('/').pop();
+            zip.file(`images/${fileName}`, blob);
+        })
+
+        const fetchVideoPromises = productData.videos.map(async (video: any) => {
+            const response = await fetch(process.env.NEXT_PUBLIC_API_URL + video.url);
+            const blob = await response.blob();
+            const fileName = video.url.split('/').pop();
+            zip.file(`videos/${fileName}`, blob);
+        })
+
+        setLoadingDownLoad(true);
+        await Promise.all([...fetchImagePromises, ...fetchVideoPromises]);
+        setLoadingDownLoad(false);
+        zip.file("data.json", jsonString);
+        zip.file("data.txt", txt);
+
+        // Tạo file ZIP
+        const content = await zip.generateAsync({ type: "blob" });
+
+        // Tải file ZIP về
+        saveAs(content, "data.zip");
+    }
     useEffect(() => {
         const fetchData = async (id: any) => {
             setLoading(true);
             const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + id;
             const response = await GetApi(url);
-            console.log(response,url);
+            console.log(response, url);
             if (response.product) {
                 console.log(response)
                 setProductData(response);
-                
+
                 if (response.images && Array.isArray(response.images)) {
                     const temp = response.images.find((photo: any) => photo.isMain);
                     response.images.forEach((photo: any, index: number) => {
@@ -66,6 +102,11 @@ export default function SearchDetails(props: Props) {
             </div>
             {(!isLoading && productData) ?
                 <div onClick={(e) => e.stopPropagation()} className='relative bg-white flex-grow w-[1000px] overflow-y-auto rounded-lg flex flex-col text-neutral-700 py-8'>
+                    {isLoadingDownLoad &&
+                        <div className='absolute z-40 flex items-center justify-center bg-white opacity-70 top-0 left-0 w-full h-full'>
+                            <ScaleLoader height={100} width={10}/>
+                        </div>
+                    }
                     <div className='flex flex-row space-x-2'>
                         <div className='flex flex-col w-44 items-center'>
                             {/* <div className='border-3 rounded p-1 border-blue-500 mb-1'>
@@ -122,7 +163,7 @@ export default function SearchDetails(props: Props) {
 
                         <div className='flex flex-col px-4 space-y-2'>
                             <div className='flex flex-row space-x-4'>
-                                <button className='flex flex-row justify-center items-center px-16 py-2 rounded text-white bg-blue-600 space-x-2'>
+                                <button onClick={() => handleDownload()} className='flex flex-row justify-center items-center px-16 py-2 rounded text-white bg-blue-600 space-x-2'>
                                     <Download size={20} /> <span>Download</span>
                                 </button>
                                 <button className='hover:bg-neutral-100 px-4 py-2 border border-neutral-300 rounded '> <Copy size={16} /> </button>
@@ -137,7 +178,7 @@ export default function SearchDetails(props: Props) {
                                 <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Flag size={20} /></button>
                             </div>
                             <div className='text-neutral-400 text-sm flex flex-row items-center space-x-1'>
-                                <Eye size={20}/> <span>{productData.viewCount + 1} view</span> 
+                                <Eye size={20} /> <span>{productData.viewCount + 1} view</span>
                             </div>
                             <div className='w-full text-sm flex flex-row pt-10'>
                                 <div className='w-full font-bold space-y-2'>
@@ -149,6 +190,8 @@ export default function SearchDetails(props: Props) {
                                     <p>CR:</p>
                                     <p>AOV:</p>
                                     <p>Country Target:</p>
+                                    <p>Gender:</p>
+                                    <p>Age:</p>
                                 </div>
                                 <div className='text-right space-y-2 w-3/4'>
                                     <p>{listServiceType.find(item => item.value === productData.product.serviceType)?.title}</p>
@@ -159,6 +202,8 @@ export default function SearchDetails(props: Props) {
                                     <p>{productData.productDetail.cr} %</p>
                                     <p>{productData.productDetail.aov}</p>
                                     <p>{productData.productDetail.countryTarget}</p>
+                                    <p>{listGender.find(gen => gen.value === productData.productDetail.genderTarget)?.title}</p>
+                                    <p>{productData.productDetail.startAge}-{productData.productDetail.endAge}</p>
                                 </div>
                             </div>
                         </div>
@@ -180,10 +225,10 @@ export default function SearchDetails(props: Props) {
                     </div>
                     <span className='px-6 font-bold'>You might also like</span>
                     <div className='px-6'>
-                        <SuggestedAreaSearch setProductId={setProductId} accountId={productData.account.id} page={1}/>
+                        <SuggestedAreaSearch setProductId={setProductId} accountId={productData.account.id} page={1} />
                     </div>
                     <div className='px-6'>
-                        <SuggestedAreaSearch setProductId={setProductId} accountId={10} page={2}/>
+                        <SuggestedAreaSearch setProductId={setProductId} accountId={10} page={2} />
                     </div>
                 </div>
                 :

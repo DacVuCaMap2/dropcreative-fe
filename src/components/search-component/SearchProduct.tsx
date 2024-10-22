@@ -333,13 +333,13 @@ const SearchProduct = () => {
 
   return (
     <div className="realative flex flex-col gap-2">
-      <div className="px-8 py-2 sticky top-12 z-20 bg-white">
+      <div className="px-8 sticky top-[60px] py-2 z-20 bg-white mb-[-20px]">
         <InputSearchComponent setDataSearch={setDataSearch} dataSearch={dataSearch} handleClickSearch={handleClickSearch} keySearch={keySearch} setKeySearch={setKeySearch} type={1} />
       </div>
 
 
 
-      <div className="w-full mt-3 px-5">
+      <div className="w-full px-5">
         <div className={`${isOpenFilter ? "flex" : ""}`}>
           {isOpenFilter ? (
             ""
@@ -358,11 +358,11 @@ const SearchProduct = () => {
 
           {isOpenFilter ? (
             <>
-              <div className="w-1/6 sticky top-[120px] overflow-auto" style={{ height: 'calc(100vh - 120px)' }}>
+              <div className="w-1/6 pb-10 sticky top-[140px] overflow-auto " style={{ height: 'calc(100vh - 120px)' }}>
 
-                <div className="h-16 text-sm font-semibold px-6 text-gray-600 flex items-center border border-r border-l-0 border-t-0 justify-between">
-                  <div className="flex gap-2 h-[64px] items-center">
-                    <SlidersHorizontal width={15} height={15} />
+                <div className="h-[55px] text-sm font-semibold px-6 text-gray-600 flex items-center border border-r border-l-0 border-t-0 justify-between">
+                  <div className="flex gap-2 items-center">
+                    <SlidersHorizontal width={15} height={10} />
                     <span>Filter</span>
                   </div>
                   <ArrowLeftFromLine
@@ -564,9 +564,9 @@ const SearchProduct = () => {
             ""
           )}
           <div className="flex flex-col w-5/6">
-            <div className="sticky top-[120px] z-20 bg-white h-[64px] px-4 border-b flex flex-row items-center space-x-4 overflow-hidden">
+            <div className="sticky top-[130px] z-20 bg-white h-[64px] px-4 border-b flex flex-row items-center space-x-4 overflow-hidden">
               {listHistory.map((str: string, index) => (
-                <button key={index} onClick={() => selectHistory(str)} className="flex flex-row space-x-2 text-neutral-500 hover:bg-neutral-100 px-4 py-2 border"><Search /> <span>{str}</span></button>
+                <button key={index} onClick={() => selectHistory(str)} className="flex flex-row space-x-2 items-center text-xs text-neutral-500 hover:bg-neutral-100 px-4 py-2 border"><Search /> <span>{str}</span></button>
               ))}
             </div>
             <div className={`${isOpenFilter ? "w-full" : ""}  mt-4 px-4`}>
