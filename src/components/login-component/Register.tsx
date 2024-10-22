@@ -22,6 +22,7 @@ const Register = (props: IProps) => {
       } else {
         message.success("Register success");
         setIsLogin(true);
+        setIsRegister(false);
       }
     } catch (error: any) {
       message.error("error", error?.data?.message);
