@@ -64,7 +64,7 @@ export default function SearchDetails(props: Props) {
 
             </div>
             {!isLoading ?
-                <div onClick={(e) => e.stopPropagation()} className='relative bg-white flex-grow w-[1100px] overflow-y-auto rounded-lg flex flex-col text-neutral-700 py-8'>
+                <div onClick={(e) => e.stopPropagation()} className='relative bg-white flex-grow w-[1000px] overflow-y-auto rounded-lg flex flex-col text-neutral-700 py-8'>
                     <div className='flex flex-row space-x-2'>
                         <div className='flex flex-col w-44 items-center'>
                             {/* <div className='border-3 rounded p-1 border-blue-500 mb-1'>
@@ -145,7 +145,6 @@ export default function SearchDetails(props: Props) {
                                     <p>CR:</p>
                                     <p>AOV:</p>
                                     <p>Country Target:</p>
-                                    <p>Categories:</p>
                                 </div>
                                 <div className='text-right space-y-2 w-3/4'>
                                     <p>{listServiceType.find(item => item.value === productData.product.serviceType)?.title}</p>
@@ -156,11 +155,6 @@ export default function SearchDetails(props: Props) {
                                     <p>{productData.productDetail.cr} %</p>
                                     <p>{productData.productDetail.aov}</p>
                                     <p>{productData.productDetail.countryTarget}</p>
-                                    <div className='flex flex-row flex-wrap w-full justify-end space-x-2 text-xs'>
-                                        {productData.product.categoryIds.map((cat: any, index: number) => (
-                                            <div key={index} className='border rounded mb-2 border-gray-300 w-fit px-2 p-1'>{listCategories.find((item: any) => item.value === cat)?.title}</div>
-                                        ))}
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -182,7 +176,10 @@ export default function SearchDetails(props: Props) {
                     </div>
                     <span className='px-6 font-bold'>You might also like</span>
                     <div className='px-6'>
-                        <SuggestedAreaSearch setProductId={setProductId} accountId={productData.account.id} />
+                        <SuggestedAreaSearch setProductId={setProductId} accountId={productData.account.id} page={1}/>
+                    </div>
+                    <div className='px-6'>
+                        <SuggestedAreaSearch setProductId={setProductId} accountId={10} page={2}/>
                     </div>
                 </div>
                 :

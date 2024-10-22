@@ -57,7 +57,7 @@ const SearchProduct = () => {
     const tempCat: any[] = [];
     const tempHol: any[] = [];
     const tempSea: any[] = [];
-    const tempCountry:string[] = [];
+    const tempCountry: string[] = [];
     const tempType: number = type ? parseFloat(type) : 0;
     if (categories) {
       categories.forEach((item: string) => {
@@ -100,14 +100,14 @@ const SearchProduct = () => {
     tempSea.forEach((item: any) => {
       filterTemp.push({ key: "season", title: item.title });
     })
-    tempCountry.forEach((item:string)=>{
-      filterTemp.push({key:"countryTarget",title:item});
+    tempCountry.forEach((item: string) => {
+      filterTemp.push({ key: "countryTarget", title: item });
     })
     filterTemp.push(firstLoadingFilter[0])
     firstLoadingFilter = filterTemp;
     firstLoadingKeySearch = search ? search : firstLoadingKeySearch;
 
-    return getSearchForm(tempCat, tempHol, tempSea, tempType,tempCountry);
+    return getSearchForm(tempCat, tempHol, tempSea, tempType, tempCountry);
 
   }
 
@@ -339,11 +339,39 @@ const SearchProduct = () => {
                 )}
                 <div>
                   <Collapse
-                    defaultActiveKey={["1"]}
+                    defaultActiveKey={["4"]}
                     ghost
                     expandIconPosition="end"
                   >
-
+                    <Panel
+                      header={
+                        <span className="text-sm font-semibold">License</span>
+                      }
+                      key="4"
+                    >
+                      <div className="w-12/12 flex flex-wrap gap-2">
+                        <Button
+                          color="default"
+                          className={`${dataSearch.service.Free
+                            ? "bg-blue-500 text-white "
+                            : "bg-white text-black"
+                            }`}
+                          onClick={() => handleAddFilter("Free", !dataSearch.service.Free)}
+                        >
+                          Free
+                        </Button>
+                        <Button
+                          color="default"
+                          className={`${dataSearch.service.Premium
+                            ? "bg-blue-500 text-white "
+                            : "bg-white text-black"
+                            }`}
+                          onClick={() => handleAddFilter("Premium", !dataSearch.service.Premium)}
+                        >
+                          Premium
+                        </Button>
+                      </div>
+                    </Panel>
                     <Panel
                       header={
                         <span className="text-sm font-semibold">Type</span>
@@ -435,35 +463,7 @@ const SearchProduct = () => {
                       </div>
                     </Panel>
 
-                    <Panel
-                      header={
-                        <span className="text-sm font-semibold">License</span>
-                      }
-                      key="4"
-                    >
-                      <div className="w-12/12 flex flex-wrap gap-2">
-                        <Button
-                          color="default"
-                          className={`${dataSearch.service.Free
-                            ? "bg-blue-500 text-white "
-                            : "bg-white text-black"
-                            }`}
-                          onClick={() => handleAddFilter("Free", !dataSearch.service.Free)}
-                        >
-                          Free
-                        </Button>
-                        <Button
-                          color="default"
-                          className={`${dataSearch.service.Premium
-                            ? "bg-blue-500 text-white "
-                            : "bg-white text-black"
-                            }`}
-                          onClick={() => handleAddFilter("Premium", !dataSearch.service.Premium)}
-                        >
-                          Premium
-                        </Button>
-                      </div>
-                    </Panel>
+
 
                     <Panel
                       header={

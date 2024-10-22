@@ -8,7 +8,8 @@ import "./SuggestedArea.css"
 import Link from 'next/link';
 type Props = {
     setProductId:React.Dispatch<React.SetStateAction<any>>,
-    accountId: any
+    accountId: any,
+    page:number
 }
 export default function SuggestedAreaSearch(props: Props) {
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
@@ -16,7 +17,7 @@ export default function SuggestedAreaSearch(props: Props) {
     const accountId = props.accountId;
     useEffect(() => {
         const fetchData = async () => {
-            const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=8&page=1`;
+            const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=8&page=${props.page}`;
             const response = await GetApi(url);
             if (response.data && Array.isArray(response.data)) {
                 setSugProduct(response.data);
