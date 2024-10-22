@@ -507,7 +507,7 @@ const SearchProduct = () => {
           <div className="flex flex-col w-full">
             <div className="sticky top-[120px] z-20 bg-white h-[64px] px-4 border-b flex flex-row items-center space-x-4">
               {listHistory.map((str: string, index) => (
-                <button onClick={() => selectHistory(str)} className="flex flex-row space-x-2 text-neutral-500 hover:bg-neutral-100 px-4 py-2 border"><Search /> <span>{str}</span></button>
+                <button key={index} onClick={() => selectHistory(str)} className="flex flex-row space-x-2 text-neutral-500 hover:bg-neutral-100 px-4 py-2 border"><Search /> <span>{str}</span></button>
               ))}
             </div>
             <div className={`${isOpenFilter ? "w-full" : ""}  mt-4 px-4`}>
