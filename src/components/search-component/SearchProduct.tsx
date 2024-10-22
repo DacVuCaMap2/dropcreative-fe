@@ -112,6 +112,7 @@ const SearchProduct = () => {
   }
 
   ///data
+  const [pageNumber,setPageNumber] = useState(1);
   const [dataSearch, setDataSearch] = useState<SearchForm>(transParams(searchParams));
   const [filters, setFilters] = useState<Filter[]>(firstLoadingFilter);
   const [keySearch, setKeySearch] = useState(firstLoadingKeySearch);
@@ -249,7 +250,7 @@ const SearchProduct = () => {
     const fetchData = async () => {
       setLoading(1);
       const params = category + holiday + season + countryTarget;
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product/${typeGet}?page=1&size=1000&sort=desc&search=${keySearch}${params}`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product/${typeGet}?page=${pageNumber}&size=30&sort=desc&search=${keySearch}${params}`;
       const response = await GetApi(url);
       console.log(response, url)
       if (response.data && Array.isArray(response.data)) {
@@ -260,7 +261,7 @@ const SearchProduct = () => {
     }
     fetchData();
 
-  }, [dataSearch, change])
+  }, [dataSearch, change,pageNumber])
 
   return (
     <div className="realative flex flex-col gap-2">
@@ -339,7 +340,7 @@ const SearchProduct = () => {
                 )}
                 <div>
                   <Collapse
-                    defaultActiveKey={["1","2","3","999","4","5"]}
+                    defaultActiveKey={["1","3","999","4","5"]}
                     ghost
                     expandIconPosition="end"
                   >
@@ -495,7 +496,7 @@ const SearchProduct = () => {
             ""
           )}
           <div className={`${isOpenFilter ? "w-5/6" : ""}  mt-4`}>
-            <SearchResult type={typeImgOrVideo} listData={listData} isOpenFilter={isOpenFilter} isLoading={isLoading} />
+            <SearchResult pageNumber={pageNumber} setPageNumber={setPageNumber} type={typeImgOrVideo} listData={listData} isOpenFilter={isOpenFilter} isLoading={isLoading} />
           </div>
         </div>
       </div>
