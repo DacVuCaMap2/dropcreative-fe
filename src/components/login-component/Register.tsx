@@ -20,7 +20,8 @@ const Register = (props: IProps) => {
       if (res.data.status === 0) {
         message.error(res.data.message);
       } else {
-        setIsNavigateEnterCode(true);
+        message.success("Register success");
+        setIsLogin(true);
       }
     } catch (error: any) {
       message.error("error", error?.data?.message);

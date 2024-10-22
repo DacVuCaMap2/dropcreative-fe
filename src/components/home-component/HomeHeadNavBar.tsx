@@ -25,7 +25,7 @@ export default function HomeHeadNavBar(props: Props) {
     router.push("/login");
   };
   return (
-    <header className={`w-full absolute z-30 top-30 ${props.type===0 ? "text-white" : "text-black"}`}>
+    <header className={`w-full absolute z-30 top-30 ${props.type===0 ? "text-white" : "text-black sticky top-0 bg-white"}`}>
       <nav className="border-gray-200 flex justify-between items-center px-4 py-2">
         <div className="flex flex-row items-center space-x-8">
           <Link href={"/"}>

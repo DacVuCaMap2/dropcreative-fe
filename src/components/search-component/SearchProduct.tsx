@@ -264,8 +264,7 @@ const SearchProduct = () => {
 
   return (
     <div className="realative flex flex-col gap-2">
-      <div className="h-14 main-menu"></div>
-      <div className="px-8 py-2 sticky top-2 z-20 bg-white">
+      <div className="px-8 py-2 sticky top-12 z-20 bg-white">
         <InputSearchComponent setDataSearch={setDataSearch} dataSearch={dataSearch} handleClickSearch={handleClickSearch} keySearch={keySearch} setKeySearch={setKeySearch} type={1} />
       </div>
 
@@ -290,7 +289,8 @@ const SearchProduct = () => {
 
           {isOpenFilter ? (
             <>
-              <div className="w-1/6">
+              <div className="w-1/6 sticky top-28 overflow-auto" style={{ height: 'calc(100vh - 120px)' }}>
+
                 <div className="h-16 text-sm font-semibold px-6 text-gray-600 flex items-center border border-r border-l-0 border-t-0 justify-between">
                   <div className="flex gap-2 items-center">
                     <SlidersHorizontal width={15} height={15} />
@@ -339,7 +339,7 @@ const SearchProduct = () => {
                 )}
                 <div>
                   <Collapse
-                    defaultActiveKey={["4"]}
+                    defaultActiveKey={["1","2","3","999","4","5"]}
                     ghost
                     expandIconPosition="end"
                   >
