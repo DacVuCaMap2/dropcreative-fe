@@ -2,33 +2,8 @@
 'use client';
 
 import Script from 'next/script';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, Suspense } from 'react';
 
-interface Props {
-  GA_MEASUREMENT_ID: string;
-}
-
-// Component riêng để xử lý analytics
-function AnalyticsTracking({ GA_MEASUREMENT_ID }: Props) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const url = pathname + searchParams.toString();
-    
-    if (typeof window.gtag !== 'undefined') {
-      window.gtag('config', GA_MEASUREMENT_ID, {
-        page_path: url,
-      });
-    }
-  }, [pathname, searchParams, GA_MEASUREMENT_ID]);
-
-  return null;
-}
-
-// Component chính
-export default function GoogleAnalytics({ GA_MEASUREMENT_ID }: Props) {
+export default function GoogleAnalytics({ GA_MEASUREMENT_ID }: { GA_MEASUREMENT_ID: string }) {
   return (
     <>
       <Script
@@ -47,19 +22,6 @@ export default function GoogleAnalytics({ GA_MEASUREMENT_ID }: Props) {
           `,
         }}
       />
-      <Suspense fallback={null}>
-        <AnalyticsTracking GA_MEASUREMENT_ID={GA_MEASUREMENT_ID} />
-      </Suspense>
     </>
   );
 }
-
-// Utility function for tracking events
-export const trackEvent = (
-  eventName: string,
-  eventParams: Record<string, any>
-) => {
-  if (typeof window.gtag !== 'undefined') {
-    window.gtag('event', eventName, eventParams);
-  }
-};
