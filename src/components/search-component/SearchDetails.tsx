@@ -12,6 +12,7 @@ import { gender, generalCategoriesSelect, generalServiceType } from '@/data/gene
 import Link from 'next/link';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import { message } from 'antd';
 type Props = {
     setOpen: React.Dispatch<React.SetStateAction<number>>,
     id: any
@@ -65,8 +66,22 @@ export default function SearchDetails(props: Props) {
         saveAs(content, "data.zip");
 
         //add 1 download
-        const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/"+productData.product.id+"/download"
+        const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + productData.product.id + "/download"
         const response = await GetApi(url);
+    }
+    const handleAddProduct = async () => {
+        setLoadingDownLoad(true)
+        const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/duplicate/" + productData.product.id;
+        const response = await GetApi(url);
+        if (response && response.status && response.status === 200 && response.value) {
+            message.success("add success");
+            window.location.href = "/admin/all-product";
+            // router.push("/admin/all-product");
+        }
+        if (response && response.status && response.status === 400 && response.message) {
+            message.error(response.message)
+        }
+        setLoadingDownLoad(false);
     }
     useEffect(() => {
         const fetchData = async (id: any) => {
@@ -171,7 +186,9 @@ export default function SearchDetails(props: Props) {
                                 </button>
                                 <button className='hover:bg-neutral-100 px-4 py-2 border border-neutral-300 rounded '> <Copy size={16} /> </button>
                             </div>
-                            <button className='hover:bg-neutral-100 flex flex-row justify-center items-center w-full py-2 rounded border border-neutral-300 space-x-4 '><Plus size={20} /> Add Product</button>
+                            <button onClick={()=>handleAddProduct()} className='hover:bg-neutral-100 flex flex-row justify-center items-center w-full py-2 rounded border border-neutral-300 space-x-4 '>
+                                <Plus size={20} /> Add Product
+                            </button>
                             <div className='flex flex-row space-x-2'>
                                 <Link href={"/landing-page/product/" + props.id} className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-4'><Layers3 size={20} />
                                     <span>View landing page</span>
