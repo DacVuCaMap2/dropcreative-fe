@@ -494,20 +494,15 @@ export default function AddProductComponent(props: Props) {
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
     try {
       setLoading(1);
-      setTimeout(() => {
-        setLoading(0)
-      }, 3000);
-      // const response = await axios.post(url, formData, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data', // Thiết lập Content-Type cho formData
-      //   },
-      // });
       const response = await PostApi(url,formData,{'Content-Type': 'multipart/form-data'})
+
+      console.log('Success:', response);
+      setLoading(0)
       message.success("Upload success")
-      console.log('Success:', response.data);
       // router.push('/admin/all-product');
       window.location.href = '/admin/all-product'
     } catch (error) {
+      setLoading(0)
       console.error('Error:', error);
     }
   }
@@ -1384,7 +1379,7 @@ export default function AddProductComponent(props: Props) {
               <label className="block text-xs font-bold">CR (%)</label>
               <input
                 type="number"
-                value={productData.cr}
+                value={productData.cr===0 ? '' : productData.cr}
                 onChange={e => handleChange(e, "cr")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
@@ -1397,7 +1392,7 @@ export default function AddProductComponent(props: Props) {
               <label className="block text-xs font-bold">AOV</label>
               <input
                 type="number"
-                value={productData.aov}
+                value={productData.aov===0 ? '' : productData.aov}
                 onChange={e => handleChange(e, "aov")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
@@ -1508,7 +1503,7 @@ export default function AddProductComponent(props: Props) {
               <div className="space-y-2">
                 <label className="block text-xs font-bold">Videos</label>
                 {videos.length > 0 &&
-                  <div className="flex flex-row border-t pt-4 justify-center space-x-4 w-full bg-red-600">
+                  <div className="flex flex-row border-t pt-4 justify-center space-x-4 w-full">
                     {videos.map((item: File, index) => (
                       <div key={index} className="mb-4 rounded-2xl overflow-auto shadow-xl relative">
                         <video
