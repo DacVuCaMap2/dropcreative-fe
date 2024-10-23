@@ -18,10 +18,10 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Button, Input, InputNumber, Rate } from "antd";
+import { Button, Input, Rate } from "antd";
 import Review from "../common-component/Review";
 import Image from "next/image";
-import CountDownComponent from "./CountDownComponent";
+import Footer from "../common-component/Footer";
 
 const banners = [
   {
@@ -760,6 +760,8 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
+      <hr />
+      <Footer />
     </div>
   );
 };
