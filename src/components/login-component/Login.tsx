@@ -83,8 +83,9 @@ const Login = () => {
       }
       // router.push("/");
       // router.back();  
-      const previousUrl = document.referrer;
-      console.log("prev :",previousUrl);
+      let previousUrl = document.referrer;
+      previousUrl = previousUrl ? previousUrl : "/"
+      console.log("prev :",previousUrl,previousUrl.includes("login"));
       if (!previousUrl.includes("login")) {
         window.location.href = previousUrl;
       } else {
