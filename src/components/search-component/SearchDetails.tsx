@@ -37,7 +37,7 @@ export default function SearchDetails(props: Props) {
         const zip = new JSZip();
         const jsonData = productData;
         const jsonString = JSON.stringify(jsonData, null, 2);
-        const txt = `title: ${productData.product.title}\nLicense: ${listServiceType.find(item => item.value === productData.product.serviceType)?.title}\nprice: $${productData.product.price}\nCompare price: $${productData.product.comparePrice}\nCost per Price: $${productData.product.costPerPrice}\nShipping fee: $${productData.product.shippingFee}\nCr: ${productData.productDetail.cr}%\nAOV: ${productData.productDetail.aov}\nCountry target:${productData.productDetail.countryTarget}\nGender: ${listGender.find(gen => gen.value === productData.productDetail.genderTarget)?.title}\nAge:${productData.productDetail.startAge}-${productData.productDetail.endAge} `
+        const txt = `title: ${productData.product.title}\nLicense: ${listServiceType.find(item => item.value === productData.product.serviceType)?.title}\nprice: $${productData.product.price}\nCompare price: $${productData.product.comparePrice}\nCost per Price: $${productData.product.costPerPrice}\nShipping fee: $${productData.product.shippingFee}\nCr: ${productData.productDetail.cr}%\nAOV: ${productData.productDetail.aov}\nCountry target: ${productData.productDetail.countryTarget}\nGender: ${listGender.find(gen => gen.value === productData.productDetail.genderTarget)?.title}\nAge:${productData.productDetail.startAge}-${productData.productDetail.endAge}\nContent: ${productData.productDetail.content} `
         const fetchImagePromises = productData.images.map(async (img: any) => {
             const response = await fetch(process.env.NEXT_PUBLIC_API_URL + img.url);
             const blob = await response.blob();
@@ -56,7 +56,7 @@ export default function SearchDetails(props: Props) {
         await Promise.all([...fetchImagePromises, ...fetchVideoPromises]);
         setLoadingDownLoad(false);
         zip.file("data.json", jsonString);
-        zip.file("data.txt", txt);
+        zip.file("note.txt", txt);
 
         // Tạo file ZIP
         const content = await zip.generateAsync({ type: "blob" });
