@@ -13,7 +13,7 @@ type productVariant = {
     optionInput: string;
 };
 type variantDetails = {
-    id:any;
+    id: any;
     name: string;
     price: number;
     comparePrice: number;
@@ -92,6 +92,15 @@ export default async function page({ params }: { params: { slug: string } }) {
             return { id: item.id, productId: item.productId, url: item.url, name: item.fileName, isMain: item.isMain };
         })]
         // images = sortImageIsMainFirst(response.images);
+        // Find the main photo
+        if (images && images.length > 0) {
+            const mainPhoto : any = images.find(image => image.isMain);
+
+            // Filter out the main photo from the array
+            const otherPhotos : any[] = images.filter(photo => !photo.isMain);
+
+            images = [mainPhoto, ...otherPhotos];
+        }
 
         /// get variant select
         const arrVariantsDetails: string[] = response.productVariants.map((item: any) => {
@@ -110,7 +119,7 @@ export default async function page({ params }: { params: { slug: string } }) {
             let image = images.find(img => img.id === item.imageId);
             image = image ? image : images[0];
             return {
-                id:item.id,
+                id: item.id,
                 name: item.value,
                 price: item.price,
                 comparePrice: item.comparePrice,
@@ -144,7 +153,7 @@ export default async function page({ params }: { params: { slug: string } }) {
                 if (productChild.product) {
                     return {
                         name: productChild.product.title,
-                        imgUrl: productChild.images.length > 0 ? process.env.NEXT_PUBLIC_API_URL+productChild.images[0].url : "",
+                        imgUrl: productChild.images.length > 0 ? process.env.NEXT_PUBLIC_API_URL + productChild.images[0].url : "",
                         id: productChild.product.id,
                         value: parseFloat(item.key2)
                     };
@@ -157,7 +166,7 @@ export default async function page({ params }: { params: { slug: string } }) {
         boughtTogetherList = boughtTogetherResults.filter(item => item !== null);
         for (let i = 0; i < 3; i++) {
             if (!boughtTogetherList[i]) {
-                boughtTogetherList[i]={
+                boughtTogetherList[i] = {
                     name: "",
                     imgUrl: "",
                     id: -1,
