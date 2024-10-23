@@ -101,7 +101,7 @@ export default async function page({ params }: { params: { slug: string } }) {
 
             images = [mainPhoto, ...otherPhotos];
         }
-
+        images = images.filter(img=>img);
         /// get variant select
         const arrVariantsDetails: string[] = response.productVariants.map((item: any) => {
             return item.value;
@@ -116,7 +116,13 @@ export default async function page({ params }: { params: { slug: string } }) {
             })
         }
         listVariantDetails = response.productVariants.map(((item: any) => {
-            let image = images.find(img => img.id === item.imageId);
+            let image :any = null;
+            if (images.length>0 && images[0] && images[0].id ) {
+                image = images.find(img => img.id === item.imageId);
+            }
+            else{
+                return null;
+            }
             image = image ? image : images[0];
             return {
                 id: item.id,
@@ -132,7 +138,8 @@ export default async function page({ params }: { params: { slug: string } }) {
                 status: item.status,
             }
         }))
-
+        listVariantDetails =  listVariantDetails.filter(item=>item);
+        
         //combosale 
         const tempComboSale = tranObjectFromStrTwoKey(response.productDetail.comboSale);
         comboSaleList = tempComboSale.map((item: any) => {
