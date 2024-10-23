@@ -8,25 +8,33 @@ import { Col, Row } from "antd";
 import Image from "next/image";
 import React from "react";
 
-const Footer = () => {
+interface IProps {
+  background?: string;
+  textColor?: string;
+}
+
+const Footer = (props: IProps) => {
+  const { background, textColor } = props;
   return (
     <div>
-      <div className="px-96 pb-10 font-sans">
+      <div className={`px-96 ${background} pt-10 pb-10 font-sans`}>
         <Row gutter={[48, 16]}>
           <Col span={6} className="flex flex-col gap-5">
-            <p className="text-xl font-bold">Store information</p>
+            <p className={`${textColor} text-xl font-bold`}>
+              Store information
+            </p>
             <span className="text-sm text-gray-400">
               San Francisco, CA 94104 USA +1 (408) 899-8879
             </span>
-            <div className="flex gap-3">
-              <FacebookOutlined style={{ fontSize: 25 }} />
-              <InstagramOutlined style={{ fontSize: 25 }} />
-              <TwitterOutlined style={{ fontSize: 25 }} />
-              <TikTokOutlined style={{ fontSize: 25 }} />
+            <div className={`flex gap-3 ${textColor}`}>
+              <FacebookOutlined style={{ fontSize: 25, color: textColor }} />
+              <InstagramOutlined style={{ fontSize: 25, color: textColor }} />
+              <TwitterOutlined style={{ fontSize: 25, color: textColor }} />
+              <TikTokOutlined style={{ fontSize: 25, color: textColor }} />
             </div>
           </Col>
           <Col span={6} className="flex flex-col gap-5">
-            <p className="text-xl font-bold">Quick shop</p>
+            <p className={`text-xl font-bold ${textColor}`}>Quick shop</p>
             <div className="flex flex-col gap-5 text-sm text-gray-400">
               <span className="hover:text-black cursor-pointer">
                 Electronics
@@ -39,7 +47,7 @@ const Footer = () => {
             </div>
           </Col>
           <Col span={6} className="flex flex-col gap-5">
-            <p className="text-xl font-bold">Customer support</p>
+            <p className={`text-xl font-bold ${textColor}`}>Customer support</p>
             <div className="flex flex-col gap-5 text-sm text-gray-400">
               <span className="hover:text-black cursor-pointer">
                 Contact us
@@ -53,7 +61,7 @@ const Footer = () => {
             </div>
           </Col>
           <Col span={6} className="flex flex-col gap-5">
-            <p className="text-xl font-bold">Policies</p>
+            <p className={`${textColor} text-xl font-bold`}>Policies</p>
             <div className="flex flex-col gap-5 text-sm text-gray-400">
               <span className="hover:text-black cursor-pointer">
                 Privacy policy
