@@ -14,13 +14,24 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        backgroundLandingPage:'#f7fcfd',
+        pricing:"#0E0A1F",
+      },
+      backgroundColor:{
+        backgroundSale:'#2B2060'
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        fadeIn: "fadeIn 1s ease-out forwards",
       },
     },
   },
   darkMode: "class",
-  plugins: [
-    flowbite.plugin(),
-    nextui()
-  ],
+  plugins: [flowbite.plugin(), nextui()],
 };
 export default config;
