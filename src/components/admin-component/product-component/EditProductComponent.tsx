@@ -503,17 +503,16 @@ export default function EditProductComponent(props: Props) {
         // const url ="http://localhost:8080/api/product/" + productData.id
         try {
             setLoading(1);
-            setTimeout(() => {
-                setLoading(0)
-            }, 3000);
             const response = await PutApi(url, formData, { 'Content-Type': 'multipart/form-data'});
             console.log('Success:', response);
             if (response.error) {
                 window.location.href="/login";
             }
             // router.push('/admin/all-product');
+            setLoading(0)
             window.location.href = '/admin/all-product'
         } catch (error) {
+            setLoading(0)
             console.error('Error:', error);
         }
     }
