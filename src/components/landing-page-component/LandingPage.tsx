@@ -761,7 +761,7 @@ const LandingPage = () => {
         </div>
       </div>
       <hr />
-      <Footer />
+      <Footer background="" textColor="" />
     </div>
   );
 };
