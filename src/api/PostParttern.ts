@@ -15,7 +15,7 @@ export default async function PostApi(url: string, data: any, config?: any) {
         
         const response = await axios.post(url, data, finalConfig); 
         // console.log(response.data.data);
-        return response.data.data;
+        return response.data;
     } catch (error) {
         const axiosError = error as AxiosError;
         console.log("error "+ axiosError);

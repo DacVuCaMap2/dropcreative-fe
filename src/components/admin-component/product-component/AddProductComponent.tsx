@@ -18,6 +18,7 @@ import { generalCategoriesSelect, generalHolidayList, generalOptionHoliday, gene
 import GetApi from "@/api/GetApi";
 import { ScaleLoader } from "react-spinners";
 import PostApi from "@/api/PostParttern";
+import { error } from "console";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -445,6 +446,7 @@ export default function AddProductComponent(props: Props) {
       , shippingDescription: shippingDesc
       , warrantyDescription: WarrantyDesc
       , reviews: reviews
+      , isDuplicated: false
     };
     const { id, ...filterPostData } = postData;
     let errMess = "";
@@ -494,13 +496,18 @@ export default function AddProductComponent(props: Props) {
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product"
     try {
       setLoading(1);
-      const response = await PostApi(url,formData,{'Content-Type': 'multipart/form-data'})
-
+      const response = await PostApi(url, formData, { 'Content-Type': 'multipart/form-data' })
       console.log('Success:', response);
+      if (response.error) {
+        message.error(response.error.message);
+      }
+      else { 
+        message.success("Upload success")
+        window.location.href = '/admin/all-product'
+      }
       setLoading(0)
-      message.success("Upload success")
       // router.push('/admin/all-product');
-      window.location.href = '/admin/all-product'
+
     } catch (error) {
       setLoading(0)
       console.error('Error:', error);
@@ -1379,7 +1386,7 @@ export default function AddProductComponent(props: Props) {
               <label className="block text-xs font-bold">CR (%)</label>
               <input
                 type="number"
-                value={productData.cr===0 ? '' : productData.cr}
+                value={productData.cr === 0 ? '' : productData.cr}
                 onChange={e => handleChange(e, "cr")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
@@ -1392,7 +1399,7 @@ export default function AddProductComponent(props: Props) {
               <label className="block text-xs font-bold">AOV</label>
               <input
                 type="number"
-                value={productData.aov===0 ? '' : productData.aov}
+                value={productData.aov === 0 ? '' : productData.aov}
                 onChange={e => handleChange(e, "aov")}
                 className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
