@@ -512,7 +512,7 @@ export default function EditProductComponent(props: Props) {
                 window.location.href="/login";
             }
             // router.push('/admin/all-product');
-            // window.location.href = '/admin/all-product'
+            window.location.href = '/admin/all-product'
         } catch (error) {
             console.error('Error:', error);
         }
