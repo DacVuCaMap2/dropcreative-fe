@@ -1,5 +1,5 @@
 "use client"
-import { Search } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import ProductCategories from './ProductCategories'
 import { CardProductItem } from './CardProductItem'
@@ -11,7 +11,8 @@ import GetApi from '@/api/GetApi'
 import { ClipLoader } from 'react-spinners'
 import { message } from 'antd'
 type Props = {
-    accountId: any
+    accountId: any,
+    isAdmin: boolean
 }
 export default function ListProduct(props: Props) {
     const pathName = usePathname();
@@ -19,6 +20,7 @@ export default function ListProduct(props: Props) {
     const [loading, setLoading] = useState(true);
     const [listData, setListData] = useState([]);
     const [change, setChange] = useState(0);
+    const [pageNumber, setPageNumber] = useState(1);
     console.log(listData);
     let cat = searchParams.get("category");
     cat = cat ? cat : "";
@@ -27,7 +29,7 @@ export default function ListProduct(props: Props) {
         try {
             setLoading(true);
             const pathUrl = cat ? `&category=${cat}` : "";
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product?accountId=${props.accountId}&size=1000&page=1${pathUrl}`;
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product?accountId=${props.accountId}&size=32&page=${pageNumber}${pathUrl}`;
             console.log(url);
             const response = await GetApi(url);
             console.log(response);
@@ -43,7 +45,7 @@ export default function ListProduct(props: Props) {
         } finally {
             setLoading(false);
         }
-    }, [cat]);
+    }, [cat, pageNumber]);
 
 
     useEffect(() => {
@@ -86,11 +88,26 @@ export default function ListProduct(props: Props) {
 
                     {listData.map((item: any, index) => (
                         <div key={index}>
-                            <CardProductItem setChange={setChange} product={item} />
+                            <CardProductItem isAdmin={props.isAdmin} setChange={setChange} product={item} />
                         </div>
                     ))}
                 </div>
             }
+            <div className='flex justify-center items-center space-x-4'>
+                {pageNumber > 1 &&
+                    <button onClick={() => setPageNumber(prev => prev - 1)} className="flex flex-row bg-blue-500 text-white font-semibold py-2 px-6 rounded shadow hover:bg-blue-600 transition duration-200">
+                        <ChevronLeft />
+                        <span>Prev</span>
+
+                    </button>
+
+                }
+                <button onClick={() => setPageNumber(prev => prev + 1)} className="flex flex-row bg-blue-500 text-white font-semibold py-2 px-6 rounded shadow hover:bg-blue-600 transition duration-200">
+
+                    <span>NEXT</span>
+                    <ChevronRight />
+                </button>
+            </div>
         </div>
     )
 }

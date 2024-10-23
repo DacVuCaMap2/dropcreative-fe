@@ -9,6 +9,7 @@ import { useEffect } from "react";
 type Props = {
   product: any,
   setChange: React.Dispatch<React.SetStateAction<number>>,
+  isAdmin: boolean
 }
 export function CardProductItem(props: Props) {
   const data = props.product;
@@ -22,13 +23,13 @@ export function CardProductItem(props: Props) {
     }
   }
   return (
-    <div className="shadow-lg transition-transform trasistion border border-neutral-300 text-neutral-600 h-[500px] flex flex-col hover:shadow-2xl duration-300 ease-in-out overflow-hidden hover:bg-gray-100">
+    <div className="shadow-lg transition-transform trasistion border border-neutral-300 text-neutral-600 md:h-[500px] h-[700px] flex flex-col hover:shadow-2xl duration-300 ease-in-out overflow-hidden hover:bg-gray-100">
       <div className="h-80 overflow-hidden flex items-center justify-center mb-2">
-        <div className="relative h-full w-full group">
+        <div className="relative h-full w-full group flex justify-center items-center">
           <Link href={`/landing-page/product/${data.id}`} target="_blank">
             <Image
-              width={1200}
-              height={1200}
+              width={1000}
+              height={1000}
               src={data.imageUrl ? `${process.env.NEXT_PUBLIC_API_URL}${data.imageUrl}` : '/image/nophotos.png'}
               alt="image 1"
             />
@@ -62,19 +63,34 @@ export function CardProductItem(props: Props) {
           </Link>
         </div>
 
-        <div className="flex flex-row text-sm">
-          <div className="flex flex-col w-full">
-            {/* <span>Categories</span> */}
-            <span>Ship fee</span>
-            <span>Date</span>
-            <span>Demo:</span>
+        <div className="flex flex-col items-center justify-center pt-2 text-xs text-neutral-500 space-y-2">
+          {props.isAdmin &&
+            <div className="flex flex-row justify-between items-center px-4 w-full">
+              <p className="w-1/2 font-bold">Creator:</p>
+              <p className="w-1/2 text-center">{data.productCreator.email}</p>
+            </div>
+          }
+          <div className="flex flex-row justify-between items-center px-4 w-full">
+            <p className="w-1/2 font-bold">License:</p>
+            <p className="w-1/2 text-center">{data.serviceType}</p>
           </div>
-          <div className="flex flex-col w-full">
-            <span>{data.category}</span>
-            <span>12$</span>
-            <span>11/11/2024</span>
-            <Link className="underline cursor-pointer text-blue-500" href={`/landing-page/product/${data.id}`}>{process.env.NEXT_PUBLIC_THIS_URL}+/landing-page/product/{data.id}</Link>
+          <div className="flex flex-row justify-between items-center px-4 w-full">
+            <p className="w-1/2 font-bold">Price:</p>
+            <p className="w-1/2 text-center">$ {data.price}</p>
           </div>
+          <div className="flex flex-row justify-between items-center px-4 w-full">
+            <p className="w-1/2 font-bold">Compare Price:</p>
+            <p className="w-1/2 text-center">$ {data.comparePrice}</p>
+          </div>
+          <div className="flex flex-row justify-between items-center px-4 w-full">
+            <p className="w-1/2 font-bold">Cost per Price:</p>
+            <p className="w-1/2 text-center">$ {data.costPerPrice}</p>
+          </div>
+          <div className="flex flex-row justify-between items-center px-4 w-full">
+            <p className="w-1/2 font-bold">Shipping Fee:</p>
+            <p className="w-1/2 text-center">$ {data.shippingFee}</p>
+          </div>
+          
         </div>
       </div>
     </div>

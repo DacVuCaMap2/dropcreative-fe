@@ -120,7 +120,7 @@
 
 import { DataSearch } from "@/types/common";
 import { Card } from "@nextui-org/react";
-import { Col, Row, Tooltip } from "antd";
+import { Col, message, Row, Tooltip } from "antd";
 import Image from "next/image";
 import React, { useState } from "react";
 import ModalDetails from "./ModalDetails";
@@ -131,6 +131,7 @@ import SearchDetails from "./SearchDetails";
 import PostApi from "@/api/PostParttern";
 import GetApi from "@/api/GetApi";
 import { handleDownloadToTxtPublic } from "@/data/downloadFunction";
+import { useRouter } from "next/navigation";
 
 type Props = {
   listData: any[],
@@ -143,6 +144,7 @@ type Props = {
 const SearchResult = (props: Props) => {
   const { listData, isOpenFilter, isLoading } = props;
   // console.log(listData);
+  const router = useRouter();
   const [isLoadingDownload, setLoadingDownload] = useState(false);
   const [openDetails, setOpenDetails] = useState<number>(-1);
   const handleOpenDetails = async (id: any) => {
@@ -153,61 +155,210 @@ const SearchResult = (props: Props) => {
   }
   const handleDownLoad = async (item: any) => {
     setLoadingDownload(true);
-    let productData : any = null;
+    let productData: any = null;
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + item.id;
     const response = await GetApi(url);
     if (response.product) {
-      productData=response;
+      productData = response;
       if (productData) {
-        await handleDownloadToTxtPublic(productData,setLoadingDownload);
+        await handleDownloadToTxtPublic(productData, setLoadingDownload);
       }
     }
     setLoadingDownload(false);
+    //add 1 download
+    const urlCount = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + productData.product.id + "/download"
+    const responseCount = await GetApi(urlCount);
   }
+
+  const handleAddProduct = async (item: any) => {
+    setLoadingDownload(true)
+    const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/duplicate/" + item.id;
+    const response = await GetApi(url);
+    if (response && response.status && response.status === 200 && response.value) {
+      message.success("add success");
+      window.location.href = "/admin/all-product";
+      // router.push("/admin/all-product");
+    }
+    if (response && response.status && response.status === 400 && response.message) {
+      message.error(response.message)
+    }
+    setLoadingDownload(false);
+  }
+
   return (
     <div className="pb-10">
       {isLoadingDownload && <div className="fixed top-0 left-0 z-40 w-screen h-screen bg-white opacity-70 flex justify-center items-center">
-        <ScaleLoader height={100} width={10}/>
+        <ScaleLoader height={100} width={10} />
       </div>}
       {isLoading === 0 ?
         <div>
           {props.type === 0 ? (
             <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
-              {listData?.map((item, index) => (
-                <div key={index} className="break-inside-avoid mb-4">
-                  <Card className="relative rounded-sm hover:cursor-pointer overflow-hidden shadow-none group">
-                    <Image
-                      width={1000}
-                      height={1000}
-                      alt="image 1"
-                      className="z-0 w-full h-auto object-cover"
-                      src={
-                        item.url
-                          ? `${process.env.NEXT_PUBLIC_API_URL}${item.url}`
-                          : "/image/nophotos.png"
-                      }
-                      onClick={() => handleOpenDetails(item.id)}
-                    />
-                    <div className="absolute flex flex-row justify-center items-center bottom-0 bg-gray-950 w-full h-16 text-neutral-200 space-x-2 transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">
-                      <Link
-                        target="_blank"
-                        href={`/landing-page/product/${item.id}`}
-                        className="hover:bg-neutral-600 h-full w-full flex flex-row items-center px-2 space-x-2 font-bold"
-                      >
-                        <Eye /> <span>View product</span>
-                      </Link>
-                      <button
-                        className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center"
-                      >
-                        <Plus />
-                      </button>
-                      <button onClick={() => handleDownLoad(item)} className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center">
-                        <ArrowDownToLine />
-                      </button>
-                    </div>
-                  </Card>
-                </div>
-              ))}
+              {listData?.map((item, index) => {
+                if (index === 0 || index === 4 || index === 8 || index === 12 || index === 16) {
+                  return (<div key={index} className="break-inside-avoid mb-4">
+                    <Card className="relative rounded-sm hover:cursor-pointer overflow-hidden shadow-none group">
+                      <Image
+                        width={1000}
+                        height={1000}
+                        alt="image 1"
+                        className="z-0 w-full h-auto object-cover"
+                        src={
+                          item.url
+                            ? `${process.env.NEXT_PUBLIC_API_URL}${item.url}`
+                            : "/image/nophotos.png"
+                        }
+                        onClick={() => handleOpenDetails(item.id)}
+                      />
+                      <div className="absolute flex flex-row justify-center items-center bottom-0 bg-gray-950 w-full h-16 text-neutral-200 space-x-2 transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">
+                        <Link
+                          target="_blank"
+                          href={`/landing-page/product/${item.id}`}
+                          className="hover:bg-neutral-600 h-full w-full flex flex-row items-center px-2 space-x-2 font-bold"
+                        >
+                          <Eye /> <span>View product</span>
+                        </Link>
+                        <button
+                          onClick={() => handleAddProduct(item)}
+                          className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center"
+                        >
+                          <Plus />
+                        </button>
+                        <button onClick={() => handleDownLoad(item)} className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center">
+                          <ArrowDownToLine />
+                        </button>
+                      </div>
+                    </Card>
+                  </div>)
+                }
+                else {
+                  return null;
+                }
+              })}
+              {listData?.map((item, index) => {
+                if (index === 1 || index === 5 || index === 9 || index === 13 || index === 17) {
+                  return (<div key={index} className="break-inside-avoid mb-4">
+                    <Card className="relative rounded-sm hover:cursor-pointer overflow-hidden shadow-none group">
+                      <Image
+                        width={1000}
+                        height={1000}
+                        alt="image 1"
+                        className="z-0 w-full h-auto object-cover"
+                        src={
+                          item.url
+                            ? `${process.env.NEXT_PUBLIC_API_URL}${item.url}`
+                            : "/image/nophotos.png"
+                        }
+                        onClick={() => handleOpenDetails(item.id)}
+                      />
+                      <div className="absolute flex flex-row justify-center items-center bottom-0 bg-gray-950 w-full h-16 text-neutral-200 space-x-2 transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">
+                        <Link
+                          target="_blank"
+                          href={`/landing-page/product/${item.id}`}
+                          className="hover:bg-neutral-600 h-full w-full flex flex-row items-center px-2 space-x-2 font-bold"
+                        >
+                          <Eye /> <span>View product</span>
+                        </Link>
+                        <button
+                          onClick={() => handleAddProduct(item)}
+                          className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center"
+                        >
+                          <Plus />
+                        </button>
+                        <button onClick={() => handleDownLoad(item)} className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center">
+                          <ArrowDownToLine />
+                        </button>
+                      </div>
+                    </Card>
+                  </div>)
+                }
+                else {
+                  return null;
+                }
+              })}
+              {listData?.map((item, index) => {
+
+                if (index === 2 || index === 6 || index === 10 || index === 14 || index === 18) {
+                  return (<div key={index} className="break-inside-avoid mb-4">
+                    <Card className="relative rounded-sm hover:cursor-pointer overflow-hidden shadow-none group">
+                      <Image
+                        width={1000}
+                        height={1000}
+                        alt="image 1"
+                        className="z-0 w-full h-auto object-cover"
+                        src={
+                          item.url
+                            ? `${process.env.NEXT_PUBLIC_API_URL}${item.url}`
+                            : "/image/nophotos.png"
+                        }
+                        onClick={() => handleOpenDetails(item.id)}
+                      />
+                      <div className="absolute flex flex-row justify-center items-center bottom-0 bg-gray-950 w-full h-16 text-neutral-200 space-x-2 transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">
+                        <Link
+                          target="_blank"
+                          href={`/landing-page/product/${item.id}`}
+                          className="hover:bg-neutral-600 h-full w-full flex flex-row items-center px-2 space-x-2 font-bold"
+                        >
+                          <Eye /> <span>View product</span>
+                        </Link>
+                        <button
+                          onClick={() => handleAddProduct(item)}
+                          className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center"
+                        >
+                          <Plus />
+                        </button>
+                        <button onClick={() => handleDownLoad(item)} className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center">
+                          <ArrowDownToLine />
+                        </button>
+                      </div>
+                    </Card>
+                  </div>)
+                }
+                else {
+                  return null;
+                }
+              })}
+              {listData?.map((item, index) => {
+                if (index === 3 || index === 7 || index === 11 || index === 15 || index === 19) {
+                  return (<div key={index} className="break-inside-avoid mb-4">
+                    <Card className="relative rounded-sm hover:cursor-pointer overflow-hidden shadow-none group">
+                      <Image
+                        width={1000}
+                        height={1000}
+                        alt="image 1"
+                        className="z-0 w-full h-auto object-cover"
+                        src={
+                          item.url
+                            ? `${process.env.NEXT_PUBLIC_API_URL}${item.url}`
+                            : "/image/nophotos.png"
+                        }
+                        onClick={() => handleOpenDetails(item.id)}
+                      />
+                      <div className="absolute flex flex-row justify-center items-center bottom-0 bg-gray-950 w-full h-16 text-neutral-200 space-x-2 transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">
+                        <Link
+                          target="_blank"
+                          href={`/landing-page/product/${item.id}`}
+                          className="hover:bg-neutral-600 h-full w-full flex flex-row items-center px-2 space-x-2 font-bold"
+                        >
+                          <Eye /> <span>View product</span>
+                        </Link>
+                        <button
+                          onClick={() => handleAddProduct(item)}
+                          className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center"
+                        >
+                          <Plus />
+                        </button>
+                        <button onClick={() => handleDownLoad(item)} className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center">
+                          <ArrowDownToLine />
+                        </button>
+                      </div>
+                    </Card>
+                  </div>)
+                }
+                else {
+                  return null;
+                }
+              })}
             </div>
           ) : (
             <Row gutter={[30, 30]}>
@@ -260,6 +411,9 @@ const SearchResult = (props: Props) => {
           <ChevronRight />
         </button>
       </div>
+
+
+
     </div>
 
   );

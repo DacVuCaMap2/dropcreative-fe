@@ -9,12 +9,12 @@ type Props = {
     accountId:any
 }
 export default function AllProductComponent(props: Props) {
-    const roleUser = generalRoles[1];
-    console.log(roleUser,props.roleStr);
+    const roleAdmin = generalRoles[1];
+    const isAdmin = props.roleStr ? props.roleStr === roleAdmin:false;
     return (
         <div className='w-full flex flex-col space-y-4'>
             <div className='flex justify-end w-full'>
-                {(props.roleStr && props.roleStr === roleUser) ?
+                {isAdmin ?
                     ''
                     :
                     <Link href={'/admin/all-product/add'} className='flex flex-row items-center bg-blue-500 font-bold text-white p-2 rounded shadow hover:bg-blue-600 transition duration-300'>
@@ -22,7 +22,7 @@ export default function AllProductComponent(props: Props) {
                     </Link>
                 }
             </div>
-            <ListProduct accountId={props.accountId} />
+            <ListProduct isAdmin={isAdmin} accountId={props.accountId} />
         </div >
     )
 }
