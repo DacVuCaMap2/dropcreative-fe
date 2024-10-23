@@ -129,6 +129,8 @@ import Link from "next/link";
 import { ScaleLoader } from "react-spinners";
 import SearchDetails from "./SearchDetails";
 import PostApi from "@/api/PostParttern";
+import GetApi from "@/api/GetApi";
+import { handleDownloadToTxtPublic } from "@/data/downloadFunction";
 
 type Props = {
   listData: any[],
@@ -140,16 +142,33 @@ type Props = {
 }
 const SearchResult = (props: Props) => {
   const { listData, isOpenFilter, isLoading } = props;
-  console.log(listData);
+  // console.log(listData);
+  const [isLoadingDownload, setLoadingDownload] = useState(false);
   const [openDetails, setOpenDetails] = useState<number>(-1);
-  const handleOpenDetails = async(id: any) => {
+  const handleOpenDetails = async (id: any) => {
     setOpenDetails(id);
     const url = process.env.NEXT_PUBLIC_API_URL + `/api/product/${id}/view`
-    const response = await PostApi(url,{});
+    const response = await PostApi(url, {});
     console.log(response);
+  }
+  const handleDownLoad = async (item: any) => {
+    setLoadingDownload(true);
+    let productData : any = null;
+    const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + item.id;
+    const response = await GetApi(url);
+    if (response.product) {
+      productData=response;
+      if (productData) {
+        await handleDownloadToTxtPublic(productData,setLoadingDownload);
+      }
+    }
+    setLoadingDownload(false);
   }
   return (
     <div className="pb-10">
+      {isLoadingDownload && <div className="fixed top-0 left-0 z-40 w-screen h-screen bg-white opacity-70 flex justify-center items-center">
+        <ScaleLoader height={100} width={10}/>
+      </div>}
       {isLoading === 0 ?
         <div>
           {props.type === 0 ? (
@@ -182,7 +201,7 @@ const SearchResult = (props: Props) => {
                       >
                         <Plus />
                       </button>
-                      <button className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center">
+                      <button onClick={() => handleDownLoad(item)} className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center">
                         <ArrowDownToLine />
                       </button>
                     </div>
@@ -229,14 +248,14 @@ const SearchResult = (props: Props) => {
       {openDetails != -1 && <SearchDetails setOpen={setOpenDetails} id={openDetails} />}
       <div className="flex flex-row justify-center items-center py-10 space-x-4">
         {props.pageNumber > 1 &&
-          <button onClick={()=>props.setPageNumber(prev=>prev-1)}  className=" flex flex-row bg-blue-500 text-white font-semibold py-2 px-6 rounded shadow hover:bg-blue-600 transition duration-200">
+          <button onClick={() => props.setPageNumber(prev => prev - 1)} className=" flex flex-row bg-blue-500 text-white font-semibold py-2 px-6 rounded shadow hover:bg-blue-600 transition duration-200">
             <ChevronLeft />
             Prev
-            
+
           </button>
         }
-        <button onClick={()=>props.setPageNumber(prev=>prev+1)}  className="flex flex-row bg-blue-500 text-white font-semibold py-2 px-6 rounded shadow hover:bg-blue-600 transition duration-200">
-        
+        <button onClick={() => props.setPageNumber(prev => prev + 1)} className="flex flex-row bg-blue-500 text-white font-semibold py-2 px-6 rounded shadow hover:bg-blue-600 transition duration-200">
+
           <span>NEXT</span>
           <ChevronRight />
         </button>
