@@ -63,6 +63,10 @@ export default function SearchDetails(props: Props) {
 
         // Tải file ZIP về
         saveAs(content, "data.zip");
+
+        //add 1 download
+        const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/"+productData.product.id+"/download"
+        const response = await GetApi(url);
     }
     useEffect(() => {
         const fetchData = async (id: any) => {
@@ -104,7 +108,7 @@ export default function SearchDetails(props: Props) {
                 <div onClick={(e) => e.stopPropagation()} className='relative bg-white flex-grow w-[1000px] overflow-y-auto rounded-lg flex flex-col text-neutral-700 py-8'>
                     {isLoadingDownLoad &&
                         <div className='absolute z-40 flex items-center justify-center bg-white opacity-70 top-0 left-0 w-full h-full'>
-                            <ScaleLoader height={100} width={10}/>
+                            <ScaleLoader height={100} width={10} />
                         </div>
                     }
                     <div className='flex flex-row space-x-2'>
@@ -147,7 +151,6 @@ export default function SearchDetails(props: Props) {
                             }
                         </div>
 
-
                         <div className='w-[500px] h-[500px] overflow-hidden flex justify-center items-center'>
                             <Image
                                 src={mainPhotoUrl.url ? process.env.NEXT_PUBLIC_API_URL + mainPhotoUrl.url : "/image/nophotos.png"}
@@ -172,13 +175,17 @@ export default function SearchDetails(props: Props) {
                             <div className='flex flex-row space-x-2'>
                                 <Link href={"/landing-page/product/" + props.id} className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-4'><Layers3 size={20} />
                                     <span>View landing page</span>
-
                                 </Link>
                                 <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Share2 size={20} /></button>
                                 <button className='hover:bg-neutral-100 flex flex-row justify-center items-center  py-2 rounded border border-neutral-300 space-x-4 px-2'><Flag size={20} /></button>
                             </div>
-                            <div className='text-neutral-400 text-sm flex flex-row items-center space-x-1'>
-                                <Eye size={20} /> <span>{productData.viewCount + 1} view</span>
+                            <div className='flex flex-row space-x-4'>
+                                <div className='text-neutral-400 text-sm flex flex-row items-center space-x-1'>
+                                    <Eye size={20} /> <span>{productData.viewCount + 1} view</span>
+                                </div>
+                                <div className='text-neutral-400 text-sm flex flex-row items-center space-x-1'>
+                                    <Download size={20} /> <span>{productData.downloadCount} Download</span>
+                                </div>
                             </div>
                             <div className='w-full text-sm flex flex-row pt-10'>
                                 <div className='w-full font-bold space-y-2'>
@@ -217,7 +224,6 @@ export default function SearchDetails(props: Props) {
                                 <span className='hover:underline cursor-pointer'>Follow</span>
                             </div>
                         </div>
-
                     </div>
                     <div className='px-6 mb-10 space-y-2'>
                         <p className='font-bold'>{productData.product.title}</p>
