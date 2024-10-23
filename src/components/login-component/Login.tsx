@@ -34,7 +34,7 @@ const Login = () => {
   const handleLogin = async (data: TypeLogin) => {
     try {
       const res: AxiosResponse<TypeResponse> = await authLogin(data);
-      const { status, message: resMessage, jwt, id, expired, role,userName,email } = res.data;
+      const { status, message: resMessage, jwt, id, expired, role, userName, email } = res.data;
       if (status === 0) {
         message.error(resMessage);
         return;
@@ -82,8 +82,14 @@ const Login = () => {
         });
       }
       // router.push("/");
-      router.back();  
-      // window.location.href = "/";
+      // router.back();  
+      const previousUrl = document.referrer;
+      console.log("prev :",previousUrl);
+      if (!previousUrl.includes("login")) {
+        window.location.href = previousUrl;
+      } else {
+        window.location.href = '/';
+      }
     } catch (error: any) {
       message.error("error", error?.data?.message);
     }
