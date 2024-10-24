@@ -118,7 +118,7 @@ export default function EditProductComponent(props: Props) {
     const [listCat, setListCat] = useState<any[]>(productData.categoryIds);
     const [listSea, setListSeasons] = useState<any[]>(productData.season ? productData.season : []);
     const [listHol, setListHolidays] = useState<any[]>(productData.holiday ? productData.holiday : []);
-    console.log("product",productData);
+    console.log("product", productData);
     const optionsCategories = generalOptionsCat;
     const catList = generalCategoriesSelect;
     const getCatCurrentEdit = (): any[] => {
@@ -468,7 +468,7 @@ export default function EditProductComponent(props: Props) {
             , season: listSea
             , shippingDescription: shippingDesc
             , warrantyDescription: WarrantyDesc
-            ,reviews:[]
+            , reviews: []
         };
         const { id, ...filterPostData } = postData;
         let errMess = "";
@@ -515,14 +515,21 @@ export default function EditProductComponent(props: Props) {
         // const url ="http://localhost:8080/api/product/" + productData.id
         try {
             setLoading(1);
-            const response = await PutApi(url, formData, { 'Content-Type': 'multipart/form-data'});
+            const response = await PutApi(url, formData, { 'Content-Type': 'multipart/form-data' });
             console.log('Success:', response);
             if (response.error) {
-                window.location.href="/login";
+                if (response.error.message) {
+                    message.error(response.error.message);
+                }
+                else{
+                    message.error("get error!")
+                }
+            } else {
+                setLoading(0)
+                window.location.href = '/admin/all-product'
             }
             // router.push('/admin/all-product');
-            setLoading(0)
-            window.location.href = '/admin/all-product'
+
         } catch (error) {
             setLoading(0)
             console.error('Error:', error);
