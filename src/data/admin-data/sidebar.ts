@@ -40,14 +40,14 @@ export const sideBarAdmin = [
         listItems:[
             {
                 name: "User Manager",
-                href:"/",
+                href:"/admin/user-manager",
                 icon:UsersRound,
                 select:"dashboard",
-                role:[1,2,3]
+                role:[2]
             },
             {
                 name: "Profile",
-                href:"/",
+                href:"/profile",
                 icon:CircleUserRound,
                 select:"dashboard",
                 role:[1,2,3]

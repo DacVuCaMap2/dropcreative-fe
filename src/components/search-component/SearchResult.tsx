@@ -151,7 +151,9 @@ const SearchResult = (props: Props) => {
     setOpenDetails(id);
     const url = process.env.NEXT_PUBLIC_API_URL + `/api/product/${id}/view`
     const response = await PostApi(url, {});
-    console.log(response);
+
+    const urlAddProductHistory =process.env.NEXT_PUBLIC_API_URL+`/api/product/${id}/history`;
+    const responseAddProductHistory = await GetApi(urlAddProductHistory);
   }
   const handleDownLoad = async (item: any) => {
     setLoadingDownload(true);

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./HomePage.css";
 import HomeDropdown from "./HomeDropdown";
-import { Search, X } from "lucide-react";
+import { ArrowDownToLine, Eye, Plus, Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "./Footer";
@@ -15,32 +15,79 @@ import HomeCategories from "./HomeCategories";
 import SlideProduct from "./SlideProduct";
 import InputSearchComponent from "../general-component/InputSearchComponent";
 import SearchForm, { getNewSearchForm } from "@/model/SearchForm";
-export default function HomePage() {
+import GetApi from "@/api/GetApi";
+import { message } from "antd";
+import { ScaleLoader } from "react-spinners";
+import { handleDownloadToTxtPublic } from "@/data/downloadFunction";
+
+type Props = {
+  listHistory: any[];
+  accountId: any
+}
+
+export default function HomePage(props: Props) {
   const listCategories = homeCategories;
   const listTheme = homeTheme;
   const listCountry = homeCountry;
   const listSuggestSearch = ["Shirt", "Duck Night Light", "Mask"]
   const [keySearch, setKeySearch] = useState("");
-  const [dataSearch,setDataSearch] = useState<SearchForm>(getNewSearchForm());
-  const handleClickSearch = () =>{
-    let category="&category=";
-    dataSearch.category.forEach(cat=>{
-      category+=cat.value+"-"
+  const [dataSearch, setDataSearch] = useState<SearchForm>(getNewSearchForm());
+  const [isLoadingDownLoad, setLoadingDownload] = useState(false);
+  const handleClickSearch = () => {
+    let category = "&category=";
+    dataSearch.category.forEach(cat => {
+      category += cat.value + "-"
     })
-    let holiday="&holiday=";
-    dataSearch.holiday.forEach(hol=>{
-      holiday+=hol.value+"-"
+    let holiday = "&holiday=";
+    dataSearch.holiday.forEach(hol => {
+      holiday += hol.value + "-"
     })
-    let season="&season=";
-    dataSearch.season.forEach(sea=>{
-      season+=sea.value+"-"
+    let season = "&season=";
+    dataSearch.season.forEach(sea => {
+      season += sea.value + "-"
     })
-    const type = "&type="+dataSearch.type.value;
-    const params = category+holiday+season+type+"&search="+keySearch;
-    window.location.href="/search?"+params
+    const type = "&type=" + dataSearch.type.value;
+    const params = category + holiday + season + type + "&search=" + keySearch;
+    window.location.href = "/search?" + params
+  }
+
+  const handleAddProduct = async (item: any) => {
+    setLoadingDownload(true)
+    const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/duplicate/" + item.productId;
+    const response = await GetApi(url);
+    console.log(response);
+    if (response && response.status && response.status === 200 && response.value) {
+      message.success("add success");
+      window.location.href = "/admin/all-product";
+      // router.push("/admin/all-product");
+    }
+    if (response && response.status && response.status === 400 && response.message) {
+      message.error(response.message)
+    }
+    setLoadingDownload(false);
+  }
+
+  const handleDownLoad = async (item: any) => {
+    setLoadingDownload(true);
+    let productData: any = null;
+    const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + item.productId;
+    const response = await GetApi(url);
+    if (response.product) {
+      productData = response;
+      if (productData) {
+        await handleDownloadToTxtPublic(productData, setLoadingDownload);
+      }
+    }
+    setLoadingDownload(false);
+    //add 1 download
+    const urlCount = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + productData.product.id + "/download"
+    const responseCount = await GetApi(urlCount);
   }
   return (
     <div className="">
+      {isLoadingDownLoad && <div className="fixed top-0 left-0 z-40 w-screen h-screen bg-white opacity-70 flex justify-center items-center">
+        <ScaleLoader height={100} width={10} />
+      </div>}
       <div className="flex flex-col relative ">
         <div className="h-[400px] main-menu"></div>
         <div className="absolute top-44 w-full h-20 flex flex-col justify-center items-center space-y-2">
@@ -48,7 +95,7 @@ export default function HomePage() {
             Ready to start looking product?
           </span>
           <span className="text-white text-sm pb-4">Find all products for any market, images, videos, and landing pages with just one click.</span>
-          <InputSearchComponent setDataSearch={setDataSearch} dataSearch={dataSearch}  handleClickSearch={handleClickSearch} keySearch={keySearch} setKeySearch={setKeySearch} type={0} />
+          <InputSearchComponent setDataSearch={setDataSearch} dataSearch={dataSearch} handleClickSearch={handleClickSearch} keySearch={keySearch} setKeySearch={setKeySearch} type={0} />
           <div className="text-white w-1/2 pt-8 flex flex-row space-x-4 items-start justify-center">
             {listSuggestSearch.map((str: string, index) => (
               <div key={index} className="relative">
@@ -65,6 +112,24 @@ export default function HomePage() {
         </div>
 
         <div className="flex flex-col justify-center items-center">
+          {!props.accountId ?
+            <div className="flex justify-center items-center w-full overflow-hidden relative">
+              <div className="h-20 w-20 bg-green-400 absolute top-[-25px] left-8 rounded-full">
+              </div>
+              <div className="h-20 w-20 bg-red-300 absolute top-[-10px] right-8 rounded-full">
+              </div>
+              <div className="mx-auto h-0 w-0 border-r-[25px] border-b-[55px] 
+              border-l-[25px] border-solid border-r-transparent
+              border-l-transparent border-b-purple-400 absolute bottom-3 right-32">
+              </div>
+              <div className="h-20 w-20 bg-red-500 absolute bottom-[-30px] left-32">
+              </div>
+              <div className="bg-amber-100 w-full py-8 flex justify-center items-center space-x-4">
+                <span className="font-bold">Sign up now to search for free sale season products </span>
+                <Link href={"/login?register=1"} className="bg-black text-white p-2">Sign Up Now</Link>
+              </div>
+            </div>
+            :
           <div className="flex justify-center items-center w-full overflow-hidden relative">
             <div className="h-20 w-20 bg-green-400 absolute top-[-25px] left-8 rounded-full">
             </div>
@@ -77,11 +142,62 @@ export default function HomePage() {
             <div className="h-20 w-20 bg-red-500 absolute bottom-[-30px] left-32">
             </div>
             <div className="bg-amber-100 w-full py-8 flex justify-center items-center space-x-4">
-              <span className="font-bold">Sign up now to search for free sale season products </span>
-              <Link href={"/login?register=1"} className="bg-black text-white p-2">Sign Up Now</Link>
+              <span className="font-bold">Discover Your Exclusive PREMIUM PLANS: </span>
+              <div className="bg-black text-white px-4 py-2"><span className="font-bold text-lg">7</span> days left</div>
             </div>
           </div>
+          }
+
+
           <div className="flex flex-col py-16 space-y-20 lg:w-[1340px] w-screen px-4">
+            {props.listHistory.length > 0 &&
+              <div className="flex flex-col space-y-8 w-full overflow-hidden">
+                <span className="font-bold text-3xl">
+                  Recently viewed products
+                </span>
+                <div className="flex flex-row w-full space-x-10 ">
+                  {props.listHistory.map((item: any, ind) => (
+                    <div key={ind} className=" flex flex-col w-72 h-72 space-y-2 ">
+                      <div className='relative w-[300px] h-[200px] overflow-hidden flex justify-center items-center bg-gray-200 rounded group'>
+                        <Image
+                          src={item.url ? process.env.NEXT_PUBLIC_API_URL + item.url : "/image/nophotos.png"}
+                          alt="img"
+                          className='h-[200px] w-auto object-contain '
+                          width={600}
+                          height={600}
+                          priority
+                        />
+                        <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-20" />
+                        <div className="absolute flex flex-row justify-center items-center bottom-0 bg-gray-950 w-full h-12 text-neutral-200 space-x-2 transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">
+                          <Link
+                            target="_blank"
+                            href={`/landing-page/product/${item.productId}`}
+                            className="hover:bg-neutral-600 h-full w-full flex flex-row items-center px-2 space-x-2 text-xs font-bold"
+                          >
+                            <Eye size={20} /> <span>View product</span>
+                          </Link>
+                          <button
+                            onClick={() => handleAddProduct(item)}
+                            className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center"
+                          >
+                            <Plus />
+                          </button>
+                          <button
+                            onClick={() => handleDownLoad(item)}
+                            className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center">
+                            <ArrowDownToLine />
+                          </button>
+                        </div>
+                      </div>
+                      <p className="w-full truncate font-bold text">{item.name}</p>
+                      <p className="text-gray-400 text-sm">3 week ago</p>
+
+                    </div>
+                  ))}
+                </div>
+              </div>
+            }
+
             <div className="flex flex-col space-y-4">
               <span className="font-bold text-xl">
                 AI helps create product images and increase creativity

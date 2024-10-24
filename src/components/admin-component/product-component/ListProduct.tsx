@@ -21,7 +21,6 @@ export default function ListProduct(props: Props) {
     const [listData, setListData] = useState([]);
     const [change, setChange] = useState(0);
     const [pageNumber, setPageNumber] = useState(1);
-    console.log(listData);
     let cat = searchParams.get("category");
     cat = cat ? cat : "";
     const listCategories = generalCategoriesSelect;
@@ -103,7 +102,6 @@ export default function ListProduct(props: Props) {
 
                 }
                 <button onClick={() => setPageNumber(prev => prev + 1)} className="flex flex-row bg-blue-500 text-white font-semibold py-2 px-6 rounded shadow hover:bg-blue-600 transition duration-200">
-
                     <span>NEXT</span>
                     <ChevronRight />
                 </button>

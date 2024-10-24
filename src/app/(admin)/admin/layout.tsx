@@ -21,7 +21,7 @@ const Layout = ({
     return (
         <div className="flex">
             <div className='h-full'>
-                <SideBar />
+                <SideBar role={role} />
             </div>
             <main className=" w-full flex flex-col">
                 <HeadNavBar role={role} email={email}/>
