@@ -286,7 +286,9 @@ export default function BuyArea(props: Props) {
                   <input type="checkbox" className='rounded mr-2' name="" id="" />
                   <span className='truncate max-w-64'>{productData.product.title}</span>
                 </div>
-                <span>${(boughtTogetherList.length > 0 && parseFloat(boughtTogetherList[0].key2) != 0) ? (((100 - parseFloat(boughtTogetherList[0].key2)) / 100) * currentVariant.price).toFixed(2) : currentVariant.price}</span>
+                {currentVariant?.price ? <span>${(boughtTogetherList.length > 0 && parseFloat(boughtTogetherList[0].key2) != 0) ? (((100 - parseFloat(boughtTogetherList[0].key2)) / 100) * currentVariant.price).toFixed(2) : currentVariant.price}</span>
+                : 0  
+              }
               </div>
               <div>
                 <select name="" id="" className='border rounded w-96 h-8 text-xs text-neutral-500'>

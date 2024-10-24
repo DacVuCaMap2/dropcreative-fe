@@ -1,5 +1,6 @@
 "use client"
 import GetApi from '@/api/GetApi';
+import { message } from 'antd';
 import { Crown, Download, Eye, Package, User } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
@@ -41,6 +42,10 @@ export default function UserManagerComponent() {
                 };
                 setResData(response);
                 setTotalManager(tempManager)
+            }
+            if (response.error) {
+                message.error("Authentication Error Or Login session expired|revoked");
+                window.location.href = "/login";
             }
             setLoading(0);
         }

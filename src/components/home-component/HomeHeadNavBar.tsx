@@ -9,7 +9,7 @@ import { Tooltip } from "react-tooltip";
 type Props = {
   email: string;
   role: string;
-  type:number;
+  type: number;
 }
 export default function HomeHeadNavBar(props: Props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,16 +25,16 @@ export default function HomeHeadNavBar(props: Props) {
     router.push("/login");
   };
   return (
-    <header className={`w-full absolute z-30 top-30 ${props.type===0 ? "text-white" : "text-black sticky top-0 bg-white"}`}>
+    <header className={`w-full absolute z-30 top-30 ${props.type === 0 ? "text-white" : "text-black sticky top-0 bg-white"}`}>
       <nav className="border-gray-200 flex justify-between items-center px-4 py-2">
         <div className="flex flex-row items-center space-x-8">
           <Link href={"/"}>
             <Image
-              src={props.type===0 ? "/image/logo-wh.png" : "/image/logo-font.png"}
+              src={props.type === 0 ? "/image/logo-wh.png" : "/image/logo-font.png"}
               alt="Logo"
-              width={160} 
-              height={0} 
-              className="object-contain" 
+              width={160}
+              height={0}
+              className="object-contain"
             />
           </Link>
           <div className="flex flex-row space-x-6 text-xs font-bold items-center">
@@ -50,17 +50,21 @@ export default function HomeHeadNavBar(props: Props) {
         <div className="flex items-center space-x-4">
           {/* Ảnh đại diện với dropdown */}
           {(props.email && props.role) ?
-            <div className="flex flex-row space-x-4">
+            <div className="flex flex-row space-x-6 justify-center items-center">
+
               <button className="flex items-center border text-xs font-bold px-4 py-2 rounded">
                 <Upload size={16} className="mr-2" />
                 Upload File
               </button>
-              <button className="hover:text-blue-500 bell">
+              <Link href={"/pricing"} className="text-yellow-300 text-sm font-bold">
+                Pricing
+              </Link>
+              {/* <button className="hover:text-blue-500 bell">
                 <Bell size={18} />
                 <Tooltip anchorSelect=".bell" place="bottom">
                   Notification
                 </Tooltip>
-              </button>
+              </button> */}
               <div className="relative">
                 <button onClick={toggleDropdown} className="flex">
                   <div className="mr-2">

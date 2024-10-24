@@ -1,3 +1,4 @@
+import Footer from "@/components/common-component/Footer";
 import React from "react";
 
 const Layout = ({
@@ -7,7 +8,10 @@ const Layout = ({
 }>) => {
   return (
     <div>
-      <main className=" w-full relative">{children}</main>
+      <main className=" w-full relative">
+        {children}
+        <Footer background="bg-black" textColor="text-white" />
+      </main>
     </div>
   );
 };
