@@ -56,7 +56,7 @@ export default function HomeHeadNavBar(props: Props) {
                 <Upload size={16} className="mr-2" />
                 Upload File
               </button>
-              <Link href={"/pricing"} className="text-yellow-300 text-sm font-bold">
+              <Link href={"/pricing"} className="text-yellow-400 text-sm font-bold">
                 Pricing
               </Link>
               {/* <button className="hover:text-blue-500 bell">

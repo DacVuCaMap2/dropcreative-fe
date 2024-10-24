@@ -255,8 +255,8 @@ export default function BuyArea(props: Props) {
                   <span>{item.key1} item get {item.key2}% OFF</span>
                   on each product
                   <div>
-                    <span className='font-bold mr-2'>${(currentVariant.price * (100 - item.key2) / 100).toFixed(2)}</span>
-                    <span className='line-through text-sm text-neutral-400'>${currentVariant.price}</span>
+                    <span className='font-bold mr-2'>${currentVariant?.price ? (currentVariant.price * (100 - item.key2) / 100).toFixed(2) : 0}</span>
+                    <span className='line-through text-sm text-neutral-400'>${currentVariant ? currentVariant.price : 0}</span>
                   </div>
                 </div>
               </div>
