@@ -30,8 +30,9 @@ export default function CardPaypal(props: Props) {
                 </button>
                 <Card hoverable className="shadow-none hover:shadow-none border-none hover:cursor-default">
                     <div className="flex flex-col h-full justify-center ">
-                        <p className="text-black text-2xl font-medium mb-6">{props.pricing.item.name}</p>
-                        <div>
+                        <p className="text-black text-2xl font-medium">{props.pricing.item.name} </p>
+                        <p className=" text-sm font-medium text-red-500 bg-gray-200 p-4 "> Currently in testing, payment not available yet !!!</p>
+                        <div className='mt-4'>
                             <span className="text-4xl text-black font-semibold">
                                 {props.value} $
                             </span>

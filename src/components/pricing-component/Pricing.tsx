@@ -20,7 +20,7 @@ const Pricing = () => {
       <div className="flex flex-col justify-center items-center">
         <div className="flex flex-col py-16 space-y-20 lg:w-[1340px] w-screen px-4">
           <div className="flex flex-col space-y-4">
-            <p className="text-6xl text-center font-medium">Pricing</p>
+            <p className="text-6xl text-center font-medium">Pricing </p>
             <p className="text-base text-gray-600 text-center font-medium">
               Access cutting-edge AI tools, easy-to-use design tools and Premium
               stock content.
