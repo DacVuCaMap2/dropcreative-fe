@@ -85,7 +85,7 @@ const Footer = (props: IProps) => {
         <div className="mt-4 text-sm text-gray-400 flex justify-between">
           <p>
             Copyright © 2023 Trendie. All rights reserved. Powered by&nbsp;
-            <span className="underline cursor-pointer">ShopBase</span>
+            <span className="underline cursor-pointer">DropCreative</span>
           </p>
           <div className="flex gap-3 items-start">
             <p className="underline cursor-pointer">English (EN) | USD</p>

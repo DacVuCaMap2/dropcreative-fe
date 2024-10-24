@@ -118,6 +118,7 @@ export default function EditProductComponent(props: Props) {
     const [listCat, setListCat] = useState<any[]>(productData.categoryIds);
     const [listSea, setListSeasons] = useState<any[]>(productData.season ? productData.season : []);
     const [listHol, setListHolidays] = useState<any[]>(productData.holiday ? productData.holiday : []);
+    console.log("product",productData);
     const optionsCategories = generalOptionsCat;
     const catList = generalCategoriesSelect;
     const getCatCurrentEdit = (): any[] => {
@@ -134,7 +135,7 @@ export default function EditProductComponent(props: Props) {
     const seasonList = generalSeasonList;
     const getSeaCurrentEdit = (): any[] => {
         const result: string[] = []
-        productData.categoryIds.forEach((item: any) => {
+        productData.season.forEach((item: any) => {
             const title = seasonList.find(sea => sea.value === parseFloat(item))?.title
             if (title) {
                 result.push(title);
@@ -144,6 +145,17 @@ export default function EditProductComponent(props: Props) {
     }
     const optionHolidays = generalOptionHoliday;
     const holidayList = generalHolidayList;
+    const getHolCurrentEdit = (): any[] => {
+        const result: string[] = []
+        productData.holiday.forEach((item: any) => {
+            const title = holidayList.find(hol => hol.value === parseFloat(item))?.title
+            if (title) {
+                result.push(title);
+            }
+        })
+        return result;
+    }
+
 
     const openModal = () => {
         document.body.style.overflow = 'hidden';
@@ -739,7 +751,7 @@ export default function EditProductComponent(props: Props) {
                                 mode="multiple"
                                 style={{ width: '100%' }}
                                 placeholder="select Season"
-                                defaultValue={[]}
+                                defaultValue={getSeaCurrentEdit()}
                                 onChange={handleChangeSeason}
                                 options={optionSeasons}
                                 optionRender={(option) => (
@@ -756,7 +768,7 @@ export default function EditProductComponent(props: Props) {
                                 mode="multiple"
                                 style={{ width: '100%' }}
                                 placeholder="select Season"
-                                defaultValue={[]}
+                                defaultValue={getHolCurrentEdit()}
                                 onChange={handleChangeHoliday}
                                 options={optionHolidays}
                                 optionRender={(option) => (
