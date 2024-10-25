@@ -1,4 +1,4 @@
-import Footer from "@/components/common-component/Footer";
+import Footer from "@/components/home-component/Footer";
 import HomeHeadNavBar from "@/components/home-component/HomeHeadNavBar";
 import { cookies } from "next/headers";
 import React from "react";
@@ -22,7 +22,7 @@ const Layout = ({
       <main className=" w-full relative">
         <HomeHeadNavBar email={email} role={role} type={0} />
         {children}
-        <Footer background="bg-black" textColor="text-white" />
+        <Footer />
       </main>
     </div>
   );

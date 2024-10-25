@@ -17,8 +17,11 @@ const config: Config = {
         backgroundLandingPage:'#f7fcfd',
         pricing:"#0E0A1F",
       },
+      backgroundImage: {
+        'custom-gradient': 'linear-gradient(30deg, #f38334, #da2e7d 50%, #6b54c6)',
+      },
       backgroundColor:{
-        backgroundSale:'#2B2060'
+        backgroundSale:'#2B2060',
       },
       keyframes: {
         fadeIn: {
