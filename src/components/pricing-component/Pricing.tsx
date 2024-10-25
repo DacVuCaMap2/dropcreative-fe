@@ -23,7 +23,7 @@ const Pricing = () => {
             <p className="text-6xl text-center font-medium">Pricing </p>
             <p className="text-base text-gray-600 text-center font-medium">
               Access cutting-edge AI tools, easy-to-use design tools and Premium
-              stock content.
+              product content.
               <br />
               All with one subscription.
             </p>
@@ -75,7 +75,7 @@ const Pricing = () => {
                     </div>
                     <div>
                       <p className="text-base font-semibold text-gray-400">
-                        Premium stock content
+                        Premium product content
                       </p>
                       <div className="mt-3">
                         <p className="flex">
@@ -85,7 +85,7 @@ const Pricing = () => {
                             height={15}
                             className="mt-1 mr-1"
                           />
-                          All Premium stock content
+                          All Premium product content
                         </p>
                         <p className="flex">
                           <Check

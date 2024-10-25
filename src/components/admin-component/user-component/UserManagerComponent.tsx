@@ -85,7 +85,7 @@ export default function UserManagerComponent() {
                             <Download size={60} />
                             <span className='font-bold'>Downloads</span>
                         </div>
-                        <span className='font-bold text-4xl'>{totalManager.views}</span>
+                        <span className='font-bold text-4xl'>{totalManager.downloads}</span>
                     </div>
                     <div className='flex flex-row justify-center items-center border-b space-x-2'>
                         <div className='flex flex-col justify-center items-center'>
