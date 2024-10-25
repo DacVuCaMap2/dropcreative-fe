@@ -6,7 +6,7 @@ type Props = {
 export default function CardTotalManager(props:Props) {
     const totalManager = props.totalManager
     return (
-        <div className='flex flex-row justify-center items-center space-x-32  py-4 text-neutral-700'>
+        <div className='flex flex-row justify-center items-center space-x-32  py-4 text-neutral-200'>
             <div className='flex flex-row justify-center items-center border-b space-x-2'>
                 <div className='flex flex-col justify-center items-center'>
                     <User size={60} />

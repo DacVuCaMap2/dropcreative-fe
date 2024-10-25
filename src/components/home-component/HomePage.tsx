@@ -119,15 +119,15 @@ export default function HomePage(props: Props) {
       {isLoadingDownLoad && <div className="fixed top-0 left-0 z-40 w-screen h-screen bg-white opacity-70 flex justify-center items-center">
         <ScaleLoader height={100} width={10} />
       </div>}
-      <div className="flex flex-col relative ">
-        <div className="h-[400px] main-menu"></div>
-        <div className="absolute top-44 w-full h-20 flex flex-col justify-center items-center space-y-2">
+      <div className="flex flex-col relative">
+        <div className="h-[500px] main-menu"></div>
+        <div className="absolute top-64 w-full h-20 flex flex-col justify-center items-center space-y-2">
           <span className="text-3xl font-bold text-white pb-2">
             Ready to start looking product?
           </span>
           <span className="text-white text-sm pb-4">Find all products for any market, images, videos, and landing pages with just one click.</span>
           <InputSearchComponent setDataSearch={setDataSearch} dataSearch={dataSearch} handleClickSearch={handleClickSearch} keySearch={keySearch} setKeySearch={setKeySearch} type={0} />
-          <div className="text-white w-1/2 pt-8 flex flex-row space-x-4 items-start justify-center">
+          <div className="text-white w-1/2 pt-4 flex flex-row space-x-4 items-start justify-center">
             {listSuggestSearch.map((str: string, index) => (
               <div key={index} className="relative">
                 <div className="absolute inset-0 bg-neutral-300 backdrop-blur-md opacity-40  "></div>
@@ -138,8 +138,19 @@ export default function HomePage(props: Props) {
               </div>
             ))}
 
-
           </div>
+          <div>
+            {listTotal ?
+              <div className="mt-2">
+                <CardTotalManager totalManager={listTotal} />
+              </div>
+              :
+              <div className="mt-2 py-10">
+                <ScaleLoader color="white" height={60} width={10}/> 
+              </div>
+            }
+          </div>
+
         </div>
 
         <div className="flex flex-col justify-center items-center">
@@ -178,21 +189,6 @@ export default function HomePage(props: Props) {
               </div>
             </div>
           }
-
-          {props.accountId &&
-            <div>
-              {listTotal ?
-                <div className="mt-10">
-                  <CardTotalManager totalManager={listTotal} />
-                </div>
-                :
-                <div className="mt-10">
-                  <ScaleLoader />
-                </div>
-              }
-            </div>
-          }
-
 
           <div className="flex flex-col py-16 space-y-20 lg:w-[1340px] w-screen px-4">
 
