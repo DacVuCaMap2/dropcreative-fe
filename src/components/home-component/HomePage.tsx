@@ -61,9 +61,9 @@ export default function HomePage(props: Props) {
     window.location.href = "/search?" + params
   }
 
-  const handleAddProduct = async (item: any) => {
+  const handleAddProduct = async (id: any) => {
     setLoadingDownload(true)
-    const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/duplicate/" + item.productId;
+    const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/duplicate/" + id;
     const response = await GetApi(url);
     console.log(response);
     if (response && response.status && response.status === 200 && response.value) {
@@ -77,10 +77,10 @@ export default function HomePage(props: Props) {
     setLoadingDownload(false);
   }
 
-  const handleDownLoad = async (item: any) => {
+  const handleDownLoad = async (id: any) => {
     setLoadingDownload(true);
     let productData: any = null;
-    const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + item.productId;
+    const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + id;
     const response = await GetApi(url);
     if (response.product) {
       productData = response;
@@ -179,13 +179,17 @@ export default function HomePage(props: Props) {
             </div>
           }
 
-          {listTotal ?
-            <div className="mt-10">
-              <CardTotalManager totalManager={listTotal} />
-            </div>
-            :
-            <div className="mt-10">
-                <ScaleLoader/>
+          {props.accountId &&
+            <div>
+              {listTotal ?
+                <div className="mt-10">
+                  <CardTotalManager totalManager={listTotal} />
+                </div>
+                :
+                <div className="mt-10">
+                  <ScaleLoader />
+                </div>
+              }
             </div>
           }
 
@@ -226,13 +230,13 @@ export default function HomePage(props: Props) {
                             <Eye size={20} /> <span>View product</span>
                           </Link>
                           <button
-                            onClick={() => handleAddProduct(item)}
+                            onClick={() => handleAddProduct(item.productId)}
                             className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center"
                           >
                             <Plus />
                           </button>
                           <button
-                            onClick={() => handleDownLoad(item)}
+                            onClick={() => handleDownLoad(item.productId)}
                             className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center">
                             <ArrowDownToLine />
                           </button>

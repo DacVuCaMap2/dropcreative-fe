@@ -1,7 +1,7 @@
 "use client";
 
 import DeleteApi from "@/api/DeleteApi";
-import { Eye, Pen, Trash } from "lucide-react";
+import { Eye, FolderDown, Pen, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -13,7 +13,6 @@ type Props = {
 }
 export function CardProductItem(props: Props) {
   const data = props.product;
-
   const delProduct = async () => {
     const confirmation = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
     if (confirmation) {
@@ -24,7 +23,13 @@ export function CardProductItem(props: Props) {
   }
   return (
     <div className="shadow-lg transition-transform trasistion border border-neutral-300 text-neutral-600  h-[570px] flex flex-col hover:shadow-2xl duration-300 ease-in-out overflow-hidden hover:bg-gray-100">
-      <div className="h-80 overflow-hidden flex items-center justify-center mb-2">
+      <div className="relative h-80 overflow-hidden flex items-center justify-center mb-2">
+        {data.isDuplicated &&
+          <div className="absolute flex flex-row items-center justify-center space-x-1 top-4 left-0 bg-yellow-300 font-bold rounded-r shadow opacity-90 py-2 px-1 z-30 text-xs">
+            <FolderDown size={20} /> <span>Dup</span>
+          </div>
+        }
+
         <div className="relative h-full w-full group flex justify-center items-center">
           <Link href={`/landing-page/product/${data.id}`} target="_blank">
             <Image

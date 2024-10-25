@@ -58,13 +58,13 @@ export default function NewestProduct(props: Props) {
                                         <Eye size={20} /> <span>View product</span>
                                     </Link>
                                     <button
-                                        onClick={() => props.handleAddProduct(item)}
+                                        onClick={() => props.handleAddProduct(item.id)}
                                         className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center"
                                     >
                                         <Plus />
                                     </button>
                                     <button
-                                        onClick={() => props.handleDownLoad(item)}
+                                        onClick={() => props.handleDownLoad(item.id)}
                                         className="hover:bg-neutral-600 h-full w-1/5 flex justify-center items-center">
                                         <ArrowDownToLine />
                                     </button>

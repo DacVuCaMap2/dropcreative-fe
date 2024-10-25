@@ -22,13 +22,15 @@ export default function ListProduct(props: Props) {
     const [change, setChange] = useState(0);
     const [pageNumber, setPageNumber] = useState(1);
     let cat = searchParams.get("category");
+    let dup = searchParams.get("isDuplicated");
     cat = cat ? cat : "";
     const listCategories = generalCategoriesSelect;
     const fetchData = useCallback(async () => {
         try {
             setLoading(true);
             const pathUrl = cat ? `&category=${cat}` : "";
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product?accountId=${props.accountId}&size=32&page=${pageNumber}${pathUrl}`;
+            dup = dup ? dup : "false";
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/api/product?accountId=${props.accountId}&size=32&page=${pageNumber}${pathUrl}&isDuplicated=${dup}`;
             console.log(url);
             const response = await GetApi(url);
             console.log(response);
@@ -44,20 +46,23 @@ export default function ListProduct(props: Props) {
         } finally {
             setLoading(false);
         }
-    }, [cat, pageNumber]);
+    }, [cat,dup, pageNumber]);
 
-
+    
     useEffect(() => {
         fetchData();
     }, [fetchData]);
 
     return (
         <div className='flex flex-col w-full space-y-2'>
-            <div className='text-neutral-500 text-sm w-full mt-4 pb-2 px-2 h-20'>
+            <div className='text-neutral-500 text-sm w-full mt-4 pb-2 h-20'>
                 <div className='w-full flex flex-col py-4 text-xs'>
-                    <div className=' flex flex-row flex-wrap justify-center items-center space-x-4'>
-                        <Link href={pathName} className={`py-2 px-4 border-black hover:border-b-2 ${cat === "" ? "border-b-2 " : ""}`}>
+                    <div className=' flex flex-row flex-wrap justify-center items-center space-x-2'>
+                        <Link href={pathName} className={`py-2 px-4 border-black hover:border-b-2 ${(cat === "" && dup!="true") ? "border-b-2 " : ""}`}>
                             <span >All</span>
+                        </Link>
+                        <Link href={pathName+"?isDuplicated=true"} className={`py-2 px-4 border-black hover:border-b-2 ${dup==="true" ? "border-b-2 " : ""}`}>
+                            <span >Dupplicate</span>
                         </Link>
                         {listCategories.map((item: any, index) => (
                             <Link key={index} href={pathName + "?category=" + item.value} className={`p-2  my-2 border-black hover:border-b-2 ${cat === item.value.toString() ? "border-b-2 border-black" : ""}`}>
