@@ -33,7 +33,7 @@ export default function HomePage(props: Props) {
   const listCategories = homeCategories;
   const listTheme = homeTheme;
   const listCountry = homeCountry;
-  const listSuggestSearch = ["Shirt", "Duck Night Light", "Mask"]
+  const listSuggestSearch: string[] = [];
   const [keySearch, setKeySearch] = useState("");
   const [dataSearch, setDataSearch] = useState<SearchForm>(getNewSearchForm());
   const [isLoadingDownLoad, setLoadingDownload] = useState(false);
@@ -120,25 +120,27 @@ export default function HomePage(props: Props) {
         <ScaleLoader height={100} width={10} />
       </div>}
       <div className="flex flex-col relative">
-        <div className="h-[500px] main-menu"></div>
-        <div className="absolute top-64 w-full h-20 flex flex-col justify-center items-center space-y-2">
+        <div className="h-[400px] main-menu"></div>
+        <div className="absolute top-52 w-full h-20 flex flex-col justify-center items-center space-y-2">
           <span className="text-3xl font-bold text-white pb-2">
             Ready to start looking product?
           </span>
           <span className="text-white text-sm pb-4">Find all products for any market, images, videos, and landing pages with just one click.</span>
           <InputSearchComponent setDataSearch={setDataSearch} dataSearch={dataSearch} handleClickSearch={handleClickSearch} keySearch={keySearch} setKeySearch={setKeySearch} type={0} />
-          <div className="text-white w-1/2 pt-4 flex flex-row space-x-4 items-start justify-center">
-            {listSuggestSearch.map((str: string, index) => (
-              <div key={index} className="relative">
-                <div className="absolute inset-0 bg-neutral-300 backdrop-blur-md opacity-40  "></div>
-                <button onClick={() => setKeySearch(str)} className="hover:bg-neutral-400 relative z-10 w-full py-2 px-4 flex flex-row space-x-2 items-center text-sm ">
-                  <span className="text-white">{str}</span>
-                  <Search className="text-white" size={20} />
-                </button>
-              </div>
-            ))}
+          {listSuggestSearch.length > 0 &&
+            <div className="text-white w-1/2 pt-2 flex flex-row space-x-4 items-start justify-center">
+              {listSuggestSearch.map((str: string, index) => (
+                <div key={index} className="relative">
+                  <div className="absolute inset-0 bg-neutral-300 backdrop-blur-md opacity-40  "></div>
+                  <button onClick={() => setKeySearch(str)} className="hover:bg-neutral-400 relative z-10 w-full py-2 px-4 flex flex-row space-x-2 items-center text-sm ">
+                    <span className="text-white">{str}</span>
+                    <Search className="text-white" size={20} />
+                  </button>
+                </div>
+              ))}
 
-          </div>
+            </div>
+          }
           <div>
             {listTotal ?
               <div className="mt-2">
@@ -146,7 +148,7 @@ export default function HomePage(props: Props) {
               </div>
               :
               <div className="mt-2 py-10">
-                <ScaleLoader color="white" height={60} width={10}/> 
+                <ScaleLoader color="white" height={60} width={10} />
               </div>
             }
           </div>

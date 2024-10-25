@@ -27,11 +27,11 @@ export const sideBarAdmin = [
                 role:[1,2,3]
             },
             {
-                name: "Bill",
-                href:"/",
+                name: "Pixel custom",
+                href:"/admin/pixel-custom",
                 icon:ChartPie,
                 select:"dashboard",
-                role:[1,2,3]
+                role:[2]
             }
         ]
     },
