@@ -19,6 +19,10 @@ import GetApi from "@/api/GetApi";
 import { message } from "antd";
 import { ScaleLoader } from "react-spinners";
 import { handleDownloadToTxtPublic } from "@/data/downloadFunction";
+import { deleteAllCookies } from "@/ultils";
+import NewestProduct from "./NewestProduct";
+import ListProduct from "../admin-component/product-component/ListProduct";
+import CardTotalManager from "./CardTotalManager";
 
 type Props = {
   listHistory: any[];
@@ -33,6 +37,12 @@ export default function HomePage(props: Props) {
   const [keySearch, setKeySearch] = useState("");
   const [dataSearch, setDataSearch] = useState<SearchForm>(getNewSearchForm());
   const [isLoadingDownLoad, setLoadingDownload] = useState(false);
+  const [listNewProduct, setListNewProduct] = useState<any[]>([]);
+  const [listTotal, setListTotal] = useState<any>(null);
+  if (!props.accountId) {
+    console.log("vao day")
+    deleteAllCookies();
+  }
   const handleClickSearch = () => {
     let category = "&category=";
     dataSearch.category.forEach(cat => {
@@ -81,8 +91,29 @@ export default function HomePage(props: Props) {
     setLoadingDownload(false);
     //add 1 download
     const urlCount = process.env.NEXT_PUBLIC_API_URL + "/api/product/" + productData.product.id + "/download"
-    const responseCount = await GetApi(urlCount);
+    await GetApi(urlCount);
   }
+  //first loading
+  useEffect(() => {
+    const fetchNewProduct = async () => {
+      const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/getProducts?page=1&size=10&sort=desc&search="
+      const response = await GetApi(url);
+      if (response.response?.data && Array.isArray(response.response.data)) {
+        console.log(response.data)
+        setListNewProduct(response.response.data);
+      }
+    }
+    const fetchTotal = async () => {
+      const url = process.env.NEXT_PUBLIC_API_URL + "/api/manager/count-all"
+      const response = await GetApi(url);
+      if (response.users) {
+        setListTotal(response);
+      }
+    }
+    fetchNewProduct();
+    fetchTotal();
+  }, [])
+
   return (
     <div className="">
       {isLoadingDownLoad && <div className="fixed top-0 left-0 z-40 w-screen h-screen bg-white opacity-70 flex justify-center items-center">
@@ -130,26 +161,44 @@ export default function HomePage(props: Props) {
               </div>
             </div>
             :
-          <div className="flex justify-center items-center w-full overflow-hidden relative">
-            <div className="h-20 w-20 bg-green-400 absolute top-[-25px] left-8 rounded-full">
-            </div>
-            <div className="h-20 w-20 bg-red-300 absolute top-[-10px] right-8 rounded-full">
-            </div>
-            <div className="mx-auto h-0 w-0 border-r-[25px] border-b-[55px] 
+            <div className="flex justify-center items-center w-full overflow-hidden relative">
+              <div className="h-20 w-20 bg-green-400 absolute top-[-25px] left-8 rounded-full">
+              </div>
+              <div className="h-20 w-20 bg-red-300 absolute top-[-10px] right-8 rounded-full">
+              </div>
+              <div className="mx-auto h-0 w-0 border-r-[25px] border-b-[55px] 
               border-l-[25px] border-solid border-r-transparent
               border-l-transparent border-b-purple-400 absolute bottom-3 right-32">
+              </div>
+              <div className="h-20 w-20 bg-red-500 absolute bottom-[-30px] left-32">
+              </div>
+              <div className="bg-amber-100 w-full py-8 flex justify-center items-center space-x-4">
+                <span className="font-bold">Discover Your Exclusive PREMIUM PLANS: </span>
+                <div className="bg-black text-white px-4 py-2"><span className="font-bold text-lg">7</span> days left</div>
+              </div>
             </div>
-            <div className="h-20 w-20 bg-red-500 absolute bottom-[-30px] left-32">
+          }
+
+          {listTotal ?
+            <div className="mt-10">
+              <CardTotalManager totalManager={listTotal} />
             </div>
-            <div className="bg-amber-100 w-full py-8 flex justify-center items-center space-x-4">
-              <span className="font-bold">Discover Your Exclusive PREMIUM PLANS: </span>
-              <div className="bg-black text-white px-4 py-2"><span className="font-bold text-lg">7</span> days left</div>
+            :
+            <div className="mt-10">
+                <ScaleLoader/>
             </div>
-          </div>
           }
 
 
           <div className="flex flex-col py-16 space-y-20 lg:w-[1340px] w-screen px-4">
+
+
+            {listNewProduct.length > 0 &&
+              <NewestProduct listProductNew={listNewProduct} handleAddProduct={handleAddProduct} handleDownLoad={handleDownLoad} />
+            }
+
+
+
             {props.listHistory.length > 0 &&
               <div className="flex flex-col space-y-8 w-full overflow-hidden">
                 <span className="font-bold text-3xl">
@@ -197,6 +246,9 @@ export default function HomePage(props: Props) {
                 </div>
               </div>
             }
+
+
+
 
             <div className="flex flex-col space-y-4">
               <span className="font-bold text-xl">

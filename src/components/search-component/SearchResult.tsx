@@ -197,7 +197,7 @@ const SearchResult = (props: Props) => {
           {props.type === 0 ? (
             <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
               {listData?.map((item, index) => {
-                if (index === 0 || index === 4 || index === 8 || index === 12 || index === 16) {
+                if (index === 0 || index === 4 || index === 8 || index === 12 || index === 16 || index === 20 || index===24 ||index==28) {
                   return (<div key={index} className="break-inside-avoid mb-4">
                     <Card className="relative rounded-sm hover:cursor-pointer overflow-hidden shadow-none group">
                       <Image
@@ -238,7 +238,7 @@ const SearchResult = (props: Props) => {
                 }
               })}
               {listData?.map((item, index) => {
-                if (index === 1 || index === 5 || index === 9 || index === 13 || index === 17) {
+                if (index === 1 || index === 5 || index === 9 || index === 13 || index === 17 || index===21 || index===25 || index===29) {
                   return (<div key={index} className="break-inside-avoid mb-4">
                     <Card className="relative rounded-sm hover:cursor-pointer overflow-hidden shadow-none group">
                       <Image
@@ -280,7 +280,7 @@ const SearchResult = (props: Props) => {
               })}
               {listData?.map((item, index) => {
 
-                if (index === 2 || index === 6 || index === 10 || index === 14 || index === 18) {
+                if (index === 2 || index === 6 || index === 10 || index === 14 || index === 18 || index===22 || index===26 || index===30) {
                   return (<div key={index} className="break-inside-avoid mb-4">
                     <Card className="relative rounded-sm hover:cursor-pointer overflow-hidden shadow-none group">
                       <Image
@@ -321,7 +321,7 @@ const SearchResult = (props: Props) => {
                 }
               })}
               {listData?.map((item, index) => {
-                if (index === 3 || index === 7 || index === 11 || index === 15 || index === 19) {
+                if (index === 3 || index === 7 || index === 11 || index === 15 || index === 19 || index===23 || index===27 || index===31) {
                   return (<div key={index} className="break-inside-avoid mb-4">
                     <Card className="relative rounded-sm hover:cursor-pointer overflow-hidden shadow-none group">
                       <Image
