@@ -192,7 +192,7 @@ export default function PixelComponent() {
                                                                 </td>
                                                                 <td>
                                                                     <div className='h-10 w-full px-2 flex  items-center'>
-                                                                        {childItem.product.title} asjd lkajsdklj aslkdj laksjdalksd alskjd lkasjdlksaj
+                                                                        {childItem.product.title} 
                                                                     </div>
                                                                 </td>
                                                                 <td>
