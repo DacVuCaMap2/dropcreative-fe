@@ -1,6 +1,6 @@
 .main-menu {
     position: relative;
-    background-image: url('/image/default/main-bg-sec.jpg');
+    background-image: url('/image/default/tigerbg.png');
     background-size: cover;
     background-position: center;
     filter: brightness(0.4);

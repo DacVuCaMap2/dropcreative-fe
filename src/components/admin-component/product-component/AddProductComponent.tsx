@@ -89,7 +89,7 @@ export default function AddProductComponent(props: Props) {
     value: 0,
   },]);
   /// just save editor tiny
-
+  const [isOpenImg, setIsOpenImg] = useState(false);
 
 
 
@@ -166,6 +166,14 @@ export default function AddProductComponent(props: Props) {
     const value = e.target.checked;
     // console.log(value);
     setServiceT({ ...serviceT, [key]: value })
+  }
+  const handleOpenImg = () => {
+    document.body.style.overflow = 'hidden';
+    setIsOpenImg(true);
+  }
+  const handleCloseImg = () => {
+    setIsOpenImg(false)
+    document.body.style.overflow = 'auto';
   }
   const handleChange = (e: any, key: string) => {
     let value = e.target.value;
@@ -390,7 +398,7 @@ export default function AddProductComponent(props: Props) {
       return details;
     })
     setListVariantDetails(temp);
-    closeModal();
+    handleCloseImg();
   }
 
   const router = useRouter();
@@ -501,7 +509,7 @@ export default function AddProductComponent(props: Props) {
       if (response.error) {
         message.error(response.error.message);
       }
-      else { 
+      else {
         message.success("Upload success")
         window.location.href = '/admin/all-product'
       }
@@ -1128,7 +1136,7 @@ export default function AddProductComponent(props: Props) {
                           </td>
                           <td className="px-2 py-2 w-36">
                             <div>
-                              <button onClick={() => { openModal(); setIndCurrent(childInd) }}>
+                              <button onClick={() => { handleOpenImg(); setIndCurrent(childInd) }}>
                                 {variantItem.image ?
                                   <img
                                     src={URL.createObjectURL(variantItem.image)}
@@ -1141,7 +1149,7 @@ export default function AddProductComponent(props: Props) {
                                 }
                               </button>
 
-                              <Modal
+                              {/* <Modal
                                 isOpen={isOpenSelectPhoto}
                                 onRequestClose={closeModal}
                                 contentLabel="Select Image"
@@ -1169,7 +1177,7 @@ export default function AddProductComponent(props: Props) {
                                     </div>
                                   )}
                                 </div>
-                              </Modal>
+                              </Modal> */}
                             </div>
                           </td>
                           <td className="px-2 py-2">
@@ -1773,6 +1781,35 @@ export default function AddProductComponent(props: Props) {
           </div>
         </div>
       </div>
+      {isOpenImg &&
+        <div className={` fixed top-0 left-0 z-40 h-screen w-screen bg-blue-900 bg-opacity-50 flex flex-col justify-center items-center`}>
+          <div className="relative flex flex-col bg-white w-2/3 h-2/3 px-4 py-4">
+            <button className="absolute top-2 right-2 bg-gray-200 p-2 rounded hover:bg-gray-400" onClick={handleCloseImg}>
+              <X />
+            </button>
+            <span className="border-b font-bold text-xl">Select an Image</span>
+            <div className=" p-2 overflow-auto">
+              {photos.length > 0 && (
+                <div className="grid grid-cols-5 gap-4 pt-4 ">
+                  {photos.map((item: File, photoInd) => (
+                    <div onClick={() => handleSelectVariantImg(item)} key={photoInd} className="cursor-pointer hover:scale-105 flex flex-col items-center rounded-lg border shadow-xl overflow-hidden">
+                      <Image
+                        quality={50}
+                        src={URL.createObjectURL(item)} // Tạo URL tạm thời cho ảnh
+                        alt={item.name}
+                        width={144}
+                        height={144}
+                        className="w-36 h-36 object-cover" // Kích thước ảnh
+                      ></Image>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      }
+
     </div>
   );
 }
