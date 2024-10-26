@@ -5,7 +5,7 @@ import ShowLoadTable from '@/components/general-component/ShowLoadTable';
 import { generalCategoriesSelect } from '@/data/generalData';
 import CategoryPixel, { FacebookPixel, FacebookPixelAccounts } from '@/model/CategoryPixel';
 import { message } from 'antd';
-import { Plus } from 'lucide-react'
+import { AlignJustify, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 export default function PixelComponent() {
@@ -13,6 +13,7 @@ export default function PixelComponent() {
     const [isLoading, setLoading] = useState(0);
     const [categoryPixel, setCategoryPixel] = useState<CategoryPixel | null>(null);
     const [selectCat, setSelectcat] = useState(1);
+    const [showAccessToken, setShowAccessToken] = useState(-1);
     const [currentFacebookPixel, setCurrentFacebookPixel] = useState<FacebookPixel>({ id: 0, name: "", value: "", status: 1, accessToken: "", businessId: "", facebookPixelAccounts: [] });
     const [refreshTable, setRefresthTable] = useState(1);
     const countRowSpan = (index: number): number => {
@@ -43,7 +44,7 @@ export default function PixelComponent() {
         setCurrentFacebookPixel({ ...currentFacebookPixel, [key]: value });
     }
 
-    const formatDateUS = (dateString: any) :string=> {
+    const formatDateUS = (dateString: any): string => {
         const date = new Date(dateString);
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -157,34 +158,100 @@ export default function PixelComponent() {
                                 :
                                 <tbody>
                                     {categoryPixel?.facebookPixels.map((item: FacebookPixel, index) => (
-                                        <tr key={index} className='bg-white border-b w-full'>
-                                            <td rowSpan={countRowSpan(index)}>
-                                                <div className='px-2 flex  items-center'>
-                                                    {item.name}
-                                                </div>
-                                            </td>
-                                            <td rowSpan={countRowSpan(index)}>
-                                                <div className='px-2 flex  items-center'>
-                                                    {item.value}
-                                                </div>
-                                            </td>
-                                            <td rowSpan={countRowSpan(index)}>
-                                                <div className='px-2 flex  items-center'>
-                                                    {item.businessId}
-                                                </div>
-                                            </td>
-                                            <td rowSpan={countRowSpan(index)} className=''>
-                                                <div className='px-2 py-2 overflow-auto'>
-                                                    <textarea defaultValue={item.accessToken} name="" id="" className="w-full p-2 border rounded" readOnly>
+                                        <>
+                                            <tr className='bg-white border-b w-full'>
+                                                <td rowSpan={countRowSpan(index)}>
+                                                    <div className='px-2 flex  items-center'>
+                                                        {item.name}
+                                                    </div>
+                                                </td>
+                                                <td rowSpan={countRowSpan(index)}>
+                                                    <div className='px-2 flex  items-center'>
+                                                        {item.value}
+                                                    </div>
+                                                </td>
+                                                <td rowSpan={countRowSpan(index)}>
+                                                    <div className='px-2 flex  items-center'>
+                                                        {item.businessId}
+                                                    </div>
+                                                </td>
+                                                <td rowSpan={countRowSpan(index)} className=''>
+                                                    <div className='px-2 py-2 overflow-auto'>
+                                                        {showAccessToken === index ?
+                                                            <div>
+                                                                <textarea defaultValue={item.accessToken} name="" id="" className="w-full p-2 border rounded" readOnly></textarea>
+                                                                <button onClick={() => setShowAccessToken(-1)} className='flex flex-row bg-gray-200 hover:bg-gray-300 p-2 items-center justify-center text-xs space-x-1'><span>Hide</span></button>
+                                                            </div>
+                                                            :
+                                                            <button onClick={() => setShowAccessToken(index)} className='flex flex-row bg-gray-200 hover:bg-gray-300 p-2 items-center justify-center text-xs space-x-1'><AlignJustify /> <span>Show</span></button>
+                                                        }
 
-                                                    </textarea>
-                                                </div>
-                                            </td>
-                                            {item.facebookPixelAccounts.length > 0 ?
-                                                <>
-                                                    {
-                                                        item.facebookPixelAccounts.map((childItem: FacebookPixelAccounts, childIndex) => (
-                                                            <>
+                                                    </div>
+                                                </td>
+                                                {item.facebookPixelAccounts.length > 0 ?
+                                                    <>
+                                                        <td >
+                                                            <div className='h-10 w-full px-2 flex  items-center'>
+                                                                {item.facebookPixelAccounts[0].accountResponse.email}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className='h-10 w-full px-2 flex  items-center'>
+                                                                {item.facebookPixelAccounts[0].product.title}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className='h-10 w-full px-2 flex justify-center items-center'>
+                                                                {item.facebookPixelAccounts[0].value}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className='h-10 w-full px-2 flex  items-center'>
+                                                                {formatDateUS(item.facebookPixelAccounts[0].createdAt)}
+                                                            </div>
+                                                        </td>
+                                                        <td className='py-2'>
+                                                            <div className='h-10  w-full px-2 flex justify-center items-center'>
+                                                                <button className='flex justify-center items-center space-x-2 p-2 border bg-gray-100 hover:bg-gray-200'>Delete</button>
+                                                            </div>
+                                                        </td>
+                                                    </>
+
+                                                    :
+                                                    <>
+                                                        <td >
+                                                            <div className='h-10 w-full px-2 flex  items-center'>
+                                                                <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className='h-10 w-full px-2 flex  items-center'>
+                                                                <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className='h-10 w-full px-2 flex  items-center'>
+                                                                <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className='h-10 w-full px-2 flex  items-center'>
+                                                                <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className='h-10 w-full px-2 flex  items-center'>
+                                                                <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                            </div>
+                                                        </td>
+                                                    </>
+                                                }
+                                            </tr>
+                                            {
+                                                item.facebookPixelAccounts.map((childItem: FacebookPixelAccounts, childIndex) => {
+                                                    if (childIndex > 0) {
+                                                        return (
+                                                            <tr key={childIndex} className='bg-white border-b w-full'>
                                                                 <td key={childIndex}>
                                                                     <div className='h-10 w-full px-2 flex  items-center'>
                                                                         {childItem.accountResponse.email}
@@ -192,7 +259,7 @@ export default function PixelComponent() {
                                                                 </td>
                                                                 <td>
                                                                     <div className='h-10 w-full px-2 flex  items-center'>
-                                                                        {childItem.product.title} 
+                                                                        {childItem.product.title}
                                                                     </div>
                                                                 </td>
                                                                 <td>
@@ -202,49 +269,23 @@ export default function PixelComponent() {
                                                                 </td>
                                                                 <td>
                                                                     <div className='h-10 w-full px-2 flex  items-center'>
-                                                                       {formatDateUS(childItem.createdAt)}
+                                                                        {formatDateUS(childItem.createdAt)}
                                                                     </div>
                                                                 </td>
-                                                                <td>
+                                                                <td className='py-2'>
                                                                     <div className='h-10 w-full px-2 flex justify-center items-center'>
                                                                         <button className='flex justify-center items-center space-x-2 p-2 border bg-gray-100 hover:bg-gray-200'>Delete</button>
                                                                     </div>
                                                                 </td>
-                                                            </>
-                                                        ))
+                                                            </tr>)
                                                     }
-                                                </>
-                                                :
-                                                <>
-                                                    <td >
-                                                        <div className='h-10 w-full px-2 flex  items-center'>
-                                                            <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className='h-10 w-full px-2 flex  items-center'>
-                                                            <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className='h-10 w-full px-2 flex  items-center'>
-                                                            <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className='h-10 w-full px-2 flex  items-center'>
-                                                            <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className='h-10 w-full px-2 flex  items-center'>
-                                                            <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
-                                                        </div>
-                                                    </td>
-                                                </>
+                                                    return;
+                                                })
                                             }
-                                        </tr>
+                                        </>
                                     ))}
+
+
                                 </tbody>
                             }
 
