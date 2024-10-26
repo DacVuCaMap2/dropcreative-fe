@@ -34,6 +34,7 @@ export function CardProductItem(props: Props) {
       value: currentInp,
       productId: data.id
     }
+    console.log(postData);
     const response = await PostApi(url,postData);
     console.log(response);
     if (response?.status===200) {
@@ -142,14 +143,12 @@ export function CardProductItem(props: Props) {
         </div>
       </div>
       {(data.isDuplicated && !props.isAdmin) &&
-        <div className="absolute w-full flex flex-col items-center justify-center bottom-0 left-0 bg-yellow-300 font-bold rounded-r shadow z-30 text-xs">
-          <div>
-            Pixel
-          </div>
+        <div className="absolute w-full flex flex-col items-center justify-center bottom-0 left-0 bg-gray-800 font-bold rounded-r shadow z-30 text-xs">
+
           <div className="flex flex-row justify-center items-center w-full">
-            <button onClick={() => setOpen(1)} className="hover:bg-yellow-400 flex w-full py-1 flex-row justify-center items-center border-r border-black"><Image src={"/icon/facebookicon.svg"} alt="google" width={25} height={25} /></button>
-            <button className="hover:bg-yellow-400 flex w-full py-1 flex-row justify-center items-center border-r border-black"><Image src={"/icon/googleicon.svg"} alt="google" width={25} height={25} /></button>
-            <button className="hover:bg-yellow-400 flex w-full py-1 flex-row justify-center items-center"><Image src={"/icon/tiktokicon.svg"} alt="google" width={25} height={25} /></button>
+            <button onClick={() => setOpen(1)} className="hover:bg-gray-600 text-white flex w-full py-2 flex-row justify-center items-center border-r border-white">Facebook pixel</button>
+            <button className="hover:bg-gray-600 text-white flex w-full py-2 flex-row justify-center items-center border-r border-white">Google analytics</button>
+            <button className="hover:bg-gray-600 text-white flex w-full py-2 flex-row justify-center items-center">Tiktok ads pixel</button>
           </div>
         </div>
       }
@@ -165,7 +164,7 @@ export function CardProductItem(props: Props) {
               <p className="text-xs text-gray-400">Copy and paste your account ads id in here then submit to get share</p>
               <div className=" flex flex-col px-10 mt-8">
                 <label className="text-xs font-bold " htmlFor="">Account ads id</label>
-                <input required type="text" className="bg-gray-100 w-[300px] border-none border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block py-2 px-4" />
+                <input onChange={e=>setCurrentInp(e.target.value)} required type="text" className="bg-gray-100 w-[300px] border-none border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block py-2 px-4" />
               </div>
               <button className="flex justify-center items-center w-20 mt-4 rounded-xl space-x-2 py-2 border bg-gray-100 hover:bg-gray-200">Submit</button>
             </div>

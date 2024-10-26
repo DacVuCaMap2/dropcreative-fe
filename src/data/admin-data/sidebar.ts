@@ -1,5 +1,5 @@
 
-import { ChartPie, CircleUserRound, Headset, Home, Package, UsersRound } from "lucide-react";
+import { ChartPie, CircleUserRound, Headset, Home, Package, UsersRound, Waypoints } from "lucide-react";
 
 export const sideBarAdmin = [
     {
@@ -29,7 +29,7 @@ export const sideBarAdmin = [
             {
                 name: "Pixel custom",
                 href:"/admin/pixel-custom",
-                icon:ChartPie,
+                icon:Waypoints,
                 select:"dashboard",
                 role:[2]
             }
