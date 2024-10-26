@@ -1,77 +1,244 @@
 "use client"
-import CategoryPixel, { FacebookPixel } from '@/model/CategoryPixel';
+import GetApi from '@/api/GetApi';
+import PostApi from '@/api/PostParttern';
+import ShowLoadTable from '@/components/general-component/ShowLoadTable';
+import { generalCategoriesSelect } from '@/data/generalData';
+import CategoryPixel, { FacebookPixel, FacebookPixelAccounts } from '@/model/CategoryPixel';
+import { message } from 'antd';
 import { Plus } from 'lucide-react'
-import React, { useState } from 'react'
-type Props = {
-    listPixel: CategoryPixel[];
-}
+import React, { useEffect, useState } from 'react'
 
-export default function PixelComponent(props: Props) {
-    const listPixel = props.listPixel;
-    const [listSelect, setListSelect] = useState([0, 0, 0]);
-    console.log(listPixel);
+export default function PixelComponent() {
+    const listCategories = generalCategoriesSelect;
+    const [isLoading, setLoading] = useState(0);
+    const [categoryPixel, setCategoryPixel] = useState<CategoryPixel | null>(null);
+    const [selectCat, setSelectcat] = useState(1);
+    const [currentFacebookPixel, setCurrentFacebookPixel] = useState<FacebookPixel>({ id: 0, name: "", value: "", accessToken: "", businessId: "", facebookPixelAccounts: [] });
+    const [refreshTable,setRefresthTable] = useState(1);
+    const countRowSpan = (index: number): number => {
+        if (categoryPixel && categoryPixel.facebookPixels[index] && categoryPixel.facebookPixels[index].facebookPixelAccounts.length > 0) {
+            console.log(categoryPixel.facebookPixels[index].facebookPixelAccounts.length)
+            return categoryPixel.facebookPixels[index].facebookPixelAccounts.length;
+        }
+        return 1;
+    }
+    const handleSubmitAdd = async (e: any) => {
+        e.preventDefault();
+        //valid
+        if (categoryPixel && categoryPixel.facebookPixels.find(item => item.name === currentFacebookPixel.name)) {
+            message.error("name already exists")
+            return;
+        }
 
+        const url = process.env.NEXT_PUBLIC_API_URL + "/api/facebook/add";
+        const postData = {...currentFacebookPixel,id:selectCat};
+        const response = await PostApi(url,postData);
+        if (response.status===200) {
+            message.success("add success");
+            setCurrentFacebookPixel({ id: 0, name: "", value: "", accessToken: "", businessId: "", facebookPixelAccounts: [] });
+        }
+        setRefresthTable(prev=>prev+1);
+    }
+    const handleChangeCurrentPixel = (e: any, key: string) => {
+        const value = e.target.value;
+        setCurrentFacebookPixel({ ...currentFacebookPixel, [key]: value });
+    }
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(1);
+            const url = process.env.NEXT_PUBLIC_API_URL + "/api/facebook/getByCategory/" + selectCat;
+            const response = await GetApi(url);
+            console.log(response);
+            if (response?.name && response?.id) {
+                setCategoryPixel(response);
+            }
+            else if (response?.error?.message === "Authentication Error Or Login session expired|revoked") {
+                window.location.href = "/login";
+            }
+            else {
+                message.error("cannot connect to server")
+            }
+            setLoading(0);
+        }
+        fetchData();
+    }, [selectCat,refreshTable])
     return (
-        <div className='px-10 py-4 flex flex-col '>
-            <div className='text-2xl font-bold mb-4'>
+        <div className='px-10 py-4 flex flex-col text-gray-700'>
+            <div className='text-xl font-bold mb-4'>
                 Pixel Custom
             </div>
             <div className='flex flex-col justify-center items-center space-y-4'>
-                <div className='flex flex-row space-x-4'>
-                    {listPixel.map((cat: CategoryPixel, index) => (
-                        <button key={index} onClick={() => setListSelect([index, listSelect[1], listSelect[2]])} className={` hover:border-gray-700 border-white border-b-2 ${listSelect[0] === index ? "border-gray-700" : ""}`}>{cat.name}</button>
+                <div className='flex flex-row space-x-4 text-sm'>
+                    {listCategories.map((cat: any, index) => (
+                        <button key={index} onClick={() => setSelectcat(cat.value)} className={` hover:border-gray-700 border-b-2 ${selectCat === cat.value ? "border-gray-700" : "border-white"}`}>{cat.title}</button>
                     ))}
                 </div>
 
-                <div className='flex flex-row border p-4 w-full'>
-                    <div className='flex flex-col w-3/4 border-r border-gray-400'>
-                        <p className='font-bold text-lg w-full border-b bg-gray-800 text-white text-center mb-4' >Facebook Pixel</p>
-                        {listPixel[listSelect[0]].facebookPixels.map((item: FacebookPixel, index) => (
-                            <div key={index} className='flex flex-col px-6 py-4 space-y-4'>
-                                <div className='flex flex-col border p-4 text-xs space-y-2 '>
+                <div className='flex flex-col w-full border-gray-400'>
+
+                    <div className='flex flex-col py-4 space-y-4'>
+                        <p className='font-bold text-lg ' >Facebook Pixel</p>
+                        <form action="" onSubmit={handleSubmitAdd}>
+
+                            <div className='flex flex-col border p-4 text-xs space-y-4 items-end'>
+                                <div className='flex flex-row space-x-4 w-full'>
                                     <div>
                                         <label htmlFor="" className='font-bold'>Name</label>
-                                        <input type="text" className='bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                                        <input required type="text" value={currentFacebookPixel.name} onChange={e => handleChangeCurrentPixel(e, "name")} className='bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                             focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4'/>
                                     </div>
-                                    <div>
-                                        <label htmlFor="" className='font-bold'>Pixel facebook</label>
-                                        <input type="text" className='bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-                            focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4'/>
-                                    </div>
-                                    <div>
+                                    <div className='flex-grow'>
                                         <label htmlFor="" className='font-bold'>Access token</label>
-                                        <input type="text" className='bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                                        <input required type="text" value={currentFacebookPixel.accessToken} onChange={e => handleChangeCurrentPixel(e, "accessToken")} className='bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                            focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4' />
+                                    </div>
+                                    <div className='flex-grow'>
+                                        <label htmlFor="" className='font-bold'>Business ID</label>
+                                        <input required type="text" value={currentFacebookPixel.businessId} onChange={e => handleChangeCurrentPixel(e, "businessId")} className='bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                             focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4' />
                                     </div>
                                 </div>
-
-                            </div>
-                        ))}
-                        <button className='w-full flex justify-center items-center space-x-2 py-2 border bg-gray-100 hover:bg-gray-200'>
-                            <Plus />
-                            <span>Add facebook pixel</span>
-                        </button>
-
-                    </div>
-                    <div className='flex flex-col w-1/4'>
-                        <p className='font-bold text-lg w-full border-b bg-gray-800 text-white text-center' >Account Id</p>
-
-                        <div className='flex flex-col py-4 px-4 space-y-4'>
-                            <div className='flex flex-col border p-2 text-xs space-y-2'>
-                                <div>
-                                    <span className='font-bold'>User: </span>
-                                    <span className=''>namlsnam113@gmail.com</span>
+                                <div className='w-full'>
+                                    <label htmlFor="" className='font-bold'>Pixel facebook</label>
+                                    <input required type="text" value={currentFacebookPixel.value} onChange={e => handleChangeCurrentPixel(e, "value")} className='bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                            focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4'/>
                                 </div>
-                                <label htmlFor="" className='font-bold'>Account id</label>
-                                <input type="text" className='bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-                            focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4' />
+                                <button className='w-1/6 flex justify-center items-center space-x-2 py-2 border bg-gray-100 hover:bg-gray-200'>
+                                    <Plus />
+                                    <span>Add facebook pixel</span>
+                                </button>
                             </div>
-                            <button className='w-full flex justify-center items-center space-x-2 py-2 border bg-gray-100 hover:bg-gray-200'>
-                                <Plus />
-                                <span>Add Account</span>
-                            </button>
-                        </div>
+                        </form>
+                    </div>
+
+                    <div>
+                        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <thead className=" sticky top-0 text-xs text-gray-700 uppercase bg-gray-100 ">
+                                <tr>
+                                    <th scope="col" className="px-4 py-3">
+                                        Name
+                                    </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        Facebook pixel
+                                    </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        Business ID
+                                    </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        AccessToken
+                                    </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        User
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-center">
+                                        Product
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-center">
+                                        Id ADS
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-center">
+                                        Date
+                                    </th>
+                                    <th scope="col" className="px-4 py-3 text-center">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            {(!categoryPixel || isLoading === 1) ?
+                                <ShowLoadTable />
+                                :
+                                <tbody>
+                                    {categoryPixel?.facebookPixels.map((item: FacebookPixel, index) => (
+                                        <tr key={index} className='bg-white border-b '>
+                                            <td rowSpan={countRowSpan(index)}>
+                                                <div className='h-10 w-full px-4 flex  items-center'>
+                                                    {item.name}
+                                                </div>
+                                            </td>
+                                            <td rowSpan={countRowSpan(index)}>
+                                                <div className='h-10 w-full px-4 flex  items-center'>
+                                                    {item.value}
+                                                </div>
+                                            </td>
+                                            <td rowSpan={countRowSpan(index)}>
+                                                <div className='h-10 w-full px-4 flex  items-center'>
+                                                    {item.businessId}
+                                                </div>
+                                            </td>
+                                            <td rowSpan={countRowSpan(index)}>
+                                                <div className='h-10 w-full px-4 flex  items-center'>
+                                                    {item.accessToken}
+                                                </div>
+                                            </td>
+                                            {item.facebookPixelAccounts.length > 0 ?
+                                                <>
+                                                    {
+                                                        item.facebookPixelAccounts.map((childItem: FacebookPixelAccounts, childIndex) => (
+                                                            <>
+                                                                <td >
+                                                                    <div className='h-10 w-full px-4 flex  items-center'>
+                                                                        <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div className='h-10 w-full px-4 flex  items-center'>
+                                                                        <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div className='h-10 w-full px-4 flex  items-center'>
+                                                                        <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div className='h-10 w-full px-4 flex  items-center'>
+                                                                        <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div className='h-10 w-full px-4 flex  items-center'>
+                                                                        <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                                    </div>
+                                                                </td>
+                                                            </>
+                                                        ))
+                                                    }
+                                                </>
+                                                :
+                                                <>
+                                                    <td >
+                                                        <div className='h-10 w-full px-4 flex  items-center'>
+                                                            <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className='h-10 w-full px-4 flex  items-center'>
+                                                            <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className='h-10 w-full px-4 flex  items-center'>
+                                                            <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className='h-10 w-full px-4 flex  items-center'>
+                                                            <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className='h-10 w-full px-4 flex  items-center'>
+                                                            <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                        </div>
+                                                    </td>
+                                                </>
+                                            }
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            }
+
+                        </table>
                     </div>
                 </div>
             </div>

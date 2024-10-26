@@ -11,6 +11,7 @@ export type FacebookPixel ={
     name:string,
     value:string,
     accessToken:string,
+    businessId:string,
     facebookPixelAccounts:FacebookPixelAccounts[]
 }
 

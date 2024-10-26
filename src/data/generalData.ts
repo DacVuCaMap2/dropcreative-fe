@@ -1,5 +1,9 @@
 export const generalCategoriesSelect = [
     {
+        title: "Fashion",
+        value: 1
+    },
+    {
         title: "Educational toys",
         value: 9
     },
@@ -26,10 +30,6 @@ export const generalCategoriesSelect = [
     {
         title: "Toys & Games",
         value: 3
-    },
-    {
-        title: "Fashion",
-        value: 1
     },
     {
         title: "Beauty & Personal Care",

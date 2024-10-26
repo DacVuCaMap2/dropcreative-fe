@@ -1,6 +1,7 @@
 "use server"
 import axios, { AxiosError } from 'axios';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function GetApi(url: string, config?: any) {
     const cookie = cookies();
@@ -14,7 +15,7 @@ export default async function GetApi(url: string, config?: any) {
         
         const finalConfig = { ...defaultConfig, ...config };
         const response = await axios.get(url, finalConfig);
-        // console.log(response.data);
+        console.log(response);
         // console.log(response.data.data);
         return response.data;
     } catch (error) {
