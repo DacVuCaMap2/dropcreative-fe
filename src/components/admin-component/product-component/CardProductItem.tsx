@@ -32,7 +32,7 @@ export function CardProductItem(props: Props) {
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/facebook/sharePixel";
     const postData = {
       value: currentInp,
-      productId: 4
+      productId: data.id
     }
     const response = await PostApi(url,postData);
     console.log(response);
