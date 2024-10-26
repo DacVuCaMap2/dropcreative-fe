@@ -3,13 +3,16 @@ import AccountResponse from "./AccountResponse";
 export type FacebookPixelAccounts= {
     id:any,
     value:string,
-    accountResponse:AccountResponse
+    accountResponse:AccountResponse,
+    product:any,
+    createdAt:string
 }
 
 export type FacebookPixel ={
     id:any,
     name:string,
     value:string,
+    status:number,
     accessToken:string,
     businessId:string,
     facebookPixelAccounts:FacebookPixelAccounts[]

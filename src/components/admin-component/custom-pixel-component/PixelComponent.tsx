@@ -13,11 +13,10 @@ export default function PixelComponent() {
     const [isLoading, setLoading] = useState(0);
     const [categoryPixel, setCategoryPixel] = useState<CategoryPixel | null>(null);
     const [selectCat, setSelectcat] = useState(1);
-    const [currentFacebookPixel, setCurrentFacebookPixel] = useState<FacebookPixel>({ id: 0, name: "", value: "", accessToken: "", businessId: "", facebookPixelAccounts: [] });
-    const [refreshTable,setRefresthTable] = useState(1);
+    const [currentFacebookPixel, setCurrentFacebookPixel] = useState<FacebookPixel>({ id: 0, name: "", value: "", status: 1, accessToken: "", businessId: "", facebookPixelAccounts: [] });
+    const [refreshTable, setRefresthTable] = useState(1);
     const countRowSpan = (index: number): number => {
         if (categoryPixel && categoryPixel.facebookPixels[index] && categoryPixel.facebookPixels[index].facebookPixelAccounts.length > 0) {
-            console.log(categoryPixel.facebookPixels[index].facebookPixelAccounts.length)
             return categoryPixel.facebookPixels[index].facebookPixelAccounts.length;
         }
         return 1;
@@ -31,17 +30,26 @@ export default function PixelComponent() {
         }
 
         const url = process.env.NEXT_PUBLIC_API_URL + "/api/facebook/add";
-        const postData = {...currentFacebookPixel,id:selectCat};
-        const response = await PostApi(url,postData);
-        if (response.status===200) {
+        const postData = { ...currentFacebookPixel, id: selectCat };
+        const response = await PostApi(url, postData);
+        if (response.status === 200) {
             message.success("add success");
-            setCurrentFacebookPixel({ id: 0, name: "", value: "", accessToken: "", businessId: "", facebookPixelAccounts: [] });
+            setCurrentFacebookPixel({ id: 0, name: "", value: "", status: 1, accessToken: "", businessId: "", facebookPixelAccounts: [] });
         }
-        setRefresthTable(prev=>prev+1);
+        setRefresthTable(prev => prev + 1);
     }
     const handleChangeCurrentPixel = (e: any, key: string) => {
         const value = e.target.value;
         setCurrentFacebookPixel({ ...currentFacebookPixel, [key]: value });
+    }
+
+    const formatDateUS = (dateString: any) :string=> {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+        return formattedDate;
     }
     useEffect(() => {
         const fetchData = async () => {
@@ -61,7 +69,7 @@ export default function PixelComponent() {
             setLoading(0);
         }
         fetchData();
-    }, [selectCat,refreshTable])
+    }, [selectCat, refreshTable])
     return (
         <div className='px-10 py-4 flex flex-col text-gray-700'>
             <div className='text-xl font-bold mb-4'>
@@ -85,7 +93,7 @@ export default function PixelComponent() {
                                     <div>
                                         <label htmlFor="" className='font-bold'>Name</label>
                                         <input required type="text" value={currentFacebookPixel.name} onChange={e => handleChangeCurrentPixel(e, "name")} className='bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
-                            focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-4'/>
+                            focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-2'/>
                                     </div>
                                     <div className='flex-grow'>
                                         <label htmlFor="" className='font-bold'>Access token</label>
@@ -115,31 +123,31 @@ export default function PixelComponent() {
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <thead className=" sticky top-0 text-xs text-gray-700 uppercase bg-gray-100 ">
                                 <tr>
-                                    <th scope="col" className="px-4 py-3">
+                                    <th scope="col" className="px-2 py-3">
                                         Name
                                     </th>
-                                    <th scope="col" className="px-4 py-3">
+                                    <th scope="col" className="px-2 py-3">
                                         Facebook pixel
                                     </th>
-                                    <th scope="col" className="px-4 py-3">
+                                    <th scope="col" className="px-2 py-3">
                                         Business ID
                                     </th>
-                                    <th scope="col" className="px-4 py-3">
+                                    <th scope="col" className="px-2 py-3">
                                         AccessToken
                                     </th>
-                                    <th scope="col" className="px-4 py-3">
+                                    <th scope="col" className="px-2 py-3">
                                         User
                                     </th>
-                                    <th scope="col" className="px-4 py-3 text-center">
+                                    <th scope="col" className="px-2 py-3">
                                         Product
                                     </th>
-                                    <th scope="col" className="px-4 py-3 text-center">
+                                    <th scope="col" className="px-2 py-3">
                                         Id ADS
                                     </th>
-                                    <th scope="col" className="px-4 py-3 text-center">
+                                    <th scope="col" className="px-2 py-3 text-center">
                                         Date
                                     </th>
-                                    <th scope="col" className="px-4 py-3 text-center">
+                                    <th scope="col" className="px-2 py-3 text-center">
                                         Action
                                     </th>
                                 </tr>
@@ -149,25 +157,27 @@ export default function PixelComponent() {
                                 :
                                 <tbody>
                                     {categoryPixel?.facebookPixels.map((item: FacebookPixel, index) => (
-                                        <tr key={index} className='bg-white border-b '>
+                                        <tr key={index} className='bg-white border-b w-full'>
                                             <td rowSpan={countRowSpan(index)}>
-                                                <div className='h-10 w-full px-4 flex  items-center'>
+                                                <div className='px-2 flex  items-center'>
                                                     {item.name}
                                                 </div>
                                             </td>
                                             <td rowSpan={countRowSpan(index)}>
-                                                <div className='h-10 w-full px-4 flex  items-center'>
+                                                <div className='px-2 flex  items-center'>
                                                     {item.value}
                                                 </div>
                                             </td>
                                             <td rowSpan={countRowSpan(index)}>
-                                                <div className='h-10 w-full px-4 flex  items-center'>
+                                                <div className='px-2 flex  items-center'>
                                                     {item.businessId}
                                                 </div>
                                             </td>
-                                            <td rowSpan={countRowSpan(index)}>
-                                                <div className='h-10 w-full px-4 flex  items-center'>
-                                                    {item.accessToken}
+                                            <td rowSpan={countRowSpan(index)} className=''>
+                                                <div className='px-2 py-2 overflow-auto'>
+                                                    <textarea defaultValue={item.accessToken} name="" id="" className="w-full p-2 border rounded" readOnly>
+
+                                                    </textarea>
                                                 </div>
                                             </td>
                                             {item.facebookPixelAccounts.length > 0 ?
@@ -175,29 +185,29 @@ export default function PixelComponent() {
                                                     {
                                                         item.facebookPixelAccounts.map((childItem: FacebookPixelAccounts, childIndex) => (
                                                             <>
-                                                                <td >
-                                                                    <div className='h-10 w-full px-4 flex  items-center'>
-                                                                        <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                                <td key={childIndex}>
+                                                                    <div className='h-10 w-full px-2 flex  items-center'>
+                                                                        {childItem.accountResponse.email}
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <div className='h-10 w-full px-4 flex  items-center'>
-                                                                        <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                                    <div className='h-10 w-full px-2 flex  items-center'>
+                                                                        {childItem.product.title} asjd lkajsdklj aslkdj laksjdalksd alskjd lkasjdlksaj
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <div className='h-10 w-full px-4 flex  items-center'>
-                                                                        <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                                    <div className='h-10 w-full px-2 flex justify-center items-center'>
+                                                                        {childItem.value}
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <div className='h-10 w-full px-4 flex  items-center'>
-                                                                        <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                                    <div className='h-10 w-full px-2 flex  items-center'>
+                                                                       {formatDateUS(childItem.createdAt)}
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <div className='h-10 w-full px-4 flex  items-center'>
-                                                                        <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
+                                                                    <div className='h-10 w-full px-2 flex justify-center items-center'>
+                                                                        <button className='flex justify-center items-center space-x-2 p-2 border bg-gray-100 hover:bg-gray-200'>Delete</button>
                                                                     </div>
                                                                 </td>
                                                             </>
@@ -207,27 +217,27 @@ export default function PixelComponent() {
                                                 :
                                                 <>
                                                     <td >
-                                                        <div className='h-10 w-full px-4 flex  items-center'>
+                                                        <div className='h-10 w-full px-2 flex  items-center'>
                                                             <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div className='h-10 w-full px-4 flex  items-center'>
+                                                        <div className='h-10 w-full px-2 flex  items-center'>
                                                             <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div className='h-10 w-full px-4 flex  items-center'>
+                                                        <div className='h-10 w-full px-2 flex  items-center'>
                                                             <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div className='h-10 w-full px-4 flex  items-center'>
+                                                        <div className='h-10 w-full px-2 flex  items-center'>
                                                             <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div className='h-10 w-full px-4 flex  items-center'>
+                                                        <div className='h-10 w-full px-2 flex  items-center'>
                                                             <div className="h-2.5 bg-gray-200 rounded-full w-full animate-pulse"></div>
                                                         </div>
                                                     </td>
