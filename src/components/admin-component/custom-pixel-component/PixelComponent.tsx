@@ -157,9 +157,9 @@ export default function PixelComponent(props:Props) {
                         <input
                             value={currentSearch}
                             onChange={e => handleSearch(e)}
-                            className='w-full h-full py-2 rounded bg-neutral-100 border-none focus:outline-neutral-300 focus:outline-none focus:ring-0 pl-8 transition duration-200 focus:bg-white focus:shadow-lg'
+                            className='w-full h-full py-2 bg-neutral-100 border-none focus:outline-neutral-300 focus:outline-none focus:ring-0 pl-8 transition duration-200 focus:bg-white focus:shadow-lg'
                             type="text"
-                            placeholder='Search by user'
+                            placeholder='Search by user and pixel id'
                         />
                         <Search className='absolute top-0 pl-2 text-neutral-400 h-full' />
                     </div>
