@@ -17,6 +17,7 @@ export default function PixelComponent() {
     const [currentFacebookPixel, setCurrentFacebookPixel] = useState<FacebookPixel>({ id: 0, name: "", value: "", status: 1, accessToken: "", businessId: "", facebookPixelAccounts: [] });
     const [refreshTable, setRefresthTable] = useState(1);
     const [currentSearch, setCurrentSearch] = useState("");
+    const [oldCategoryPixel,setOldCategoryPixel] = useState<CategoryPixel|null>(null);
     const countRowSpan = (index: number): number => {
         if (categoryPixel && categoryPixel.facebookPixels[index] && categoryPixel.facebookPixels[index].facebookPixelAccounts.length > 0) {
             return categoryPixel.facebookPixels[index].facebookPixelAccounts.length;
@@ -55,16 +56,19 @@ export default function PixelComponent() {
     }
     const handleSearch = (e:any) =>{
         const value = e.target.value;
-        const tempCategory = {...categoryPixel};
-        if (tempCategory?.facebookPixels) {
+        const tempCategory = {...oldCategoryPixel};
+        if(value==="" && oldCategoryPixel){
+
+            setCategoryPixel({...oldCategoryPixel});
+            return;
+        }
+        if (tempCategory?.facebookPixels && oldCategoryPixel) {
             let tempFacebookPixels : FacebookPixel[] = tempCategory.facebookPixels.map((item:FacebookPixel,index)=>{
                 const tempAccount = item.facebookPixelAccounts.filter(childItem=>childItem.accountResponse.email.includes(value));
                 return {...item,facebookPixelAccounts:tempAccount};
             })
             tempFacebookPixels = tempFacebookPixels.filter(item=>item.facebookPixelAccounts.length>0);
-            if (categoryPixel) {
-                setCategoryPixel({...categoryPixel,facebookPixels:tempFacebookPixels})
-            }
+            setCategoryPixel({...oldCategoryPixel,facebookPixels:tempFacebookPixels});
         }
     }
     useEffect(() => {
@@ -74,7 +78,9 @@ export default function PixelComponent() {
             const response = await GetApi(url);
             console.log(response);
             if (response?.name && response?.id) {
+                setCurrentSearch("");
                 setCategoryPixel(response);
+                setOldCategoryPixel(response);
             }
             else if (response?.error?.message === "Authentication Error Or Login session expired|revoked") {
                 window.location.href = "/login";
