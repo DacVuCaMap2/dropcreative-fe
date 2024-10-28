@@ -166,7 +166,7 @@ export function CardProductItem(props: Props) {
         <div className="fixed top-0 left-0 z-50 h-screen w-screen bg-gray-800 bg-opacity-90 flex flex-col justify-center items-center">
           <form action="" onSubmit={handleShareFacebookPixel}>
 
-            <div className="relative flex flex-col justify-center items-center bg-white h-[500px] w-[800px]">
+            <div className="relative flex flex-col justify-center items-center bg-white h-[500px] w-[650px]">
               {isLoading &&
                 <div className="absolute flex justify-center items-center h-full w-full bg-white z-50 top-0 left-0 opacity-80">
                   <ScaleLoader />
@@ -178,8 +178,7 @@ export function CardProductItem(props: Props) {
               <p className="text-xs text-gray-400">Copy and paste your account ads id in here then submit to get share</p>
               <div className="flex flex-row py-10 items-center justify-center w-full">
                 <div className=" flex flex-col  w-[350px]">
-                  <label className="text-xs font-bold " htmlFor="">Account ads id</label>
-                  <textarea placeholder="newline with each id" onChange={e => setCurrentInp(e.target.value)} required className="bg-gray-100 w-[300px] max-h-[100px] border-none border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block py-2 px-4" />
+                  <textarea placeholder="Account ads id" onChange={e => setCurrentInp(e.target.value)} required className="bg-gray-100 w-[300px] h-[130px] border-none border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block py-2 px-4" />
                 </div>
                 <div className="flex flex-col px-2 w-[200px] h-32 overflow-hidden border-l">
                   {pixelList.map((item: any, index: number) => (

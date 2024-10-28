@@ -54,7 +54,7 @@ export default function SideBar(props: Props) {
             {showSideBar ? <ArrowLeftFromLine size={16} /> : <ArrowRightFromLine size={16} />}
           </button>
         </div>
-        {(showSideBar && roleValue!=1) &&
+        {(showSideBar && roleValue==2) &&
           <div className="pl-2 py-2 text-sm">
             <span className="">Get your shop ready</span>
             <Flex vertical gap="middle">
