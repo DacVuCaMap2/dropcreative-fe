@@ -1381,7 +1381,7 @@ export default function AddProductComponent(props: Props) {
                   Select FacebookPixel
                 </option>
                 {selectFacebookPixel.map((item:FacebookPixel,index)=>(
-                  <option value={item.value}>{item.name} - {item.value}</option>
+                  <option key={index} value={item.value}>{item.name} - {item.value}</option>
                 ))}
               </select>
             </div>
