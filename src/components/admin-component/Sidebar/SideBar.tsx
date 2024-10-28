@@ -2,6 +2,7 @@
 "use client";
 
 import { sideBarAdmin } from "@/data/admin-data/sidebar";
+import { Flex, Progress, ProgressProps } from "antd";
 import { ArrowLeftFromLine, ArrowRightFromLine } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +12,16 @@ type Props = {
   role: any
 }
 export default function SideBar(props: Props) {
+  const twoColors: ProgressProps['strokeColor'] = {
+    '0%': '#108ee9',
+    '100%': '#87d068',
+  };
+
+  const conicColors: ProgressProps['strokeColor'] = {
+    '0%': '#87d068',
+    '50%': '#ffe58f',
+    '100%': '#ffccc7',
+  };
   const roleValue = props.role === "user_role" ? 1 : 2;
   const listSideBar = sideBarAdmin;
   const pathName = usePathname();
@@ -43,6 +54,15 @@ export default function SideBar(props: Props) {
             {showSideBar ? <ArrowLeftFromLine size={16} /> : <ArrowRightFromLine size={16} />}
           </button>
         </div>
+        {showSideBar &&
+          <div className="pl-2 py-2 text-sm">
+            <span className="">Get your shop ready</span>
+            <Flex vertical gap="middle">
+              <Progress percent={25} strokeColor={twoColors} />
+            </Flex>
+            <span>1/4</span>
+          </div>
+        }
         {listSideBar &&
           listSideBar.map((item, index: number) => (
             <div key={index} className="mb-2 border-b border-stone-700">

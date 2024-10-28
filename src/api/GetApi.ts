@@ -15,7 +15,7 @@ export default async function GetApi(url: string, config?: any) {
         
         const finalConfig = { ...defaultConfig, ...config };
         const response = await axios.get(url, finalConfig);
-        console.log(response);
+        // console.log(response);
         // console.log(response.data.data);
         return response.data;
     } catch (error) {
