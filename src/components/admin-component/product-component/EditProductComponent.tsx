@@ -1413,26 +1413,21 @@ export default function EditProductComponent(props: Props) {
                         <p className="font-bold">Tracking data</p>
                         <div>
                             <label className="block text-sm font-bold mb-1">
-                                Facebook Pixel
+                                Facebook Pixel (choose categories and get facebook pixel)
                             </label>
-                            <div>
-                                <label className="block text-sm font-bold mb-1">
-                                    Facebook Pixel (choose categories and get facebook pixel)
-                                </label>
-                                <select
-                                    value={productData.facebookPixel}
-                                    onChange={e => handleChange(e, "facebookPixel")}
-                                    className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                            <select
+                                value={productData.facebookPixel}
+                                onChange={e => handleChange(e, "facebookPixel")}
+                                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
                 focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
-                                >
-                                    <option value={productData.facebookPixel} disabled>
-                                        {productData.facebookPixel}
-                                    </option>
-                                    {selectFacebookPixel.map((item: FacebookPixel, index) => (
-                                        <option key={index} value={item.value}>{item.name} - {item.value}</option>
-                                    ))}
-                                </select>
-                            </div>
+                            >
+                                <option value={productData.facebookPixel} disabled>
+                                    {productData.facebookPixel}
+                                </option>
+                                {selectFacebookPixel.map((item: FacebookPixel, index) => (
+                                    <option key={index} value={item.value}>{item.name} - {item.value}</option>
+                                ))}
+                            </select>
                         </div>
 
                         <div>
