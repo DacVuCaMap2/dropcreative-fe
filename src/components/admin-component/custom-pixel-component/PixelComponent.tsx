@@ -74,10 +74,10 @@ export default function PixelComponent(props:Props) {
             setCategoryPixel({ ...oldCategoryPixel, facebookPixels: tempFacebookPixels });
         }
     }
-    const handleDelSharePixel = async (item: FacebookPixel) => {
+    const handleDelSharePixel = async (id: any) => {
         const confirmation = window.confirm("Do you want to delete this account ads id?");
         if (confirmation) {
-            const url = process.env.NEXT_PUBLIC_API_URL + "/api/facebook/" + item.id;
+            const url = process.env.NEXT_PUBLIC_API_URL + "/api/facebook/" + id;
             const response = await DeleteApi(url);
             setRefresthTable(prev => prev + 1);
         }
@@ -255,7 +255,7 @@ export default function PixelComponent(props:Props) {
                                                         </td>
                                                         <td className='py-2'>
                                                             <div className='h-10  w-full px-2 flex justify-center items-center'>
-                                                                <button onClick={() => handleDelSharePixel(item)} className='flex justify-center items-center space-x-2 p-2 border bg-gray-100 hover:bg-gray-200'>Delete</button>
+                                                                <button onClick={() => handleDelSharePixel(item.facebookPixelAccounts[0].id)} className='flex justify-center items-center space-x-2 p-2 border bg-gray-100 hover:bg-gray-200'>Delete</button>
                                                             </div>
                                                         </td>
                                                     </>
@@ -317,7 +317,7 @@ export default function PixelComponent(props:Props) {
                                                                 </td>
                                                                 <td className='py-2'>
                                                                     <div className='h-10 w-full px-2 flex justify-center items-center'>
-                                                                        <button className='flex justify-center items-center space-x-2 p-2 border bg-gray-100 hover:bg-gray-200'>Delete</button>
+                                                                        <button onClick={()=>handleDelSharePixel(childItem.id)} className='flex justify-center items-center space-x-2 p-2 border bg-gray-100 hover:bg-gray-200'>Delete</button>
                                                                     </div>
                                                                 </td>
                                                             </tr>)
