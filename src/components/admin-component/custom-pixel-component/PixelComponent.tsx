@@ -5,7 +5,7 @@ import ShowLoadTable from '@/components/general-component/ShowLoadTable';
 import { generalCategoriesSelect } from '@/data/generalData';
 import CategoryPixel, { FacebookPixel, FacebookPixelAccounts } from '@/model/CategoryPixel';
 import { message } from 'antd';
-import { AlignJustify, Plus } from 'lucide-react'
+import { AlignJustify, Plus, Search } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 export default function PixelComponent() {
@@ -16,6 +16,7 @@ export default function PixelComponent() {
     const [showAccessToken, setShowAccessToken] = useState(-1);
     const [currentFacebookPixel, setCurrentFacebookPixel] = useState<FacebookPixel>({ id: 0, name: "", value: "", status: 1, accessToken: "", businessId: "", facebookPixelAccounts: [] });
     const [refreshTable, setRefresthTable] = useState(1);
+    const [currentSearch, setCurrentSearch] = useState("");
     const countRowSpan = (index: number): number => {
         if (categoryPixel && categoryPixel.facebookPixels[index] && categoryPixel.facebookPixels[index].facebookPixelAccounts.length > 0) {
             return categoryPixel.facebookPixels[index].facebookPixelAccounts.length;
@@ -52,6 +53,20 @@ export default function PixelComponent() {
         const formattedDate = `${year}-${month}-${day}`;
         return formattedDate;
     }
+    const handleSearch = (e:any) =>{
+        const value = e.target.value;
+        const tempCategory = {...categoryPixel};
+        if (tempCategory?.facebookPixels) {
+            let tempFacebookPixels : FacebookPixel[] = tempCategory.facebookPixels.map((item:FacebookPixel,index)=>{
+                const tempAccount = item.facebookPixelAccounts.filter(childItem=>childItem.accountResponse.email.includes(value));
+                return {...item,facebookPixelAccounts:tempAccount};
+            })
+            tempFacebookPixels = tempFacebookPixels.filter(item=>item.facebookPixelAccounts.length>0);
+            if (categoryPixel) {
+                setCategoryPixel({...categoryPixel,facebookPixels:tempFacebookPixels})
+            }
+        }
+    }
     useEffect(() => {
         const fetchData = async () => {
             setLoading(1);
@@ -71,6 +86,7 @@ export default function PixelComponent() {
         }
         fetchData();
     }, [selectCat, refreshTable])
+
     return (
         <div className='px-10 py-4 flex flex-col text-gray-700'>
             <div className='text-xl font-bold mb-4'>
@@ -81,6 +97,15 @@ export default function PixelComponent() {
                     {listCategories.map((cat: any, index) => (
                         <button key={index} onClick={() => setSelectcat(cat.value)} className={` hover:border-gray-700 border-b-2 ${selectCat === cat.value ? "border-gray-700" : "border-white"}`}>{cat.title}</button>
                     ))}
+                </div>
+                <div className='relative w-full'>
+                    <input
+                        onChange={e=>handleSearch(e)}
+                        className='w-full h-full py-2 rounded bg-neutral-100 border-none focus:outline-neutral-300 focus:outline-none focus:ring-0 pl-8 transition duration-200 focus:bg-white focus:shadow-lg'
+                        type="text"
+                        placeholder='Search product'
+                    />
+                    <Search className='absolute top-0 pl-2 text-neutral-400 h-full' />
                 </div>
 
                 <div className='flex flex-col w-full border-gray-400'>

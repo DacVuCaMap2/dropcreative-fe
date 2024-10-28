@@ -31,7 +31,7 @@ export const sideBarAdmin = [
                 href:"/admin/pixel-custom",
                 icon:Waypoints,
                 select:"dashboard",
-                role:[2]
+                role:[1,2]
             }
         ]
     },
