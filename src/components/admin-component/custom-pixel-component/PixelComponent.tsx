@@ -59,6 +59,7 @@ export default function PixelComponent(props:Props) {
     }
     const handleSearch = (e: any) => {
         const value = e.target.value;
+        setCurrentSearch(value);
         const tempCategory = { ...oldCategoryPixel };
         if (value === "" && oldCategoryPixel) {
 
