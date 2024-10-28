@@ -154,7 +154,7 @@ export default function PixelComponent(props:Props) {
                             </div>
                         </form>
                     </div>
-                    <div className='relative w-full mb-10'>
+                    <div className='relative w-full mb-4'>
                         <input
                             value={currentSearch}
                             onChange={e => handleSearch(e)}
