@@ -1,4 +1,5 @@
 "use client"
+import DeleteApi from '@/api/DeleteApi';
 import GetApi from '@/api/GetApi';
 import PostApi from '@/api/PostParttern';
 import ShowLoadTable from '@/components/general-component/ShowLoadTable';
@@ -7,8 +8,10 @@ import CategoryPixel, { FacebookPixel, FacebookPixelAccounts } from '@/model/Cat
 import { message } from 'antd';
 import { AlignJustify, Plus, Search } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-
-export default function PixelComponent() {
+type Props = {
+    isAdmin:boolean
+}
+export default function PixelComponent(props:Props) {
     const listCategories = generalCategoriesSelect;
     const [isLoading, setLoading] = useState(0);
     const [categoryPixel, setCategoryPixel] = useState<CategoryPixel | null>(null);
@@ -17,7 +20,7 @@ export default function PixelComponent() {
     const [currentFacebookPixel, setCurrentFacebookPixel] = useState<FacebookPixel>({ id: 0, name: "", value: "", status: 1, accessToken: "", businessId: "", facebookPixelAccounts: [] });
     const [refreshTable, setRefresthTable] = useState(1);
     const [currentSearch, setCurrentSearch] = useState("");
-    const [oldCategoryPixel,setOldCategoryPixel] = useState<CategoryPixel|null>(null);
+    const [oldCategoryPixel, setOldCategoryPixel] = useState<CategoryPixel | null>(null);
     const countRowSpan = (index: number): number => {
         if (categoryPixel && categoryPixel.facebookPixels[index] && categoryPixel.facebookPixels[index].facebookPixelAccounts.length > 0) {
             return categoryPixel.facebookPixels[index].facebookPixelAccounts.length;
@@ -54,22 +57,31 @@ export default function PixelComponent() {
         const formattedDate = `${year}-${month}-${day}`;
         return formattedDate;
     }
-    const handleSearch = (e:any) =>{
+    const handleSearch = (e: any) => {
         const value = e.target.value;
-        const tempCategory = {...oldCategoryPixel};
-        if(value==="" && oldCategoryPixel){
+        const tempCategory = { ...oldCategoryPixel };
+        if (value === "" && oldCategoryPixel) {
 
-            setCategoryPixel({...oldCategoryPixel});
+            setCategoryPixel({ ...oldCategoryPixel });
             return;
         }
         if (tempCategory?.facebookPixels && oldCategoryPixel) {
-            let tempFacebookPixels : FacebookPixel[] = tempCategory.facebookPixels.map((item:FacebookPixel,index)=>{
-                const tempAccount = item.facebookPixelAccounts.filter(childItem=>childItem.accountResponse.email.includes(value));
-                return {...item,facebookPixelAccounts:tempAccount};
+            let tempFacebookPixels: FacebookPixel[] = tempCategory.facebookPixels.map((item: FacebookPixel, index) => {
+                const tempAccount = item.facebookPixelAccounts.filter(childItem => childItem.accountResponse.email.includes(value));
+                return { ...item, facebookPixelAccounts: tempAccount };
             })
-            tempFacebookPixels = tempFacebookPixels.filter(item=>item.facebookPixelAccounts.length>0);
-            setCategoryPixel({...oldCategoryPixel,facebookPixels:tempFacebookPixels});
+            tempFacebookPixels = tempFacebookPixels.filter(item => item.facebookPixelAccounts.length > 0);
+            setCategoryPixel({ ...oldCategoryPixel, facebookPixels: tempFacebookPixels });
         }
+    }
+    const handleDelSharePixel = async (item: FacebookPixel) => {
+        const confirmation = window.confirm("Do you want to delete this account ads id?");
+        if (confirmation) {
+            const url = process.env.NEXT_PUBLIC_API_URL + "/api/facebook/" + item.id;
+            const response = await DeleteApi(url);
+            setRefresthTable(prev => prev + 1);
+        }
+
     }
     useEffect(() => {
         const fetchData = async () => {
@@ -103,15 +115,6 @@ export default function PixelComponent() {
                     {listCategories.map((cat: any, index) => (
                         <button key={index} onClick={() => setSelectcat(cat.value)} className={` hover:border-gray-700 border-b-2 ${selectCat === cat.value ? "border-gray-700" : "border-white"}`}>{cat.title}</button>
                     ))}
-                </div>
-                <div className='relative w-full'>
-                    <input
-                        onChange={e=>handleSearch(e)}
-                        className='w-full h-full py-2 rounded bg-neutral-100 border-none focus:outline-neutral-300 focus:outline-none focus:ring-0 pl-8 transition duration-200 focus:bg-white focus:shadow-lg'
-                        type="text"
-                        placeholder='Search product'
-                    />
-                    <Search className='absolute top-0 pl-2 text-neutral-400 h-full' />
                 </div>
 
                 <div className='flex flex-col w-full border-gray-400'>
@@ -150,7 +153,16 @@ export default function PixelComponent() {
                             </div>
                         </form>
                     </div>
-
+                    <div className='relative w-full'>
+                        <input
+                            value={currentSearch}
+                            onChange={e => handleSearch(e)}
+                            className='w-full h-full py-2 rounded bg-neutral-100 border-none focus:outline-neutral-300 focus:outline-none focus:ring-0 pl-8 transition duration-200 focus:bg-white focus:shadow-lg'
+                            type="text"
+                            placeholder='Search product'
+                        />
+                        <Search className='absolute top-0 pl-2 text-neutral-400 h-full' />
+                    </div>
                     <div>
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <thead className=" sticky top-0 text-xs text-gray-700 uppercase bg-gray-100 ">
@@ -243,7 +255,7 @@ export default function PixelComponent() {
                                                         </td>
                                                         <td className='py-2'>
                                                             <div className='h-10  w-full px-2 flex justify-center items-center'>
-                                                                <button className='flex justify-center items-center space-x-2 p-2 border bg-gray-100 hover:bg-gray-200'>Delete</button>
+                                                                <button onClick={() => handleDelSharePixel(item)} className='flex justify-center items-center space-x-2 p-2 border bg-gray-100 hover:bg-gray-200'>Delete</button>
                                                             </div>
                                                         </td>
                                                     </>

@@ -19,6 +19,7 @@ import GetApi from "@/api/GetApi";
 import { ScaleLoader } from "react-spinners";
 import PostApi from "@/api/PostParttern";
 import { error } from "console";
+import { FacebookPixel } from "@/model/CategoryPixel";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -76,6 +77,7 @@ export default function AddProductComponent(props: Props) {
   const [listProductSelect, setListProductSelect] = useState<any[]>([]);
   const [listComboSale, setListComboSale] = useState<ComboSale[]>([]);
   const [selectDesc, setSelectDesc] = useState(0);
+  const [selectFacebookPixel, setSelectPixel] = useState<FacebookPixel[]>([]);
   const [thisBoughtTogether, setThisBoughtTogether] = useState<BoughtTogether>({ name: "", imgUrl: "", id: 0, value: 0 });
   const [listBoughtTogerther, setListBoughtTogether] = useState<BoughtTogether[]>([{
     name: "",
@@ -522,7 +524,7 @@ export default function AddProductComponent(props: Props) {
     }
   }
 
-  const handleChangeCat = (value: any[]) => {
+  const handleChangeCat = async (value: any[]) => {
     let tempCat: any[] = [...listCat];
     tempCat = [];
     value.forEach(item => {
@@ -531,7 +533,15 @@ export default function AddProductComponent(props: Props) {
         tempCat.push(idCat.value);
       }
     })
+    console.log(tempCat);
     setListCat(tempCat);
+    /// set select pixel
+    const url = process.env.NEXT_PUBLIC_API_URL + "/api/facebook/getByCategoriesList"
+    const response = await PostApi(url, tempCat);
+    console.log(response);
+    if (response) {
+      setSelectPixel(response);
+    }
   }
   const handleChangeSeason = (value: any[]) => {
     console.log(value);
@@ -1350,9 +1360,9 @@ export default function AddProductComponent(props: Props) {
             <p className="font-bold">Tracking data</p>
             <div>
               <label className="block text-sm font-bold mb-1">
-                Facebook Pixel
+                Facebook Pixel (choose categories and get facebook pixel)
               </label>
-              <input
+              {/* <input
                 type="text"
                 value={productData.facebookPixel}
                 onChange={e => handleChange(e, "facebookPixel")}
@@ -1360,7 +1370,20 @@ export default function AddProductComponent(props: Props) {
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
                 placeholder="Type title"
                 required
-              />
+              /> */}
+              <select
+                value={productData.facebookPixel}
+                onChange={e => handleChange(e, "facebookPixel")}
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+              >
+                <option value="" disabled>
+                  Select FacebookPixel
+                </option>
+                {selectFacebookPixel.map((item:FacebookPixel,index)=>(
+                  <option value={item.value}>{item.name} - {item.value}</option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -1469,7 +1492,7 @@ export default function AddProductComponent(props: Props) {
                 <option value="US">US</option>
                 <option value="EU">EU</option>
                 <option value="ASIAN">ASIAN</option>
-                <option value="AFRICA">AFRICA</option>
+                <option value="AFRICA">AU</option>
               </select>
             </div>
             <div className="space-y-2">
