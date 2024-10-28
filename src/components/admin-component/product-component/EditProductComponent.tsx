@@ -19,6 +19,9 @@ import GetApi from "@/api/GetApi";
 import { ScaleLoader } from "react-spinners";
 import PhotoGalleryEdit from "@/components/imgdrag/ImageDragEdit";
 import PutApi from "@/api/PutApi";
+import { Facebook } from "next/dist/lib/metadata/types/extra-types";
+import { FacebookPixel } from "@/model/CategoryPixel";
+import PostApi from "@/api/PostParttern";
 type productVariant = {
     optionName: string;
     optionValue: string[];
@@ -88,23 +91,11 @@ export default function EditProductComponent(props: Props) {
     const [thisBoughtTogether, setThisBoughtTogether] = useState<BoughtTogether>(props.boughtTogetherList[0]);
     const tempBoughtTogetherList = props.boughtTogetherList.map((item: BoughtTogether, index) => { })
     const [listBoughtTogerther, setListBoughtTogether] = useState<BoughtTogether[]>([props.boughtTogetherList[1], props.boughtTogetherList[2]]);
-    const [isOpenImg,setIsOpenImg] =  useState(false);
+    const [isOpenImg, setIsOpenImg] = useState(false);
+    const [selectFacebookPixel, setSelectPixel] = useState<FacebookPixel[]>([]);
     /// just save editor tiny
-
     ///get list Product select
-    useEffect(() => {
 
-        if (listProductSelect.length == 0) {
-            const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=100&page=1`;
-            const fetchData = async () => {
-                const response = await GetApi(url);
-                if (Array.isArray(response.data)) {
-                    setListProductSelect(response.data);
-                }
-            }
-            fetchData();
-        }
-    }, [])
 
     console.log(photos);
 
@@ -119,6 +110,32 @@ export default function EditProductComponent(props: Props) {
     const [listCat, setListCat] = useState<any[]>(productData.categoryIds);
     const [listSea, setListSeasons] = useState<any[]>(productData.season ? productData.season : []);
     const [listHol, setListHolidays] = useState<any[]>(productData.holiday ? productData.holiday : []);
+
+    useEffect(() => {
+
+        if (listProductSelect.length == 0) {
+            const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=100&page=1`;
+            const fetchData = async () => {
+                const response = await GetApi(url);
+                if (Array.isArray(response.data)) {
+                    setListProductSelect(response.data);
+                }
+            }
+            fetchData();
+        }
+        if (listCat?.length > 0) {
+            const fetchData = async() => {
+                const url = process.env.NEXT_PUBLIC_API_URL + "/api/facebook/getByCategoriesList"
+                const response = await PostApi(url, listCat);
+                if (response) {
+                    setSelectPixel(response);
+                }
+            }
+            fetchData();
+        }
+    }, [])
+
+
     console.log("product", productData);
     const optionsCategories = generalOptionsCat;
     const catList = generalCategoriesSelect;
@@ -195,11 +212,11 @@ export default function EditProductComponent(props: Props) {
         console.log(value);
         setServiceT({ ...serviceT, [key]: value })
     }
-    const handleOpenImg = ()=>{
+    const handleOpenImg = () => {
         document.body.style.overflow = 'hidden';
         setIsOpenImg(true);
     }
-    const handleCloseImg = () =>{
+    const handleCloseImg = () => {
         setIsOpenImg(false)
         document.body.style.overflow = 'auto';
     }
@@ -1398,15 +1415,33 @@ export default function EditProductComponent(props: Props) {
                             <label className="block text-sm font-bold mb-1">
                                 Facebook Pixel
                             </label>
-                            <input
-                                type="text"
-                                value={productData.facebookPixel}
-                                onChange={e => handleChange(e, "facebookPixel")}
-                                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                            <div>
+                                <label className="block text-sm font-bold mb-1">
+                                    Facebook Pixel (choose categories and get facebook pixel)
+                                </label>
+                                {/* <input
+                type="text"
+                value={productData.facebookPixel}
+                onChange={e => handleChange(e, "facebookPixel")}
+                className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
               focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
-                                placeholder="Type title"
-                                required
-                            />
+                placeholder="Type title"
+                required
+              /> */}
+                                <select
+                                    value={productData.facebookPixel}
+                                    onChange={e => handleChange(e, "facebookPixel")}
+                                    className="bg-gray-100 border-none border-gray-300 text-sm rounded-lg 
+                focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
+                                >
+                                    <option value="" disabled>
+                                        Select FacebookPixel
+                                    </option>
+                                    {selectFacebookPixel.map((item: FacebookPixel, index) => (
+                                        <option key={index} value={item.value}>{item.name} - {item.value}</option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
 
                         <div>
@@ -1860,9 +1895,9 @@ export default function EditProductComponent(props: Props) {
                     </div>
                 </div>
             </div>
-            <div  className={`${isOpenImg ? "block" : "hidden"} fixed top-0 left-0 z-40 h-screen w-screen bg-blue-900 bg-opacity-50 flex flex-col justify-center items-center`}>
+            <div className={`${isOpenImg ? "block" : "hidden"} fixed top-0 left-0 z-40 h-screen w-screen bg-blue-900 bg-opacity-50 flex flex-col justify-center items-center`}>
                 <div className="relative flex flex-col bg-white w-2/3 h-2/3 px-4 py-4">
-                    <button className="absolute top-2 right-2 bg-gray-200 p-2 rounded hover:bg-gray-400" onClick={()=>handleCloseImg()}>
+                    <button className="absolute top-2 right-2 bg-gray-200 p-2 rounded hover:bg-gray-400" onClick={() => handleCloseImg()}>
                         <X />
                     </button>
                     <span className="border-b font-bold text-xl">Select an Image</span>
