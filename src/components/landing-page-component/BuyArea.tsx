@@ -10,6 +10,9 @@ import { Rate } from 'antd'
 import { stringToVariant, tranObjectFromStrTwoKey } from '@/data/function'
 import CountDownComponent from './CountDownComponent'
 import GetApi from '@/api/GetApi'
+import Cart, { getNewCart } from '@/model/Cart'
+import CartItem, { getNewCartItem } from '@/model/CartItem'
+import CartBar from './CartBar'
 
 type Props = {
   productData: any
@@ -39,40 +42,33 @@ declare global {
 
 
 
-export const useFacebookPixel = (str:any) => {
+export const useFacebookPixel = (str: any) => {
   const PIXEL_ID = str;
   useEffect(() => {
     const initPixel = () => {
       if (typeof window === 'undefined') return;
 
-      // Check if pixel is already initialized
       if (window.fbq?.loaded) return;
 
-      // Create the base fbq function
-      const fbq : any = function (this: FacebookPixelFunction | void, ...args: any[]) {
+      const fbq: any = function (this: FacebookPixelFunction | void, ...args: any[]) {
         if (this?.callMethod) {
           this.callMethod.apply(this, args);
         } else {
           fbq.queue.push(args);
         }
       } as FacebookPixelFunction;
-
-      // Initialize required properties
       fbq.queue = [];
       fbq.loaded = false;
       fbq.version = '2.0';
       fbq.push = fbq;
 
-      // Assign to window
       window.fbq = fbq;
       window._fbq = fbq;
 
-      // Load the Facebook Pixel script
       const script = document.createElement('script');
       script.async = true;
       script.src = 'https://connect.facebook.net/en_US/fbevents.js';
 
-      // Add error handling
       script.onerror = () => {
         console.error('Failed to load Facebook Pixel script');
       };
@@ -122,6 +118,10 @@ export const useFacebookPixel = (str:any) => {
 };
 
 export default function BuyArea(props: Props) {
+  ///Cart
+  const [currentListCart, setCurrentListCart] = useState<Cart[]>([]);
+
+
   const { trackEvent } = useFacebookPixel(props.productData.productDetail.facebookPixel);
   const productData: any = props.productData;
   const [swiperRef, setSwiperRef] = useState<any>(null);
@@ -135,20 +135,9 @@ export default function BuyArea(props: Props) {
   const comboSaleList = tranObjectFromStrTwoKey(productData.productDetail.comboSale);
   const boughtTogetherList = tranObjectFromStrTwoKey(productData.productDetail.boughtTogether);
   const [boughtTogetherShow, setBoughttTogetherShow] = useState<any[]>([]);
-
-  const handleAddToCart = () => {
-    // Gọi hàm fbq để gửi sự kiện đến Facebook Pixel
-    if (window.fbq) {
-      window.fbq('track', 'AddToCart', {
-        content_name: "test",
-        content_ids: [1],
-        value: "20$",
-        currency: 'USD',
-      });
-      console.log(`Added to cart: test`); // Log để kiểm tra
-    }
-  };
-
+  const [listCart, setListCart] = useState<any[]>([]);
+  const [isOpenCart, setOpenCart] = useState(false);
+  const [tickAddSale,setTickAddSale] = useState({1:0,2:0,3:0});
 
   let urlMainPhoto = "";
   let photos: any[] = [];
@@ -189,7 +178,6 @@ export default function BuyArea(props: Props) {
       swiperRef.slideTo(index);
     }
   };
-  console.log(photos)
   useEffect(() => {
     const arrSearch: string[] = [];
     for (let i = 0; i < variantsSelectList.length; i++) {
@@ -210,6 +198,68 @@ export default function BuyArea(props: Props) {
     });
   }, [selectedVariant])
   //get productdetails
+
+
+
+  const handleAddToCart = (quan?:any) => {
+    // // Gọi hàm fbq để gửi sự kiện đến Facebook Pixel
+    // if (window.fbq) {
+    //   window.fbq('track', 'AddToCart', {
+    //     content_name: "test",
+    //     content_ids: [1],
+    //     value: "20$",
+    //     currency: 'USD',
+    //   });
+    //   console.log(`Added to cart: test`);
+    // }
+
+    /// add to cart 
+    console.log("quan",currentQuan);
+    const thisQuan : number = (quan && !isNaN(quan)) ? parseFloat(quan)+currentQuan : currentQuan;
+    let tempCart: Cart[] = [...currentListCart];
+    let cart: Cart | undefined = tempCart.find(cart => cart.productId === currentVariant.productId);
+    console.log(cart);
+    if (!cart) {
+      cart = getNewCart(currentVariant.productId, comboSaleList, productData.product.shippingFee);
+      tempCart.push(cart);
+    }
+    let productVariants: CartItem | undefined = cart.cartItems.find(item => item.id === currentVariant.id);
+    const selectPhoto = photos.find(item => item.id === currentVariant.imageId).url;
+    if (productVariants) {
+      productVariants = { ...productVariants, quantity: productVariants.quantity + thisQuan, imageUrl: selectPhoto };
+      const tempCartItems = cart.cartItems.map(item => {
+        if (productVariants && item.id === productVariants.id) {
+          return productVariants;
+        }
+        return item;
+      })
+      cart = { ...cart, cartItems: tempCartItems };
+    }
+    else {
+      cart.cartItems.push(getNewCartItem(currentVariant.id, thisQuan, productData.product.title, currentVariant.productId, currentVariant.price, currentVariant.value, selectPhoto, currentVariant.comparePrice));
+    }
+    console.log("cart", cart);
+    tempCart = tempCart.map(item => {
+      if (item.productId === currentVariant.productId) {
+        return cart;
+      }
+      return item;
+    })
+    setCurrentListCart(tempCart);
+    handleOpenOrCloseCart(true);
+    console.log(currentVariant);
+    console.log(currentQuan);
+    console.log(comboSaleList);
+  };
+  const handleOpenOrCloseCart = (isOpen: boolean) => {
+
+    setOpenCart(isOpen);
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    }else{
+      document.body.style.overflow = 'auto';
+    }
+  }
 
   useEffect(() => {
     if (boughtTogetherList.length > 1) {
@@ -233,8 +283,15 @@ export default function BuyArea(props: Props) {
     }
   }, [])
   return (
-    <div className='w-[1100px] flex flex-row space-x-2 py-4 justify-between'>
-      <div className='flex flex-col space-y-8 '>
+    <div className='lg:w-[1100px] lg:flex-row w-full flex flex-col  space-x-2 py-4 justify-between'>
+      <CartBar isOpen={isOpenCart} setCurrentListCart={setCurrentListCart} setOpenCart={handleOpenOrCloseCart} currentListCart={currentListCart} />
+      {isOpenCart &&
+        <div onClick={() => handleOpenOrCloseCart(false)} className='fixed top-0 left-[-100px] z-20 h-screen w-screen bg-black bg-opacity-45'>
+
+        </div>
+      }
+
+      <div className='flex flex-col space-y-8 px-4 lg:px-0'>
         <div className='overflow-hidden border-b border-neutral-300 pb-4'>
           <Swiper
             loop={loop}
@@ -289,7 +346,7 @@ export default function BuyArea(props: Props) {
             ))}
           </Swiper>
         </div>
-        <div className='grid grid-cols-2 gap-2 px-6'>
+        <div className=' grid-cols-2 gap-2 px-6 hidden lg:grid'>
           {photos.map((image: any, index) => {
             if (index < 6) {
               return (<div key={index} className='rounded-xl overflow-hidden hover:scale-105 cursor-pointer transition-transform transform shadow'>
@@ -371,7 +428,7 @@ export default function BuyArea(props: Props) {
                   </div>
                 </div>
               </div>
-              <button className='bg-white py-1 px-4 border border-black'>Add</button>
+              <button onClick={()=> {handleAddToCart(item.key1)}} className={`bg-white py-1 px-4 border border-black`}>Add</button>
             </div>
           ))}
         </div>
@@ -386,7 +443,7 @@ export default function BuyArea(props: Props) {
             {boughtTogetherShow.map((item: any, index) => (
               <div key={index} className='relative border'>
                 <Image src={`${(Array.isArray(item.images) && item.images.length > 0) ? process.env.NEXT_PUBLIC_API_URL + item.images[0].url : "/image/nophotos.png"}`} alt='image' width={160} height={160}></Image>
-                <div className='absolute z-20 left-[-14px] top-[75px] rounded-full bg-blue-500 text-white '><Plus size={20} /></div>
+                <div className='absolute z-10 left-[-14px] top-[75px] rounded-full bg-blue-500 text-white '><Plus size={20} /></div>
               </div>
             ))}
           </div>

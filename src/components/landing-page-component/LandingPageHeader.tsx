@@ -27,7 +27,7 @@ export default function LandingPageHeader() {
                         <span className='font-bold text-lg'>DEMO</span>
                     </Link>
                 </div>
-                <div className='flex flex-row items-center justify-center space-x-6'>
+                <div className=' flex-row items-center justify-center space-x-6 lg:flex hidden'>
                     <Link href={'/'} className='hover:border-b border-b-neutral-800 text-neutral-600'>
                         Home
                     </Link>

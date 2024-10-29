@@ -13,7 +13,7 @@ const Layout = ({
   return (
     <div>
       <AccountProvider>
-        <main className=" w-full relative">
+        <main className=" w-full relative lg:px-0 px-2">
           <LandingPageHeader />
           {children}
           {/* <Footer /> */}
