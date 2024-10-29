@@ -37,9 +37,10 @@ declare global {
 }
 
 
-const PIXEL_ID = '978640694025797';
 
-export const useFacebookPixel = () => {
+
+export const useFacebookPixel = (str:any) => {
+  const PIXEL_ID = str;
   useEffect(() => {
     const initPixel = () => {
       if (typeof window === 'undefined') return;
@@ -121,7 +122,7 @@ export const useFacebookPixel = () => {
 };
 
 export default function BuyArea(props: Props) {
-  const { trackEvent } = useFacebookPixel();
+  const { trackEvent } = useFacebookPixel(props.productData.productDetail.facebookPixel);
   const productData: any = props.productData;
   const [swiperRef, setSwiperRef] = useState<any>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
