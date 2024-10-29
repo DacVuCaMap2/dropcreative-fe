@@ -23,49 +23,53 @@ type Props = {
 
 
 // Facebook Pixel implementation
-const useInitializeFacebookPixel = () => {
+export const useFacebookPixel = () => {
   useEffect(() => {
-    const loadFacebookPixel = () => {
+    const initPixel = () => {
       if (typeof window !== 'undefined') {
-        // Create the script element
+        // Define fbq function
+        const fbq = (...args: any[]) => {
+          if (window.fbq.callMethod) {
+            window.fbq.callMethod(...args);
+          } else {
+            window.fbq.queue.push(args);
+          }
+        };
+
+        // Assign fbq to window
+        window.fbq = fbq;
+        
+        // Initialize other properties
+        if (!window._fbq) {
+          window._fbq = fbq;
+        }
+        window.fbq.push = fbq;
+        window.fbq.loaded = true;
+        window.fbq.version = '2.0';
+        window.fbq.queue = [];
+
+        // Create and insert script
         const script = document.createElement('script');
         script.async = true;
         script.src = 'https://connect.facebook.net/en_US/fbevents.js';
         
-        // Initialize fbq
-        window.fbq = function() {
-          window.fbq.callMethod ? 
-            window.fbq.callMethod.apply(window.fbq, arguments) : 
-            window.fbq.queue.push(arguments);
-        };
-        
-        // Initialize Facebook Pixel queue
-        if (!window._fbq) {
-          window._fbq = window.fbq;
-        }
-        window.fbq.push = window.fbq;
-        window.fbq.loaded = true;
-        window.fbq.version = '2.0';
-        window.fbq.queue = [];
-        
-        // Insert the script into the DOM
         const firstScript = document.getElementsByTagName('script')[0];
-        if (firstScript && firstScript.parentNode) {
+        if (firstScript?.parentNode) {
           firstScript.parentNode.insertBefore(script, firstScript);
         }
-        
-        // Initialize and track PageView
+
+        // Initialize pixel
         window.fbq('init', '1874932473002128');
         window.fbq('track', 'PageView');
+        
+        // Add debug logging in development
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Facebook Pixel initialized');
+        }
       }
     };
 
-    loadFacebookPixel();
-    
-    // Cleanup function
-    return () => {
-      // Clean up if needed
-    };
+    initPixel();
   }, []);
 };
 
@@ -84,7 +88,7 @@ export default function BuyArea(props: Props) {
   const [boughtTogetherShow, setBoughttTogetherShow] = useState<any[]>([]);
 
   // facebookpixel
-  useInitializeFacebookPixel();
+  useFacebookPixel();
 
 
   let urlMainPhoto = "";
