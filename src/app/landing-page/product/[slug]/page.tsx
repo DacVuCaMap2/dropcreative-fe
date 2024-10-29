@@ -6,10 +6,7 @@ import React from 'react'
 
 export default async function page({params}:{params : {slug:string}}) {
     const cookie = cookies();
-    const accountId = cookie.get('account_id')?.value;
-    if (!accountId) {
-        window.location.href="/login";
-    }
+    // const accountId = cookie.get('account_id')?.value;
     const url = process.env.NEXT_PUBLIC_API_URL + "/api/product/"+params.slug; 
     const productData = await GetApi(url);
     console.log(productData);

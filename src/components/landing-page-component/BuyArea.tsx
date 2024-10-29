@@ -1,10 +1,4 @@
 "use client"
-declare global {
-  interface Window {
-    fbq: any;
-    _fbq: any;
-  }
-}
 import React, { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { FreeMode, Navigation, Pagination, Thumbs } from 'swiper/modules'
@@ -20,60 +14,114 @@ import GetApi from '@/api/GetApi'
 type Props = {
   productData: any
 }
+// types.ts
+type FbqParameter = string | Record<string, any> | null;
+
+interface FacebookPixelFunction {
+  (
+    eventName: string,
+    ...args: FbqParameter[]
+  ): void;
+  push: (args: any[]) => void;
+  loaded?: boolean;
+  version?: string;
+  queue: any[];
+  callMethod?: (...args: any[]) => void;
+}
+
+declare global {
+  interface Window {
+    fbq: FacebookPixelFunction;
+    _fbq: FacebookPixelFunction;
+  }
+}
 
 
-// Facebook Pixel implementation
+const PIXEL_ID = '978640694025797';
+
 export const useFacebookPixel = () => {
   useEffect(() => {
     const initPixel = () => {
-      if (typeof window !== 'undefined') {
-        // Define fbq function
-        const fbq = (...args: any[]) => {
-          if (window.fbq.callMethod) {
-            window.fbq.callMethod(...args);
-          } else {
-            window.fbq.queue.push(args);
+      if (typeof window === 'undefined') return;
+
+      // Check if pixel is already initialized
+      if (window.fbq?.loaded) return;
+
+      // Create the base fbq function
+      const fbq : any = function (this: FacebookPixelFunction | void, ...args: any[]) {
+        if (this?.callMethod) {
+          this.callMethod.apply(this, args);
+        } else {
+          fbq.queue.push(args);
+        }
+      } as FacebookPixelFunction;
+
+      // Initialize required properties
+      fbq.queue = [];
+      fbq.loaded = false;
+      fbq.version = '2.0';
+      fbq.push = fbq;
+
+      // Assign to window
+      window.fbq = fbq;
+      window._fbq = fbq;
+
+      // Load the Facebook Pixel script
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+
+      // Add error handling
+      script.onerror = () => {
+        console.error('Failed to load Facebook Pixel script');
+      };
+
+      // Add onload handler
+      script.onload = () => {
+        if (window.fbq) {
+          // Initialize the pixel after script loads
+          window.fbq('init', PIXEL_ID);
+          window.fbq('track', 'PageView');
+
+          if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') {
+            console.log('Facebook Pixel initialized successfully');
           }
-        };
-
-        // Assign fbq to window
-        window.fbq = fbq;
-        
-        // Initialize other properties
-        if (!window._fbq) {
-          window._fbq = fbq;
         }
-        window.fbq.push = fbq;
-        window.fbq.loaded = true;
-        window.fbq.version = '2.0';
-        window.fbq.queue = [];
+      };
 
-        // Create and insert script
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://connect.facebook.net/en_US/fbevents.js';
-        
-        const firstScript = document.getElementsByTagName('script')[0];
-        if (firstScript?.parentNode) {
-          firstScript.parentNode.insertBefore(script, firstScript);
-        }
+      // Insert the script
+      document.head.appendChild(script);
 
-        // Initialize pixel
-        window.fbq('init', '1874932473002128');
-        window.fbq('track', 'PageView');
-        
-        // Add debug logging in development
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Facebook Pixel initialized');
-        }
-      }
+      // Add the noscript pixel
+      const noscript = document.createElement('noscript');
+      const img = document.createElement('img');
+      img.height = 1;
+      img.width = 1;
+      img.style.display = 'none';
+      img.src = `https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`;
+      noscript.appendChild(img);
+      document.head.appendChild(noscript);
     };
 
-    initPixel();
+    try {
+      initPixel();
+    } catch (error) {
+      console.error('Error initializing Facebook Pixel:', error);
+    }
   }, []);
+
+  // Helper function to safely call fbq with proper typing
+  const trackEvent = (event: string, data?: any) => {
+    if (window.fbq) {
+      window.fbq('track', event, data);
+    }
+  };
+
+  return { trackEvent };
 };
 
 export default function BuyArea(props: Props) {
+  const { trackEvent } = useFacebookPixel();
   const productData: any = props.productData;
   const [swiperRef, setSwiperRef] = useState<any>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
@@ -87,8 +135,18 @@ export default function BuyArea(props: Props) {
   const boughtTogetherList = tranObjectFromStrTwoKey(productData.productDetail.boughtTogether);
   const [boughtTogetherShow, setBoughttTogetherShow] = useState<any[]>([]);
 
-  // facebookpixel
-  useFacebookPixel();
+  const handleAddToCart = () => {
+    // Gọi hàm fbq để gửi sự kiện đến Facebook Pixel
+    if (window.fbq) {
+      window.fbq('track', 'AddToCart', {
+        content_name: "test",
+        content_ids: [1],
+        value: "20$",
+        currency: 'USD',
+      });
+      console.log(`Added to cart: test`); // Log để kiểm tra
+    }
+  };
 
 
   let urlMainPhoto = "";
@@ -286,7 +344,7 @@ export default function BuyArea(props: Props) {
 
             <button onClick={() => setCurrentQuan(currentQuan + 1)} className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Plus /></button>
           </div>
-          <button className='flex justify-center  items-center h-14 border border-black w-2/3 hover:scale-105 transition-transform transform'>
+          <button onClick={handleAddToCart} className='flex justify-center  items-center h-14 border border-black w-2/3 hover:scale-105 transition-transform transform'>
             Add to cart
           </button>
         </div>
