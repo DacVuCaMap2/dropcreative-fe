@@ -1,4 +1,10 @@
 "use client"
+declare global {
+  interface Window {
+    fbq: any;
+    _fbq: any;
+  }
+}
 import React, { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { FreeMode, Navigation, Pagination, Thumbs } from 'swiper/modules'
@@ -15,6 +21,54 @@ type Props = {
   productData: any
 }
 
+
+// Facebook Pixel implementation
+const useInitializeFacebookPixel = () => {
+  useEffect(() => {
+    const loadFacebookPixel = () => {
+      if (typeof window !== 'undefined') {
+        // Create the script element
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+        
+        // Initialize fbq
+        window.fbq = function() {
+          window.fbq.callMethod ? 
+            window.fbq.callMethod.apply(window.fbq, arguments) : 
+            window.fbq.queue.push(arguments);
+        };
+        
+        // Initialize Facebook Pixel queue
+        if (!window._fbq) {
+          window._fbq = window.fbq;
+        }
+        window.fbq.push = window.fbq;
+        window.fbq.loaded = true;
+        window.fbq.version = '2.0';
+        window.fbq.queue = [];
+        
+        // Insert the script into the DOM
+        const firstScript = document.getElementsByTagName('script')[0];
+        if (firstScript && firstScript.parentNode) {
+          firstScript.parentNode.insertBefore(script, firstScript);
+        }
+        
+        // Initialize and track PageView
+        window.fbq('init', '1874932473002128');
+        window.fbq('track', 'PageView');
+      }
+    };
+
+    loadFacebookPixel();
+    
+    // Cleanup function
+    return () => {
+      // Clean up if needed
+    };
+  }, []);
+};
+
 export default function BuyArea(props: Props) {
   const productData: any = props.productData;
   const [swiperRef, setSwiperRef] = useState<any>(null);
@@ -28,6 +82,11 @@ export default function BuyArea(props: Props) {
   const comboSaleList = tranObjectFromStrTwoKey(productData.productDetail.comboSale);
   const boughtTogetherList = tranObjectFromStrTwoKey(productData.productDetail.boughtTogether);
   const [boughtTogetherShow, setBoughttTogetherShow] = useState<any[]>([]);
+
+  // facebookpixel
+  useInitializeFacebookPixel();
+
+
   let urlMainPhoto = "";
   let photos: any[] = [];
   let loop = false;
@@ -45,19 +104,8 @@ export default function BuyArea(props: Props) {
     // Filter out the main photo from the array
     const otherPhotos = photos.filter(photo => !photo.isMain);
 
-    photos = [mainPhoto,...otherPhotos];
-    // const mainImg = props.productData.images.find((item: any) => item.isMain);
+    photos = [mainPhoto, ...otherPhotos];
 
-    // if (mainImg) {
-    //     photos.push({ url: mainImg.url, isMain: true });
-    // }
-
-    // // Lọc ra những phần tử không phải là ảnh chính
-    // const otherImages = props.productData.images.filter((item: any) => !item.isMain);
-
-    // // Kết hợp ảnh chính với các ảnh khác
-    // photos = [{ url: mainImg.url, isMain: true }, ...otherImages.map((item: any) => ({ url: item.url, isMain: item.isMain }))];
-    // console.log(photos);
     loop = photos.length > 5;
   }
 
@@ -287,8 +335,8 @@ export default function BuyArea(props: Props) {
                   <span className='truncate max-w-64'>{productData.product.title}</span>
                 </div>
                 {currentVariant?.price ? <span>${(boughtTogetherList.length > 0 && parseFloat(boughtTogetherList[0].key2) != 0) ? (((100 - parseFloat(boughtTogetherList[0].key2)) / 100) * currentVariant.price).toFixed(2) : currentVariant.price}</span>
-                : 0  
-              }
+                  : 0
+                }
               </div>
               <div>
                 <select name="" id="" className='border rounded w-96 h-8 text-xs text-neutral-500'>
