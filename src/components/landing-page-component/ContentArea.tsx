@@ -32,7 +32,7 @@ export default function ContentArea(props: Props) {
         </div>
         <div className='mt-20 flex flex-col items-center px-4 '>
           <span className='font-bold text-3xl mb-8'>You may also like</span>
-          <div className='lg:w-[1000px] w-[500px]'>
+          <div className='lg:w-[1000px] w-[300px] '>
             <SuggestedArea accountId={accountId}/>
           </div>
         </div>
