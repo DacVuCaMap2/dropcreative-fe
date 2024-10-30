@@ -14,6 +14,16 @@ type Total = { subtotal: number, shippingFee: number, sale: number, total: numbe
 export default function CartBar(props: Props) {
     const currentListCart = props.currentListCart;
     let selectSale : any=null;
+
+    const handleCount = () :number=>{
+        let countAllProduct = currentListCart.reduce((parentTot:any,cart:Cart)=>{
+            return cart.cartItems.reduce((childTot:any,cartItem:CartItem)=>{
+                return childTot+cartItem.quantity
+            },0) + parentTot;
+        },0) 
+        return countAllProduct;
+    }
+    const countCartItem=handleCount();
     const handleTotal = (): Total => {
         if (currentListCart.length > 0) {
             const shippingFee = currentListCart[0].shippingFee;
@@ -80,7 +90,7 @@ export default function CartBar(props: Props) {
         <div onClick={e=>e.stopPropagation()}  className={`lg:w-[500px] w-full fixed top-0 right-0 h-screen  bg-white z-30 flex flex-col px-4 transition-transform transform ${props.isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
             <div className='flex flex-row items-center justify-between border-b border-neutral-400 py-2 '>
                 <div className=' text-gray-500 relative pl-2'>
-                    <div className='top-[-10px] right-[-10px] rounded-full w-5 h-5 text-[10px] flex justify-center items-center absolute bg-black text-white'>10</div>
+                    <div className='top-[-10px] right-[-10px] rounded-full w-5 h-5 text-[10px] flex justify-center items-center absolute bg-black text-white'>{countCartItem}</div>
                     <ShoppingCart />
                 </div>
                 <div className='flex flex-row space-x-2 px-4 text-2xl'>
