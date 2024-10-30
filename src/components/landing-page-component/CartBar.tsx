@@ -16,7 +16,7 @@ export default function CartBar(props: Props) {
     let selectSale : any=null;
 
     const handleCount = () :number=>{
-        let countAllProduct = currentListCart.reduce((parentTot:any,cart:Cart)=>{
+        const countAllProduct = currentListCart.reduce((parentTot:any,cart:Cart)=>{
             return cart.cartItems.reduce((childTot:any,cartItem:CartItem)=>{
                 return childTot+cartItem.quantity
             },0) + parentTot;
