@@ -290,7 +290,7 @@ export default function BuyArea(props: Props) {
 
         </div>
       }
-      <div className='fixed w-screen bg-white border-t bottom-0 left-[-8px] z-20 px-4 lg:block hidden'>
+      <div className='fixed w-screen bg-white border-t bottom-0 left-[-8px] z-20 px-4 lg:hidden block'>
         {/* <div>
           {productVariantTitle.map((item:any,index)=>(
             <div key={index} className='flex flex-col '>
