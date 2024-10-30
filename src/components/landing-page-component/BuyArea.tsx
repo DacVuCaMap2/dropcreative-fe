@@ -137,7 +137,7 @@ export default function BuyArea(props: Props) {
   const [boughtTogetherShow, setBoughttTogetherShow] = useState<any[]>([]);
   const [listCart, setListCart] = useState<any[]>([]);
   const [isOpenCart, setOpenCart] = useState(false);
-  const [tickAddSale,setTickAddSale] = useState({1:0,2:0,3:0});
+  const [tickAddSale, setTickAddSale] = useState({ 1: 0, 2: 0, 3: 0 });
 
   let urlMainPhoto = "";
   let photos: any[] = [];
@@ -201,7 +201,7 @@ export default function BuyArea(props: Props) {
 
 
 
-  const handleAddToCart = (quan?:any) => {
+  const handleAddToCart = (quan?: any) => {
     // // Gọi hàm fbq để gửi sự kiện đến Facebook Pixel
     // if (window.fbq) {
     //   window.fbq('track', 'AddToCart', {
@@ -214,8 +214,8 @@ export default function BuyArea(props: Props) {
     // }
 
     /// add to cart 
-    console.log("quan",currentQuan);
-    const thisQuan : number = (quan && !isNaN(quan)) ? parseFloat(quan)+currentQuan : currentQuan;
+    console.log("quan", currentQuan);
+    const thisQuan: number = (quan && !isNaN(quan)) ? parseFloat(quan) + currentQuan : currentQuan;
     let tempCart: Cart[] = [...currentListCart];
     let cart: Cart | undefined = tempCart.find(cart => cart.productId === currentVariant.productId);
     console.log(cart);
@@ -256,7 +256,7 @@ export default function BuyArea(props: Props) {
     setOpenCart(isOpen);
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-    }else{
+    } else {
       document.body.style.overflow = 'auto';
     }
   }
@@ -290,6 +290,46 @@ export default function BuyArea(props: Props) {
 
         </div>
       }
+      <div className='fixed w-screen bg-white border-t bottom-0 left-[-8px] z-20 px-4'>
+        {/* <div>
+          {productVariantTitle.map((item:any,index)=>(
+            <div key={index} className='flex flex-col '>
+              <span>{item}</span>
+              <select name="" id="">
+                {variantsSelectList[index].map((childItem:string,childIndex)=>(
+                  <option value="">{childItem}</option>
+                ))}
+              </select>
+            </div>
+          ))}
+        </div> */}
+        <div className='space-y-1 text-xs'>
+          {productVariantTitle.map((item: any, index) => (
+            <div key={index}>
+              <span className=''>{item}</span>
+              <div className='flex flex-row overflow-auto'>
+                {variantsSelectList[index].map((childItem: string, childIndex) => (
+                  <button onClick={() => handleSelectedVariant(index, childIndex)} key={childIndex} className={`border rounded-lg py-2 px-4 mr-4 mb-2 ${selectedVariant[index] === childIndex ? 'bg-neutral-800 text-white shadow-lg ' : ''}`}>
+                    {childItem}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className='flex flex-row justify-center space-x-4 pb-2 items-center text-xs'>
+          <div className='flex flex-row lg:w-36 w-[120px] border border-neutral-300 h-10 items-center  '>
+            <button onClick={() => setCurrentQuan(currentQuan > 1 ? currentQuan - 1 : currentQuan)} className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Minus /></button>
+            <span className='w-full text-center'>{currentQuan}</span>
+
+            <button onClick={() => setCurrentQuan(currentQuan + 1)} className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Plus /></button>
+          </div>
+          <button onClick={handleAddToCart} className='w-2/3 flex justify-center  items-center h-10 border border-black bg-black text-white  hover:scale-105 transition-transform transform'>
+            Add to cart
+          </button>
+        </div>
+      </div>
+
 
       <div className='flex flex-col space-y-8 px-4 lg:px-0'>
         <div className='overflow-hidden border-b border-neutral-300 pb-4'>
@@ -303,7 +343,7 @@ export default function BuyArea(props: Props) {
                 thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
             }}
             modules={[FreeMode, Navigation, Thumbs]}
-            className='w-[550px] h-[550px] rounded-lg'
+            className='lg:w-[550px] lg:h-[550px] w-full h-full '
           >
             {photos.map((image: any, index: number) => (
               <SwiperSlide key={index}>
@@ -396,13 +436,13 @@ export default function BuyArea(props: Props) {
         </div>
 
         <div className='flex flex-row justify-between h-20 items-center'>
-          <div className='flex flex-row w-36 border border-neutral-300 h-14 items-center'>
+          <div className='flex flex-row lg:w-36 w-[120px] border border-neutral-300 h-14 items-center'>
             <button onClick={() => setCurrentQuan(currentQuan > 1 ? currentQuan - 1 : currentQuan)} className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Minus /></button>
             <span className='w-full text-center'>{currentQuan}</span>
 
             <button onClick={() => setCurrentQuan(currentQuan + 1)} className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Plus /></button>
           </div>
-          <button onClick={handleAddToCart} className='flex justify-center  items-center h-14 border border-black w-2/3 hover:scale-105 transition-transform transform'>
+          <button onClick={handleAddToCart} className='w-2/3 flex justify-center  items-center h-14 border border-black  hover:scale-105 transition-transform transform'>
             Add to cart
           </button>
         </div>
@@ -428,7 +468,7 @@ export default function BuyArea(props: Props) {
                   </div>
                 </div>
               </div>
-              <button onClick={()=> {handleAddToCart(item.key1)}} className={`bg-white py-1 px-4 border border-black`}>Add</button>
+              <button onClick={() => { handleAddToCart(item.key1) }} className={`bg-white py-1 px-4 border border-black`}>Add</button>
             </div>
           ))}
         </div>
@@ -449,10 +489,10 @@ export default function BuyArea(props: Props) {
           </div>
           <div className='flex flex-col space-y-4'>
             <div className='space-y-1'>
-              <div className='flex flex-row space-x-2 text-sm justify-between'>
+              <div className='flex flex-row space-x-2 text-sm justify-between px-2'>
                 <div className='flex flex-row'>
                   <input type="checkbox" className='rounded mr-2' name="" id="" />
-                  <span className='truncate max-w-64'>{productData.product.title}</span>
+                  <span className='truncate max-w-56'>{productData.product.title}</span>
                 </div>
                 {currentVariant?.price ? <span>${(boughtTogetherList.length > 0 && parseFloat(boughtTogetherList[0].key2) != 0) ? (((100 - parseFloat(boughtTogetherList[0].key2)) / 100) * currentVariant.price).toFixed(2) : currentVariant.price}</span>
                   : 0
@@ -469,10 +509,10 @@ export default function BuyArea(props: Props) {
             {boughtTogetherShow.map((item: any, index) => (
               <div key={index} className='space-y-1'>
                 {item.product &&
-                  <div className='flex flex-row space-x-2 text-sm justify-between'>
+                  <div className='flex flex-row space-x-2 text-sm justify-between px-2'>
                     <div className='flex flex-row'>
                       <input type="checkbox" className='rounded mr-2' name="" id="" />
-                      <span className='truncate max-w-96'>{item.product.title}</span>
+                      <span className='truncate max-w-56'>{item.product.title}</span>
                     </div>
                     <span>${parseFloat(boughtTogetherList[index + 1].key2) != 0 ? (((100 - parseFloat(boughtTogetherList[index + 1].key2)) / 100) * item.product.price).toFixed(2) : item.product.price}</span>
                   </div>

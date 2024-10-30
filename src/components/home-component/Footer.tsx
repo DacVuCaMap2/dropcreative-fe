@@ -14,11 +14,7 @@ export default function Footer() {
               AI image generator
             </p>
             <p className="hover:text-white cursor-pointer">
-              Background remover
-            </p>
-            <p className="hover:text-white cursor-pointer">Photo editor</p>
-            <p className="hover:text-white cursor-pointer">
-              All DropCreative tools
+              Facebook ads libary
             </p>
           </div>
         </div>
