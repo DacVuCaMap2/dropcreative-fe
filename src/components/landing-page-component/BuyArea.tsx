@@ -290,7 +290,7 @@ export default function BuyArea(props: Props) {
 
         </div>
       }
-      <div className='fixed w-screen bg-white border-t bottom-0 left-[-8px] z-20 px-4 lg:hidden block'>
+      <div className='fixed w-screen bg-white border-t bottom-0 left-[-8px] z-20 px-4 lg:hidden block py-4'>
         {/* <div>
           {productVariantTitle.map((item:any,index)=>(
             <div key={index} className='flex flex-col '>
@@ -317,7 +317,7 @@ export default function BuyArea(props: Props) {
             </div>
           ))}
         </div>
-        <div className='flex flex-row justify-center space-x-4 pb-2 items-center text-xs'>
+        <div className='flex flex-row justify-center space-x-4 items-center text-xs'>
           <div className='flex flex-row lg:w-36 w-[120px] border border-neutral-300 h-10 items-center  '>
             <button onClick={() => setCurrentQuan(currentQuan > 1 ? currentQuan - 1 : currentQuan)} className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Minus /></button>
             <span className='w-full text-center'>{currentQuan}</span>
