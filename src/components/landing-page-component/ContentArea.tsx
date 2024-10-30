@@ -30,9 +30,9 @@ export default function ContentArea(props: Props) {
         <div className='lg:w-[1000px] w-full'>
           <CommentArea/>
         </div>
-        <div className='mt-20 flex flex-col items-center'>
+        <div className='mt-20 flex flex-col items-center px-4 '>
           <span className='font-bold text-3xl mb-8'>You may also like</span>
-          <div className='lg:w-[1000px] w-full'>
+          <div className='lg:w-[1000px] w-[500px]'>
             <SuggestedArea accountId={accountId}/>
           </div>
         </div>
