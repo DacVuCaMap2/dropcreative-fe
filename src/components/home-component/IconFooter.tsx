@@ -11,7 +11,7 @@ const IconFooter = () => {
             width="16"
             height="16"
             aria-hidden="true"
-            class="_24ydrq0 _1286nb11m _1286nb12qu"
+            className="_24ydrq0 _1286nb11m _1286nb12qu"
           >
             <path
               fill="white"
@@ -26,7 +26,7 @@ const IconFooter = () => {
             height="16"
             viewBox="0 0 512 512"
             aria-hidden="true"
-            class="_24ydrq0 _1286nb11m _1286nb12qu"
+            className="_24ydrq0 _1286nb11m _1286nb12qu"
           >
             <path
               fill="black"
@@ -41,7 +41,7 @@ const IconFooter = () => {
             width="16"
             height="16"
             aria-hidden="true"
-            class="_24ydrq0 _1286nb11m _1286nb12qu"
+            className="_24ydrq0 _1286nb11m _1286nb12qu"
           >
             <path
               fill="white"
@@ -56,7 +56,7 @@ const IconFooter = () => {
             width="16"
             height="16"
             aria-hidden="true"
-            class="_24ydrq0 _1286nb11m _1286nb12qu"
+            className="_24ydrq0 _1286nb11m _1286nb12qu"
           >
             <path
               fill="white"
@@ -78,7 +78,7 @@ const IconFooter = () => {
             width="16"
             height="16"
             aria-hidden="true"
-            class="_24ydrq0 _1286nb11m _1286nb12qu"
+            className="_24ydrq0 _1286nb11m _1286nb12qu"
           >
             <path
               fill="white"
@@ -93,7 +93,7 @@ const IconFooter = () => {
             width="16"
             height="16"
             aria-hidden="true"
-            class="_24ydrq0 _1286nb11m _1286nb12qu"
+            className="_24ydrq0 _1286nb11m _1286nb12qu"
           >
             <path
               fill="white"
@@ -108,7 +108,7 @@ const IconFooter = () => {
             height="16"
             viewBox="0 0 17 13"
             aria-hidden="true"
-            class="_24ydrq0 _1286nb11m _1286nb12qu"
+            className="_24ydrq0 _1286nb11m _1286nb12qu"
           >
             <path
               fill="white"
@@ -123,7 +123,7 @@ const IconFooter = () => {
             height="16"
             viewBox="0 0 17 15"
             aria-hidden="true"
-            class="_24ydrq0 _1286nb11m _1286nb12qu"
+            className="_24ydrq0 _1286nb11m _1286nb12qu"
           >
             <path
               fill="white"
