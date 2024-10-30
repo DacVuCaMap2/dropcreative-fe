@@ -13,7 +13,7 @@ export default function LandingPageHeader() {
 
     return (
         <header className="w-full text-black border-b ">
-            <nav className="bg-white border-gray-200 dark:bg-gray-900 flex justify-between items-center px-10 py-4">
+            <nav className="bg-white border-gray-200 dark:bg-gray-900 flex justify-between items-center lg:px-10 px-2 py-4">
                 {/* Nút Upload */}
                 <div className="flex flex-row items-center space-x-8 text-black">
                     <Link href={"/"} className='flex flex-row items-center space-x-2'>

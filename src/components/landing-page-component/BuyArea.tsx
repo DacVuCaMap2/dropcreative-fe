@@ -138,7 +138,23 @@ export default function BuyArea(props: Props) {
   const [listCart, setListCart] = useState<any[]>([]);
   const [isOpenCart, setOpenCart] = useState(false);
   const [tickAddSale, setTickAddSale] = useState({ 1: 0, 2: 0, 3: 0 });
+  const [isVisibleAdd, setIsVisibleAdd] = useState(false);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 1400) { // Điều chỉnh số 200 theo ý muốn của bạn
+        setIsVisibleAdd(true);
+      } else {
+        setIsVisibleAdd(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   let urlMainPhoto = "";
   let photos: any[] = [];
   let loop = false;
@@ -290,19 +306,7 @@ export default function BuyArea(props: Props) {
 
         </div>
       }
-      <div className='fixed w-screen bg-white border-t bottom-0 left-[-8px] z-20 px-4 lg:hidden block py-4'>
-        {/* <div>
-          {productVariantTitle.map((item:any,index)=>(
-            <div key={index} className='flex flex-col '>
-              <span>{item}</span>
-              <select name="" id="">
-                {variantsSelectList[index].map((childItem:string,childIndex)=>(
-                  <option value="">{childItem}</option>
-                ))}
-              </select>
-            </div>
-          ))}
-        </div> */}
+      <div className={`fixed w-screen bg-white border-t bottom-0 left-[-8px] z-20 px-4 lg:hidden block py-4 transition-opacity duration-300 ${isVisibleAdd ? "lg:opacity-0 opacity-100" : "opacity-0"}`}>
         <div className='space-y-1 text-xs'>
           {productVariantTitle.map((item: any, index) => (
             <div key={index}>
@@ -317,6 +321,8 @@ export default function BuyArea(props: Props) {
             </div>
           ))}
         </div>
+
+
         <div className='flex flex-row justify-center space-x-4 items-center text-xs'>
           <div className='flex flex-row lg:w-36 w-[120px] border border-neutral-300 h-10 items-center  '>
             <button onClick={() => setCurrentQuan(currentQuan > 1 ? currentQuan - 1 : currentQuan)} className='w-1/4 flex justify-center items-center px-2 hover:bg-gray-200 h-full'><Minus /></button>
