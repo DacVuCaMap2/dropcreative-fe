@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import CardPaypal from "./CardPaypal";
 import { pricingData } from "@/data/pricing-data/pricingData";
 import { title } from "process";
+import SlideProduct from "../home-component/SlideProduct";
 
 const Pricing = () => {
   const listPricing = pricingData;
@@ -65,7 +66,7 @@ const Pricing = () => {
                               height={15}
                               className="mt-1 mr-1"
                             />
-                            {feature.value===-1 ? "Unlimited" : feature.value} {feature.desc}
+                            {feature.value === -1 ? "Unlimited" : feature.value} {feature.desc}
                           </p>
                         ))}
                       </div>
@@ -81,7 +82,7 @@ const Pricing = () => {
               ))}
 
             </div>
-
+            <SlideProduct />
           </div>
         </div>
       </div>
