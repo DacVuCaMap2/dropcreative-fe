@@ -22,7 +22,7 @@ const Layout = ({
       <main className=" w-full relative">
         <HomeHeadNavBar email={email} role={role} type={1} />
         {children}
-        <Footer background="bg-black" textColor="text-white" />
+        <Footer />
       </main>
     </div>
   );
