@@ -82,9 +82,11 @@ const Pricing = () => {
               ))}
 
             </div>
-            <SlideProduct />
+            
           </div>
+          
         </div>
+        <SlideProduct type={1}/>
       </div>
     </div>
   );

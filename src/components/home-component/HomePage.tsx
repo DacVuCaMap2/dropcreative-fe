@@ -499,7 +499,7 @@ export default function HomePage(props: Props) {
               </div>
             </div>
           </div>
-          <SlideProduct />
+          <SlideProduct type={0}/>
         </div>
 
         {/* <Footer /> */}
