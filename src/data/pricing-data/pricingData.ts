@@ -5,13 +5,12 @@ export const pricingData = [
         days: "day",
         title: "50 AI credits for 1 day",
         features: [
-            "5 searches",
-            "2 pixel extractions",
-            "10 copy of a premium product",
-            "10 download of product content",
-            "10 view of a template page",
-            "10 domain limit",
-            "Maximum of 1 payment gateways for products"
+            {value:10,desc:"searches"},
+            {value:2,desc:"pixel extractions"},
+            {value:10,desc:"copy of a premium product"},
+            {value:10,desc:"download of product content"},
+            {value:1,desc:"domain limit"},
+            {value:1,desc:"maxium of payment gateways for products"}
         ],
         domainLimit: 1,
         paymentGatewayLimit: 1,
@@ -23,13 +22,12 @@ export const pricingData = [
         days: "7 days",
         title: "1500 AI credits for 7 days",
         features: [
-            "100 searches",
-            "40 pixel extractions",
-            "20 copies of premium products",
-            "20 downloads of product content",
-            "20 views of template pages",
-            "20 domain limit",
-            "Maximum of 3 payment gateways for products"
+            {value:100,desc:"searches"},
+            {value:40,desc:"pixel extractions"},
+            {value:70,desc:"copy of a premium product"},
+            {value:70,desc:"download of product content"},
+            {value:5,desc:"domain limit"},
+            {value:3,desc:"maxium of payment gateways for products"}
         ],
         domainLimit: 5,
         paymentGatewayLimit: 3,
@@ -41,13 +39,12 @@ export const pricingData = [
         days: "30 days",
         title: "5000 AI credits for 30 days",
         features: [
-            "200 searches",
-            "100 pixel extractions",
-            "50 copies of premium products",
-            "50 downloads of product content",
-            "50 views of template pages",
-            "50 domain limit",
-            "Maximum of 5 payment gateways for products"
+            {value:500,desc:"searches"},
+            {value:40,desc:"pixel extractions"},
+            {value:300,desc:"copy of a premium product"},
+            {value:300,desc:"download of product content"},
+            {value:10,desc:"domain limit"},
+            {value:5,desc:"maxium of payment gateways for products"}
         ],
         domainLimit: 10,
         paymentGatewayLimit: 5,
@@ -59,13 +56,12 @@ export const pricingData = [
         days: "360 days",
         title: "25000 AI credits for 360 days",
         features: [
-            "Unlimited searches",
-            "Unlimited pixel extractions",
-            "100 copies of premium products",
-            "100 downloads of product content",
-            "100 views of template pages",
-            "100 domain limit",
-            "Maximum of 10 payment gateways for products"
+            {value:4000,desc:"searches"},
+            {value:1000,desc:"pixel extractions"},
+            {value:3600,desc:"copy of a premium product"},
+            {value:3600,desc:"download of product content"},
+            {value:20,desc:"domain limit"},
+            {value:1,desc:"maxium of payment gateways for products"}
         ],
         domainLimit: 20,
         paymentGatewayLimit: 10,
@@ -77,13 +73,12 @@ export const pricingData = [
         days: "1 year",
         title: "Unlimited AI credits",
         features: [
-            "Unlimited searches",
-            "Unlimited pixel extractions",
-            "Unlimited copies of premium products",
-            "Unlimited downloads of product content",
-            "Unlimited views of template pages",
-            "Unlimited domain limit",
-            "Maximum of 15 payment gateways for products"
+            {value:-1,desc:"searches"},
+            {value:-1,desc:"pixel extractions"},
+            {value:-1,desc:"copy of a premium product"},
+            {value:-1,desc:"download of product content"},
+            {value:-1,desc:"domain limit"},
+            {value:15,desc:"maxium of payment gateways for products"}
         ],
         domainLimit: 30,
         paymentGatewayLimit: 15,

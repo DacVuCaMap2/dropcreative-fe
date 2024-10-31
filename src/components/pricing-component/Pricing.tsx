@@ -57,7 +57,7 @@ const Pricing = () => {
                         Premium product content
                       </p>
                       <div className="mt-3">
-                        {pricing.features.map((feature: string, featureIndex: number) => (
+                        {pricing.features.map((feature: any, featureIndex: number) => (
                           <p key={featureIndex} className="flex">
                             <Check
                               color="green"
@@ -65,7 +65,7 @@ const Pricing = () => {
                               height={15}
                               className="mt-1 mr-1"
                             />
-                            {feature}
+                            {feature.value===-1 ? "Unlimited" : feature.value} {feature.desc}
                           </p>
                         ))}
                       </div>
