@@ -1,6 +1,6 @@
 "use client";
 import { deleteAllCookies } from "@/ultils";
-import { Bell, ChevronDown, Upload } from "lucide-react";
+import { Bell, ChevronDown, Upload, Wallet } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -52,11 +52,14 @@ export default function HomeHeadNavBar(props: Props) {
           {(props.email && props.role) ?
             <div className="flex flex-row space-x-6 justify-center items-center">
 
-              <button className="flex items-center border text-xs font-bold px-4 py-2 rounded">
-                <Upload size={16} className="mr-2" />
-                Upload File
+              <button className="flex items-center border text-xs px-4 py-2 rounded flex-row space-x-3">
+                <div className=" flex flex-row items-center space-x-1">
+                  <Wallet />
+                  <span>Your wallet</span>
+                </div>
+                <span className="font-bold text-sm">$0</span>
               </button>
-              <Link href={"/pricing"} className="text-yellow-400 text-sm font-bold">
+              <Link href={"/pricing"} className="text-yellow-400  text-sm font-bold">
                 Pricing
               </Link>
               {/* <button className="hover:text-blue-500 bell">
