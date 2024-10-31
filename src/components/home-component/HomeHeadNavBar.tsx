@@ -42,6 +42,10 @@ export default function HomeHeadNavBar(props: Props) {
               Manager
             </Link>
             <Link href={"/"}>Tools</Link>
+            <Link href={"/"}>About us</Link>
+            <Link href={"/"}>Blog</Link>
+            <Link href={"/"}>Events</Link>
+            <Link href={"/"}>Contact</Link>
             <Link href={"/"}>More</Link>
           </div>
         </div>
