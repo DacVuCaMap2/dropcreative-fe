@@ -84,18 +84,18 @@ export const useFacebookPixel = (str: any) => {
         console.error('Failed to load Facebook Pixel script');
       };
 
-      // Add onload handler
-      script.onload = () => {
-        if (window.fbq) {
-          // Initialize the pixel after script loads
-          window.fbq('init', PIXEL_ID);
-          window.fbq('track', 'PageView');
+      // // Add onload handler
+      // script.onload = () => {
+      //   if (window.fbq) {
+      //     // Initialize the pixel after script loads
+      //     window.fbq('init', PIXEL_ID);
+      //     // window.fbq('track', 'PageView');
 
-          if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') {
-            console.log('Facebook Pixel initialized successfully');
-          }
-        }
-      };
+      //     if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') {
+      //       console.log('Facebook Pixel initialized successfully');
+      //     }
+      //   }
+      // };
 
       // Insert the script
       document.head.appendChild(script);
@@ -119,12 +119,10 @@ export const useFacebookPixel = (str: any) => {
   }, []);
 
   // Helper function to safely call fbq with proper typing
-  const trackEvent = (event: string, data?: any) => {
-    console.log(data);
+  const trackEvent = (event: string, data: any) => {
     if (window.fbq) {
-      if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') {
-        console.log('Tracking event:', event, data);
-      }
+      console.log('FBQ Object:', window.fbq);
+      console.log("data", data)
       window.fbq('track', event, data);
     }
   };
@@ -230,17 +228,27 @@ export default function BuyArea(props: Props) {
   }, [selectedVariant])
   //get productdetails
 
-
+  const trackAddToCartNoscript = (eventData: any) => {
+    const noscript = document.createElement('noscript');
+    const img = document.createElement('img');
+    img.height = 1;
+    img.width = 1;
+    img.style.display = 'none';
+    img.src = `https://www.facebook.com/tr?id=${props.productData.productDetail.facebookPixel}&ev=AddToCart&contents=${encodeURIComponent(JSON.stringify(eventData.contents))}&currency=${eventData.currency}&noscript=1`;
+    noscript.appendChild(img);
+    document.head.appendChild(noscript);
+  };
 
   const handleAddToCart = (quan?: any) => {
     /// add to cart 
-    const eventData : AddToCartData = {
+    const eventData: AddToCartData = {
       content_ids: ["product"],
       content_type: 'product',
-      contents: [{id:"ss1",quantity:currentQuan,price:currentVariant.price}],
+      contents: [{ id: "ss1", quantity: currentQuan, price: currentVariant.price }],
       currency: 'USD'
-    } 
+    }
     trackEvent('AddToCart', eventData);
+    trackAddToCartNoscript(eventData);
     // console.log("quan", currentQuan);
     const thisQuan: number = (quan && !isNaN(quan)) ? parseFloat(quan) + currentQuan : currentQuan;
     let tempCart: Cart[] = [...currentListCart];
