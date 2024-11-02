@@ -109,6 +109,7 @@ export const useFacebookPixel = (str: any) => {
 
   // Helper function to safely call fbq with proper typing
   const trackEvent = (event: string, data?: any) => {
+    console.log(data);
     if (window.fbq) {
       window.fbq('track', event, data);
     }
@@ -120,7 +121,6 @@ export const useFacebookPixel = (str: any) => {
 export default function BuyArea(props: Props) {
   ///Cart
   const [currentListCart, setCurrentListCart] = useState<Cart[]>([]);
-
 
   const { trackEvent } = useFacebookPixel(props.productData.productDetail.facebookPixel);
   const productData: any = props.productData;
@@ -218,23 +218,24 @@ export default function BuyArea(props: Props) {
 
 
   const handleAddToCart = (quan?: any) => {
-    // // Gọi hàm fbq để gửi sự kiện đến Facebook Pixel
-    // if (window.fbq) {
-    //   window.fbq('track', 'AddToCart', {
-    //     content_name: "test",
-    //     content_ids: [1],
-    //     value: "20$",
-    //     currency: 'USD',
-    //   });
-    //   console.log(`Added to cart: test`);
-    // }
-
     /// add to cart 
-    console.log("quan", currentQuan);
+
+    trackEvent('AddToCart', {
+      content_ids: [currentVariant.productId],
+      content_name: productData.product.title,
+      content_type: 'product',
+      currency: 'USD',
+      value: currentVariant.price,
+      contents: [{
+        id: currentVariant.productId,
+        quantity: currentQuan,
+        price: currentVariant.price
+      }]
+    });
+    // console.log("quan", currentQuan);
     const thisQuan: number = (quan && !isNaN(quan)) ? parseFloat(quan) + currentQuan : currentQuan;
     let tempCart: Cart[] = [...currentListCart];
     let cart: Cart | undefined = tempCart.find(cart => cart.productId === currentVariant.productId);
-    console.log(cart);
     if (!cart) {
       cart = getNewCart(currentVariant.productId, comboSaleList, productData.product.shippingFee);
       tempCart.push(cart);
@@ -254,7 +255,6 @@ export default function BuyArea(props: Props) {
     else {
       cart.cartItems.push(getNewCartItem(currentVariant.id, thisQuan, productData.product.title, currentVariant.productId, currentVariant.price, currentVariant.value, selectPhoto, currentVariant.comparePrice));
     }
-    console.log("cart", cart);
     tempCart = tempCart.map(item => {
       if (item.productId === currentVariant.productId) {
         return cart;
@@ -263,9 +263,9 @@ export default function BuyArea(props: Props) {
     })
     setCurrentListCart(tempCart);
     handleOpenOrCloseCart(true);
-    console.log(currentVariant);
-    console.log(currentQuan);
-    console.log(comboSaleList);
+    // console.log(currentVariant);
+    // console.log(currentQuan);
+    // console.log(comboSaleList);
   };
   const handleOpenOrCloseCart = (isOpen: boolean) => {
 
