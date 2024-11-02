@@ -39,7 +39,18 @@ declare global {
   }
 }
 
-
+interface AddToCartData {
+  content_ids: string[];
+  content_name?: string;
+  content_type: 'product';
+  contents: Array<{
+    id: string;
+    quantity: number;
+    price?: number;
+  }>;
+  currency: string;
+  value?: number;
+}
 
 
 export const useFacebookPixel = (str: any) => {
@@ -111,12 +122,16 @@ export const useFacebookPixel = (str: any) => {
   const trackEvent = (event: string, data?: any) => {
     console.log(data);
     if (window.fbq) {
+      if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') {
+        console.log('Tracking event:', event, data);
+      }
       window.fbq('track', event, data);
     }
   };
 
   return { trackEvent };
 };
+
 
 export default function BuyArea(props: Props) {
   ///Cart
@@ -219,19 +234,13 @@ export default function BuyArea(props: Props) {
 
   const handleAddToCart = (quan?: any) => {
     /// add to cart 
-
-    trackEvent('AddToCart', {
-      content_ids: [currentVariant.productId],
-      content_name: productData.product.title,
+    const eventData : AddToCartData = {
+      content_ids: ["product"],
       content_type: 'product',
-      currency: 'USD',
-      value: currentVariant.price,
-      contents: [{
-        id: currentVariant.productId,
-        quantity: currentQuan,
-        price: currentVariant.price
-      }]
-    });
+      contents: [{id:"ss1",quantity:currentQuan,price:currentVariant.price}],
+      currency: 'USD'
+    } 
+    trackEvent('AddToCart', eventData);
     // console.log("quan", currentQuan);
     const thisQuan: number = (quan && !isNaN(quan)) ? parseFloat(quan) + currentQuan : currentQuan;
     let tempCart: Cart[] = [...currentListCart];
