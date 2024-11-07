@@ -71,16 +71,20 @@ export default function HomeHeadNavBar(props: Props) {
           {/* Ảnh đại diện với dropdown */}
           {(props.email && props.role) ?
             <div className="flex flex-row space-x-6 justify-center items-center">
-              <Link href={"/pricing/wallet"} className="flex items-center border text-xs px-4 py-2 rounded flex-row space-x-3">
-                <div className=" flex flex-row items-center space-x-1">
-                  <Wallet />
-                  <span>Your wallet</span>
+              {props.role === "user_role" &&
+                <div className="flex flex-row space-x-6 justify-center items-center">
+                  <Link href={"/pricing/wallet"} className="flex items-center border text-xs px-4 py-2 rounded flex-row space-x-3">
+                    <div className=" flex flex-row items-center space-x-1">
+                      <Wallet />
+                      <span>Your wallet</span>
+                    </div>
+                    <span className="font-bold text-sm">${balance}</span>
+                  </Link>
+                  <Link href={"/pricing"} className="text-yellow-400  text-sm font-bold">
+                    Pricing
+                  </Link>
                 </div>
-                <span className="font-bold text-sm">${balance}</span>
-              </Link>
-              <Link href={"/pricing"} className="text-yellow-400  text-sm font-bold">
-                Pricing
-              </Link>
+              }
               {/* <button className="hover:text-blue-500 bell">
                 <Bell size={18} />
                 <Tooltip anchorSelect=".bell" place="bottom">
