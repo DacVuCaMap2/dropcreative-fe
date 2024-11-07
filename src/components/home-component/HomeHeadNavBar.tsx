@@ -1,10 +1,11 @@
 "use client";
+import GetApi from "@/api/GetApi";
 import { deleteAllCookies } from "@/ultils";
 import { Bell, ChevronDown, Upload, Wallet } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 type Props = {
   email: string;
@@ -12,7 +13,9 @@ type Props = {
   type: number;
 }
 export default function HomeHeadNavBar(props: Props) {
+  console.log(props.role)
   const [isOpen, setIsOpen] = useState(false);
+  const [balance, setBalance] = useState(0);
   const router = useRouter();
 
   const toggleDropdown = () => {
@@ -24,6 +27,19 @@ export default function HomeHeadNavBar(props: Props) {
     deleteAllCookies();
     router.push("/login");
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = process.env.NEXT_PUBLIC_API_URL + "/api/wallet";
+      const response = await GetApi(url);
+      console.log(response);
+      if (response && response.balance) {
+        setBalance(response.balance);
+      }
+    }
+    if (props.role && props.role === "user_role") {
+      fetchData();
+    }
+  }, [])
   return (
     <header className={`w-full absolute z-30 top-30 ${props.type === 0 ? "text-white" : "text-black sticky top-0 bg-white"}`}>
       <nav className="border-gray-200 flex justify-between items-center px-4 py-2">
@@ -55,14 +71,13 @@ export default function HomeHeadNavBar(props: Props) {
           {/* Ảnh đại diện với dropdown */}
           {(props.email && props.role) ?
             <div className="flex flex-row space-x-6 justify-center items-center">
-
-              <button className="flex items-center border text-xs px-4 py-2 rounded flex-row space-x-3">
+              <Link href={"/pricing/wallet"} className="flex items-center border text-xs px-4 py-2 rounded flex-row space-x-3">
                 <div className=" flex flex-row items-center space-x-1">
                   <Wallet />
                   <span>Your wallet</span>
                 </div>
-                <span className="font-bold text-sm">$0</span>
-              </button>
+                <span className="font-bold text-sm">${balance}</span>
+              </Link>
               <Link href={"/pricing"} className="text-yellow-400  text-sm font-bold">
                 Pricing
               </Link>

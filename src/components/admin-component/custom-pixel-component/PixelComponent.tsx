@@ -198,7 +198,7 @@ export default function PixelComponent(props:Props) {
                                 </tr>
                             </thead>
                             {(!categoryPixel || isLoading === 1) ?
-                                <ShowLoadTable />
+                                <ShowLoadTable countRow={6}/>
                                 :
                                 <tbody>
                                     {categoryPixel?.facebookPixels.map((item: FacebookPixel, index) => (

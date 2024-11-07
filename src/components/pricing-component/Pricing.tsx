@@ -22,7 +22,7 @@ const Pricing = () => {
       <div className="flex flex-col justify-center items-center">
         <div className="flex flex-col py-16 space-y-20 w-full px-10">
           <div className="flex flex-col space-y-4">
-            <p className="text-6xl text-center font-medium">Pricing </p>
+            <p className="text-6xl text-center font-medium">Pricing</p>
             <p className="text-base text-gray-600 text-center font-medium">
               Access cutting-edge AI tools, easy-to-use design tools and Premium
               product content.
@@ -31,7 +31,6 @@ const Pricing = () => {
             </p>
             <div className="mt-4 flex gap-10">
               {listPricing.map((pricing: any, index) => (
-
                 <Card key={index} hoverable className="flex-1">
                   <div className="flex gap-5 flex-col ">
                     <p className="text-black text-2xl font-medium">{pricing.name}</p>
