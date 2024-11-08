@@ -11,6 +11,7 @@ type Props = {
 export default function WalletPaypal(props: Props) {
     const [currentValue, setCurrentValue] = useState(0);
     const [showPaypal, setShowPaypal] = useState(false);
+    const [opacityPaypal,setOpacityPaypal] = useState(false);
     const paypalClientId: string = process.env.NEXT_PUBLIC_PAYPAL_ID || "";
     const handleApprove = async (data: any, actions: any) => {
         try {
@@ -36,13 +37,20 @@ export default function WalletPaypal(props: Props) {
     const handleChangeCurrentValue = (e: any) => {
         const value = parseFloat(e.target.value);
         setShowPaypal(false);
+        setOpacityPaypal(false);
         setCurrentValue(value);
 
     }
     const handleShowPaypal = () => {
         console.log(currentValue);
+        // if (currentValue > 0) {
+        //     setShowPaypal(true);
+        // }
         if (currentValue > 0) {
             setShowPaypal(true);
+            setTimeout(() => {
+                setOpacityPaypal(true)
+            }, 1000); // 1000 ms = 1 giây (có thể thay đổi tùy theo yêu cầu)
         }
     }
     // Create the PayPal order
@@ -82,7 +90,7 @@ export default function WalletPaypal(props: Props) {
                         <p className=" text-sm font-medium text-red-500 bg-gray-200 p-4 "> The transaction will incur a fee of approximately 5%.</p>
 
                         {showPaypal &&
-                            <div className=''>
+                            <div className='opacity-100'>
                                 <PayPalScriptProvider options={{ "clientId": paypalClientId }}>
                                     <div className="p-8">
                                         <PayPalButtons
