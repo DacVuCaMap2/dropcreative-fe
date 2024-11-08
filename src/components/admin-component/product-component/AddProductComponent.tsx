@@ -101,7 +101,7 @@ export default function AddProductComponent(props: Props) {
   useEffect(() => {
 
     if (listProductSelect.length == 0) {
-      const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=100&page=1`;
+      const url = process.env.NEXT_PUBLIC_API_URL + `/api/product?accountId=${accountId}&size=300&page=1`;
       const fetchData = async () => {
         const response = await GetApi(url);
         console.log(response);
