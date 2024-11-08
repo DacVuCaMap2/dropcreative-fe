@@ -3,25 +3,25 @@ import GetApi from '@/api/GetApi';
 import PostApi from '@/api/PostParttern';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { Card, message } from 'antd';
-import { Check, X } from 'lucide-react';
+import { Check, Minus, X } from 'lucide-react';
 import React, { useState } from 'react'
 type Props = {
-    setOpen:React.Dispatch<React.SetStateAction<boolean>>;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function WalletPaypal(props:Props) {
+export default function WalletPaypal(props: Props) {
     const [currentValue, setCurrentValue] = useState(0);
     const [showPaypal, setShowPaypal] = useState(false);
     const paypalClientId: string = process.env.NEXT_PUBLIC_PAYPAL_ID || "";
     const handleApprove = async (data: any, actions: any) => {
         try {
             const details = await actions.order.capture();
-            const url = process.env.NEXT_PUBLIC_API_URL + "/api/wallet/capture/"+details.id;
-            const response = await  GetApi(url);
+            const url = process.env.NEXT_PUBLIC_API_URL + "/api/wallet/capture/" + details.id;
+            const response = await GetApi(url);
             console.log(response);
-            if (response?.status && response.status===200) {
+            if (response?.status && response.status === 200) {
                 window.location.reload();
             }
-            else{
+            else {
                 message.error("failed!")
             }
 
@@ -33,13 +33,13 @@ export default function WalletPaypal(props:Props) {
         document.body.style.overflow = 'auto';
         props.setOpen(false);
     }
-    const handleChangeCurrentValue = (e:any) => {
+    const handleChangeCurrentValue = (e: any) => {
         const value = parseFloat(e.target.value);
         setShowPaypal(false);
         setCurrentValue(value);
-        
+
     }
-    const handleShowPaypal = () =>{
+    const handleShowPaypal = () => {
         console.log(currentValue);
         if (currentValue > 0) {
             setShowPaypal(true);
@@ -50,7 +50,7 @@ export default function WalletPaypal(props:Props) {
         const url = process.env.NEXT_PUBLIC_API_URL + "/api/wallet/create-order";
         const postData = { value: currentValue, currency: "USD" };
         const response = await PostApi(url, postData);
-        console.log("handleGetPaypalButton response:", response);   
+        console.log("handleGetPaypalButton response:", response);
         return response.id;
     };
     return (
@@ -66,9 +66,21 @@ export default function WalletPaypal(props:Props) {
                             <input onChange={e => handleChangeCurrentValue(e)} type="number" placeholder='Type your money' className='bg-gray-100 border-none border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-2' />
                             <button onClick={e => handleShowPaypal()} className='px-4 bg-blue-500 text-white'>Confirm</button>
                         </div>
+                        {showPaypal &&
+                            <div className='flex flex-col border-b justify-end items-end'>
+                                <Minus />
+                                <div className='space-x-2 mr-2'>
+                                    <span className='text-gray-500'>(fee 5%)</span>
+                                    <span className='text-xl'>${currentValue * 5 / 100}</span>
+                                </div>
+                            </div>
+                        }
+                        {showPaypal &&
+                            <p className='font-bold text-xl text-end mr-2'>${currentValue - currentValue * 5 / 100}</p>
+                        }
                         <p className=" text-sm font-medium text-red-500 bg-gray-200 p-4 "> Currently in testing, payment not available yet !!!</p>
-                        <p className=" text-sm font-medium text-red-500 bg-gray-200 p-4 "> The transaction will incur a fee of approximately 3-5%.</p>
-                        
+                        <p className=" text-sm font-medium text-red-500 bg-gray-200 p-4 "> The transaction will incur a fee of approximately 5%.</p>
+
                         {showPaypal &&
                             <div className=''>
                                 <PayPalScriptProvider options={{ "clientId": paypalClientId }}>
