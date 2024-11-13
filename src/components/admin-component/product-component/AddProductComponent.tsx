@@ -20,6 +20,7 @@ import { ScaleLoader } from "react-spinners";
 import PostApi from "@/api/PostParttern";
 import { error } from "console";
 import { FacebookPixel } from "@/model/CategoryPixel";
+import { defaultReturn, defaultShipping } from "@/data/admin-data/productData";
 type productVariant = {
   optionName: string;
   optionValue: string[];
@@ -65,8 +66,8 @@ export default function AddProductComponent(props: Props) {
   const [productData, setProductData] = useState<Product>(getNewProduct());
   const [listVariant, setListVariant] = useState<productVariant[]>([]);
   const [description, setDescription] = useState(`<p>${productData.description}</p>`);
-  const [shippingDesc, setShippingDesc] = useState(`<p>${productData.shippingDescription}</p>`);
-  const [WarrantyDesc, setWarrantyDesc] = useState(`<p>${productData.warrantyDescription}</p>`);
+  const [shippingDesc, setShippingDesc] = useState(defaultShipping);
+  const [WarrantyDesc, setWarrantyDesc] = useState(defaultReturn);
   const [contentCalling, setContentCalling] = useState(`<p>${productData.contentCalling}</p>`);
   const [listComment, setListComment] = useState<Comment[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
@@ -825,13 +826,13 @@ export default function AddProductComponent(props: Props) {
               </div>
               <div className={`${selectDesc === 1 ? '' : 'hidden'}`}>
                 <TinyMCEEditor
-                  initialValue={""}
+                  initialValue={shippingDesc}
                   onEditorChange={handleShippingChange}
                 />
               </div>
               <div className={`${selectDesc === 2 ? '' : 'hidden'}`}>
                 <TinyMCEEditor
-                  initialValue={""}
+                  initialValue={WarrantyDesc}
                   onEditorChange={handleWarrantyChange}
                 />
               </div>
