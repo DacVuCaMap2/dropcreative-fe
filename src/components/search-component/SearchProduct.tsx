@@ -301,8 +301,9 @@ const SearchProduct = () => {
         setListHistory(response.searchs);
       }
       if (response.error) {
-        message.error("Authentication Error Or Login session expired|revoked");
-        window.location.href = "/login";
+        //fix-0411
+        // message.error("Authentication Error Or Login session expired|revoked");
+        // window.location.href = "/login";
       }
       setLoading(0);
     }

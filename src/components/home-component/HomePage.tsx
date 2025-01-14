@@ -133,7 +133,7 @@ export default function HomePage(props: Props) {
                 <div className="absolute inset-0 bg-neutral-300 backdrop-blur-md opacity-40  "></div>
                 <button onClick={() => setKeySearch(str)} className="hover:bg-neutral-400 relative z-10 w-full py-2 px-4 flex flex-row space-x-2 items-center text-sm ">
                   <span className="text-white">{str}</span>
-                  <Search className="text-white" size={20} />
+                  <Search className="text-white" size={20} /> 
                 </button>
               </div>
             ))}
